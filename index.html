@@ -25,16 +25,12 @@
 
   // ── الـ Config الافتراضي المُضمّن (عدّله مرة واحدة هنا) ──
   const DEFAULT_CONFIG = {
- // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDAoVZOaTaGIY6jFm5U4FPvPscLSksW2Fk",
-  authDomain: "spesocial-f0d40.firebaseapp.com",
-  projectId: "spesocial-f0d40",
-  storageBucket: "spesocial-f0d40.firebasestorage.app",
-  messagingSenderId: "749090667654",
-  appId: "1:749090667654:web:b454a62bba1c24ecabe507",
-  measurementId: "G-TLFKF6GCTG"
-}; 
+    apiKey:            "AIzaSyDAoVZOaTaGIY6jFm5U4FPvPscLSksW2Fk",
+    authDomain:        "spesocial-f0d40.firebaseapp.com",
+    projectId:         "spesocial-f0d40",
+    storageBucket:     "spesocial-f0d40.firebasestorage.app",
+    messagingSenderId: "749090667654",
+    appId:             "1:749090667654:web:b454a62bba1c24ecabe507"
   };
 
   // ── قراءة Config المحفوظ من localStorage (يُعدّ من واجهة الإعدادات) ──
@@ -489,109 +485,267 @@ const firebaseConfig = {
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
   }
 
-  /* ======= PORTAL LANDING ======= */
+  /* ======= PORTAL LANDING — DASHBOARD STATS + DOORS v31 ======= */
   #portalLanding {
-    padding: 32px 20px 40px;
-    /* Portal always visible — sidebar overlays it */
+    padding: 0 0 40px;
   }
-  .portal-title {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  .portal-title h2 {
-    font-family: 'Amiri', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 6px;
-  }
-  .portal-title p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-  }
-  .portal-divider {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    margin: 18px 0;
-  }
-  .portal-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 20px;
-  }
-  .portal-card {
-    background: var(--surface);
-    border-radius: 16px;
-    border: 2px solid var(--border);
-    box-shadow: 0 2px 16px rgba(26,58,92,0.08);
-    padding: 24px 18px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: inherit;
+
+  /* --- Dashboard Header --- */
+  .portal-dashboard-header {
+    background: linear-gradient(135deg, #0a1f3d 0%, #1a3a5c 55%, #1e4976 100%);
+    padding: 20px 20px 0;
     position: relative;
     overflow: hidden;
   }
-  .portal-card::after {
+  .portal-dashboard-header::before {
     content: '';
     position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    transform: scaleX(0);
-    transition: transform 0.25s ease;
-  }
-  .portal-card:hover { 
-    border-color: var(--primary-light);
-    box-shadow: 0 10px 36px rgba(26,58,92,0.18);
-    transform: translateY(-5px);
-  }
-  .portal-card:hover::after { transform: scaleX(1); }
-  .portal-card:hover .portal-card-icon {
-    background: var(--primary);
-    color: white;
-    transform: scale(1.08) rotate(-3deg);
-  }
-  .portal-card-icon {
-    width: 68px; height: 68px;
+    top: -60px; left: -60px;
+    width: 260px; height: 260px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #eff6ff, #dbeafe);
-    border: 2px solid #bfdbfe;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.9rem;
-    transition: all 0.25s ease;
+    background: radial-gradient(circle, rgba(200,169,74,0.15) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .portal-card-label {
-    font-size: 0.95rem;
-    font-weight: 800;
-    color: var(--primary);
-    line-height: 1.4;
+  .portal-dashboard-header::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,168,0.3) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .portal-card-desc {
-    font-size: 0.78rem;
+  .portal-dash-top {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .portal-dash-greeting h2 {
+    font-family: 'Amiri', serif;
+    font-size: 1.25rem; font-weight: 700;
+    color: #f0d97a; margin-bottom: 2px;
+  }
+  .portal-dash-greeting p {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+  }
+  .portal-dash-date {
+    text-align: left;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 6px 12px;
+  }
+  .portal-dash-date strong { color: rgba(255,255,255,0.85); font-size: 0.78rem; display: block; }
+
+  /* --- Central Stats Grid --- */
+  .portal-stats-center {
+    position: relative; z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px 16px 0 0;
+    overflow: hidden;
+    margin: 0 -0px;
+  }
+  .dash-stat-card {
+    padding: 14px 10px 12px;
+    text-align: center;
+    border-left: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    transition: background 0.25s;
+    cursor: default;
+  }
+  .dash-stat-card:last-child { border-left: none; }
+  .dash-stat-card:hover { background: rgba(255,255,255,0.07); }
+  .dash-stat-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 40%; height: 2px;
+    border-radius: 2px 2px 0 0;
+    opacity: 0; transition: opacity 0.25s;
+  }
+  .dash-stat-card:hover::before { opacity: 1; }
+  .dash-stat-card.s-blue::before { background: #60a5fa; }
+  .dash-stat-card.s-amber::before { background: #fbbf24; }
+  .dash-stat-card.s-green::before { background: #4ade80; }
+  .dash-stat-card.s-violet::before { background: #c084fc; }
+
+  .dash-stat-icon {
+    font-size: 1.1rem; margin-bottom: 5px; display: block;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.2));
+  }
+  .dash-stat-num {
+    font-size: 1.55rem; font-weight: 800;
+    display: block; line-height: 1;
+    margin-bottom: 4px;
+  }
+  .dash-stat-card.s-blue .dash-stat-num { color: #93c5fd; }
+  .dash-stat-card.s-amber .dash-stat-num { color: #fcd34d; }
+  .dash-stat-card.s-green .dash-stat-num { color: #86efac; }
+  .dash-stat-card.s-violet .dash-stat-num { color: #d8b4fe; }
+  .dash-stat-lbl {
+    font-size: 0.63rem; color: rgba(255,255,255,0.5);
+    display: block; line-height: 1.4;
+  }
+
+  /* --- Section Divider --- */
+  .portal-section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 16px 10px;
+  }
+  .portal-section-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+  .portal-section-line.right {
+    background: linear-gradient(270deg, var(--border), transparent);
+  }
+  .portal-section-title {
+    font-size: 0.72rem; font-weight: 800;
     color: var(--text-muted);
-    line-height: 1.6;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex; align-items: center; gap: 6px;
   }
-  .portal-card-btn {
-    margin-top: 6px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 7px 20px;
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
+
+  /* --- DOORS GRID (الأبواب) --- */
+  .portal-doors {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    padding: 0 12px;
+  }
+
+  .portal-door {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
+    padding: 12px 6px 10px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    box-shadow: 0 1px 6px rgba(26,58,92,0.06);
+    transition: transform 0.2s cubic-bezier(.34,1.56,.64,1),
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    animation: doorPop 0.45s cubic-bezier(.34,1.56,.64,1) both;
   }
-  .portal-card-btn:hover { opacity: 0.9; transform: scale(1.03); }
+  .portal-door::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+  .portal-door:hover {
+    transform: translateY(-5px) scale(1.04);
+    box-shadow: 0 10px 28px rgba(26,58,92,0.18);
+    border-color: transparent;
+  }
+  .portal-door:active { transform: translateY(-2px) scale(1.01); }
+
+  /* Color themes for doors */
+  .portal-door.d-navy::before { background: linear-gradient(90deg,#1a3a5c,#2563a8); }
+  .portal-door.d-navy:hover { box-shadow: 0 10px 28px rgba(26,58,92,0.25); }
+  .portal-door.d-teal::before { background: linear-gradient(90deg,#0f766e,#0d9488); }
+  .portal-door.d-teal:hover { box-shadow: 0 10px 28px rgba(15,118,110,0.22); }
+  .portal-door.d-amber::before { background: linear-gradient(90deg,#b45309,#d97706); }
+  .portal-door.d-amber:hover { box-shadow: 0 10px 28px rgba(180,83,9,0.22); }
+  .portal-door.d-red::before { background: linear-gradient(90deg,#991b1b,#dc2626); }
+  .portal-door.d-red:hover { box-shadow: 0 10px 28px rgba(153,27,27,0.22); }
+  .portal-door.d-green::before { background: linear-gradient(90deg,#065f46,#059669); }
+  .portal-door.d-green:hover { box-shadow: 0 10px 28px rgba(6,95,70,0.22); }
+  .portal-door.d-violet::before { background: linear-gradient(90deg,#5b21b6,#7c3aed); }
+  .portal-door.d-violet:hover { box-shadow: 0 10px 28px rgba(91,33,182,0.22); }
+  .portal-door.d-blue::before { background: linear-gradient(90deg,#1d4ed8,#2563eb); }
+  .portal-door.d-blue:hover { box-shadow: 0 10px 28px rgba(29,78,216,0.22); }
+
+  .door-icon-wrap {
+    width: 46px; height: 46px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    transition: transform 0.22s ease;
+    flex-shrink: 0;
+  }
+  .portal-door:hover .door-icon-wrap {
+    transform: scale(1.15) rotate(-8deg);
+  }
+  .portal-door.d-navy .door-icon-wrap { background:#eef4ff; border:1.5px solid #c7dcff; }
+  .portal-door.d-teal .door-icon-wrap { background:#f0fdfb; border:1.5px solid #99f6e4; }
+  .portal-door.d-amber .door-icon-wrap { background:#fffbeb; border:1.5px solid #fde68a; }
+  .portal-door.d-red .door-icon-wrap { background:#fff1f2; border:1.5px solid #fca5a5; }
+  .portal-door.d-green .door-icon-wrap { background:#f0fdf4; border:1.5px solid #6ee7b7; }
+  .portal-door.d-violet .door-icon-wrap { background:#faf5ff; border:1.5px solid #c4b5fd; }
+  .portal-door.d-blue .door-icon-wrap { background:#eff6ff; border:1.5px solid #93c5fd; }
+
+  .door-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-align: center;
+    line-height: 1.3;
+  }
+  .portal-door.d-navy .door-label { color: #1a3a5c; }
+  .portal-door.d-teal .door-label { color: #0f766e; }
+  .portal-door.d-amber .door-label { color: #92400e; }
+  .portal-door.d-red .door-label { color: #991b1b; }
+  .portal-door.d-green .door-label { color: #065f46; }
+  .portal-door.d-violet .door-label { color: #5b21b6; }
+  .portal-door.d-blue .door-label { color: #1d4ed8; }
+
+  .door-badge {
+    font-size: 0.58rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  /* Dark mode portal */
+  body.dark-mode .portal-dashboard-header { background: linear-gradient(135deg,#050e1e,#0f2238,#111d35); }
+  body.dark-mode .portal-door { background: var(--surface); border-color: var(--border); }
+  body.dark-mode .door-label { filter: brightness(1.4); }
+  body.dark-mode .portal-section-title { color: #475569; }
+  body.dark-mode .dash-stat-card:hover { background: rgba(255,255,255,0.05); }
+
+  /* Legacy compat */
+  .portal-card { display: none !important; }
+  .portal-cards { display: none !important; }
+  .portal-welcome-banner { display: none !important; }
+
+  /* Animation */
+  @keyframes doorPop {
+    from { opacity: 0; transform: translateY(20px) scale(0.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .portal-door:nth-child(1)  { animation-delay: 0.05s; }
+  .portal-door:nth-child(2)  { animation-delay: 0.10s; }
+  .portal-door:nth-child(3)  { animation-delay: 0.15s; }
+  .portal-door:nth-child(4)  { animation-delay: 0.20s; }
+  .portal-door:nth-child(5)  { animation-delay: 0.25s; }
+  .portal-door:nth-child(6)  { animation-delay: 0.30s; }
+  .portal-door:nth-child(7)  { animation-delay: 0.35s; }
+  .portal-door:nth-child(8)  { animation-delay: 0.40s; }
+  .portal-door:nth-child(9)  { animation-delay: 0.45s; }
+  .portal-door:nth-child(10) { animation-delay: 0.50s; }
+
+  @keyframes statPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .stat-loading { animation: statPulse 1.2s ease infinite; }
 
   /* ======= TOOL PAGES ======= */
   .tool-page {
@@ -1125,17 +1279,7 @@ const firebaseConfig = {
   .tool-page { display: none; }
   .tool-page.active { display: block; }
 
-  /* Colors on portal cards — refresh */
-  .portal-card { position: relative; overflow: hidden; }
-  .portal-card::before {
-    content: '';
-    position: absolute;
-    top: -40px; left: -40px;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,169,74,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
+  /* Portal cards are already styled in main CSS */
 
   /* ======= PRINT ======= */
   @media print {
@@ -1903,7 +2047,7 @@ const firebaseConfig = {
         <!-- IMPORT -->
         <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px;margin-bottom:10px;">
           <div style="font-size:0.82rem;font-weight:600;color:#166534;margin-bottom:8px;">📥 استيراد لائحة تلاميذ جديدة (Excel)</div>
-          <div style="font-size:0.74rem;color:#15803d;margin-bottom:10px;">يجب أن يحتوي ملف Excel على 3 أعمدة: <strong>الاسم الكامل</strong> — <strong>القسم</strong> — <strong>الجنس</strong></div>
+          <div style="font-size:0.74rem;color:#15803d;margin-bottom:10px;">يدعم ملفات Excel متعددة الأوراق — يتم استيراد <strong>جميع الأوراق</strong> تلقائياً. يكفي وجود عمود الاسم في كل ورقة (القسم والجنس اختيارية)</div>
           <input type="file" id="importStudentFile" accept=".xlsx,.xls,.csv" style="display:none;" onchange="importStudentListFromFile(this)">
           <button onclick="document.getElementById('importStudentFile').click()" style="width:100%;padding:10px;background:linear-gradient(135deg,#166534,#16a34a);color:white;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;font-weight:700;cursor:pointer;">📂 اختيار ملف Excel / CSV للاستيراد</button>
           <div id="importStudentMsg" style="font-size:0.78rem;margin-top:6px;min-height:16px;"></div>
@@ -2004,7 +2148,7 @@ const firebaseConfig = {
       <div class="header-text">
         <h1>المملكة المغربية</h1>
         <p>وزارة التربية الوطنية والتعليم الأولي والرياضة</p>
-        <p>مديرية الحي الحسني</p>
+        <p class="dynamic-directorate">مديرية الحي الحسني</p>
       </div>
     </div>
     <div style="text-align:center; flex:1; padding: 0 16px;">
@@ -2037,89 +2181,132 @@ const firebaseConfig = {
   <div class="accent-bar"></div>
 </header>
 
-<!-- ===== PORTAL LANDING PAGE ===== -->
+<!-- ===== PORTAL LANDING PAGE — v31 DASHBOARD + DOORS ===== -->
 <div id="portalLanding">
-  <div class="portal-title">
-    <h2>مرحباً بك في منصة التوثيق</h2>
-    <p>اختر الأداة المناسبة لمهمتك</p>
-    
-  </div>
-  <div class="portal-divider"></div>
-  <div class="portal-cards">
-    <div class="portal-card" onclick="openTool('interview')">
-      <div class="portal-card-icon">🗂</div>
-      <div class="portal-card-label">المقابلات الفردية</div>
-      <div class="portal-card-desc">توثيق المقابلات الفردية مع التلاميذ، وتسجيل الملاحظات والإجراءات المتخذة وحفظها في الأرشيف.</div>
-      <button class="portal-card-btn">الدخول للأداة ←</button>
-    </div>
-    <div class="portal-card" onclick="openTool('reintegration')">
-      <div class="portal-card-icon">📋</div>
-      <div class="portal-card-label">الإدماج المدرسي</div>
-      <div class="portal-card-desc">تتبع التلاميذ المُعاد إدماجهم في المنظومة التربوية ورصد جميع الإجراءات المتخذة قبل وأثناء وبعد الإدماج.</div>
-      <button class="portal-card-btn">الدخول للأداة ←</button>
+
+  <!-- Dashboard Header + Central Stats -->
+  <div class="portal-dashboard-header">
+    <div class="portal-dash-top">
+      <div class="portal-dash-greeting">
+        <h2 id="portalGreetingTitle">مرحباً بك في منصة التوثيق</h2>
+        <p id="portalGreetingSub" class="dynamic-directorate-sub">المختص الاجتماعي · مديرية الحي الحسني</p>
+      </div>
+      <div class="portal-dash-date" id="portalDateBox">
+        <strong id="portalDateDay">...</strong>
+        <span id="portalDateFull">...</span>
+      </div>
     </div>
 
-    <div class="portal-card" onclick="openTool('stats')">
-      <div class="portal-card-icon">📊</div>
-      <div class="portal-card-label">الإحصاء البياني</div>
-      <div class="portal-card-desc">رسوم بيانية تفاعلية للنشاط الأسبوعي والشهري للمختص الاجتماعي، مع إمكانية تحميل التقرير البياني وطباعته.</div>
-      <button class="portal-card-btn">الدخول للأداة ←</button>
+    <!-- 4-column stats bar -->
+    <div class="portal-stats-center">
+      <div class="dash-stat-card s-blue">
+        <span class="dash-stat-icon">🗂</span>
+        <span class="dash-stat-num stat-loading" id="statInterviews">—</span>
+        <span class="dash-stat-lbl">مقابلات مسجلة</span>
+      </div>
+      <div class="dash-stat-card s-amber">
+        <span class="dash-stat-icon">🚨</span>
+        <span class="dash-stat-num stat-loading" id="statAbsence">—</span>
+        <span class="dash-stat-lbl">حالات غياب</span>
+      </div>
+      <div class="dash-stat-card s-green">
+        <span class="dash-stat-icon">🔔</span>
+        <span class="dash-stat-num stat-loading" id="statNotifs">—</span>
+        <span class="dash-stat-lbl">متابعات قادمة</span>
+      </div>
+      <div class="dash-stat-card s-violet">
+        <span class="dash-stat-icon">🛡️</span>
+        <span class="dash-stat-num stat-loading" id="statViolence">—</span>
+        <span class="dash-stat-lbl">حالات عنف</span>
+      </div>
     </div>
-    <div class="portal-card" onclick="openTool('absence')" style="border-color:#fde68a;background:linear-gradient(135deg,#fffbeb,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:#fcd34d;">🚨</div>
-      <div class="portal-card-label" style="color:#92400e;">التلاميذ الأكثر غياباً</div>
-      <div class="portal-card-desc">تتبع وتوثيق وضعيات التلاميذ الأكثر غياباً، ورصد الإجراءات المتخذة معهم، وحفظ الملفات في الأرشيف مع إمكانية توليد تقارير رسمية.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#92400e,#d97706);">الدخول للأداة ←</button>
+  </div>
+
+  <!-- Section Divider -->
+  <div class="portal-section-header">
+    <div class="portal-section-line right"></div>
+    <span class="portal-section-title">🚪 أدوات المنصة</span>
+    <div class="portal-section-line"></div>
+  </div>
+
+  <!-- Doors Grid — 5 columns × 2 rows -->
+  <div class="portal-doors">
+
+    <!-- 1. المقابلات الفردية -->
+    <div class="portal-door d-navy" onclick="openTool('interview')">
+      <div class="door-icon-wrap">🗂</div>
+      <span class="door-label">المقابلات<br>الفردية</span>
     </div>
-    <div class="portal-card" onclick="openTool('casefile')" style="border-color:#99f6e4;background:linear-gradient(135deg,#f0fdfa,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#ccfbf1,#99f6e4);border-color:#5eead4;">📁</div>
-      <div class="portal-card-label" style="color:#0f766e;">ملف الحالة الشامل</div>
-      <div class="portal-card-desc">ربط ذكي يجمع كل المقابلات والزيارات والإجراءات المتعلقة بتلميذ واحد في ملف موحد قابل للاسترجاع والطباعة.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#0f766e,#0d9488);">الدخول للأداة ←</button>
+
+    <!-- 2. الإدماج المدرسي -->
+    <div class="portal-door d-navy" onclick="openTool('reintegration')">
+      <div class="door-icon-wrap">📋</div>
+      <span class="door-label">الإدماج<br>المدرسي</span>
     </div>
-    <div class="portal-card" onclick="openTool('violence')" style="border-color:#fca5a5;background:linear-gradient(135deg,#fff1f2,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#fee2e2,#fca5a5);border-color:#f87171;">🛡️</div>
-      <div class="portal-card-label" style="color:#991b1b;">التدخل في حالات العنف</div>
-      <div class="portal-card-desc">توثيق حالات العنف المدرسي والأسري والإلكتروني، مع تسجيل الإجراءات الوقائية والتنسيق مع المصالح المختصة وحفظ الملفات في الأرشيف.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#991b1b,#dc2626);">الدخول للأداة ←</button>
+
+    <!-- 3. الإحصاء البياني -->
+    <div class="portal-door d-teal" onclick="openTool('stats')">
+      <div class="door-icon-wrap">📊</div>
+      <span class="door-label">الإحصاء<br>البياني</span>
     </div>
-    <div class="portal-card" onclick="openTool('contacts')" style="border-color:#6ee7b7;background:linear-gradient(135deg,#f0fdf4,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#d1fae5,#6ee7b7);border-color:#34d399;">📞</div>
-      <div class="portal-card-label" style="color:#065f46;">الاتصالات وجلسات الأولياء</div>
-      <div class="portal-card-desc">توثيق الاتصالات الهاتفية وجلسات الاستماع مع أولياء الأمور، وتسجيل نتائجها والإجراءات المتخذة، مع أرشفة كاملة وإمكانية طباعة تقرير رسمي.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#065f46,#059669);">الدخول للأداة ←</button>
+
+    <!-- 4. التلاميذ الأكثر غياباً -->
+    <div class="portal-door d-amber" onclick="openTool('absence')">
+      <div class="door-icon-wrap">🚨</div>
+      <span class="door-label">التلاميذ<br>الأكثر غياباً</span>
     </div>
-    <div class="portal-card" onclick="openTool('workshops')" style="border-color:#fde68a;background:linear-gradient(135deg,#fffbeb,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#fef9c3,#fde68a);border-color:#fcd34d;">🎯</div>
-      <div class="portal-card-label" style="color:#92400e;">الورشات والأنشطة</div>
-      <div class="portal-card-desc">تخطيط وتوثيق الورشات التوعوية والأنشطة التربوية والبرامج الجماعية، وتسجيل عدد المشاركين والنتائج مع إنشاء تقارير رسمية.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#92400e,#d97706);">الدخول للأداة ←</button>
+
+    <!-- 5. ملف الحالة الشامل -->
+    <div class="portal-door d-teal" onclick="openTool('casefile')">
+      <div class="door-icon-wrap">📁</div>
+      <span class="door-label">ملف الحالة<br>الشامل</span>
     </div>
-    <div class="portal-card" onclick="openTool('notifications')" style="border-color:#c4b5fd;background:linear-gradient(135deg,#faf5ff,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd);border-color:#a78bfa;">🔔</div>
-      <div class="portal-card-label" style="color:#5b21b6;">الإشعارات والمتابعات</div>
-      <div class="portal-card-desc">تنبيهات ذكية بمواعيد المتابعات القادمة والمتأخرة، مصنفة حسب الأولوية والتاريخ لضمان عدم إغفال أي حالة.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#5b21b6,#7c3aed);">الدخول للأداة ←</button>
+
+    <!-- 6. التدخل في حالات العنف -->
+    <div class="portal-door d-red" onclick="openTool('violence')">
+      <div class="door-icon-wrap">🛡️</div>
+      <span class="door-label">حالات<br>العنف</span>
     </div>
-    <div class="portal-card" onclick="openTool('specialneeds')" style="border-color:#93c5fd;background:linear-gradient(135deg,#eff6ff,#fff);">
-      <div class="portal-card-icon" style="background:linear-gradient(135deg,#dbeafe,#93c5fd);border-color:#60a5fa;">♿</div>
-      <div class="portal-card-label" style="color:#1d4ed8;">وضعية إعاقة وصعوبات التعلم</div>
-      <div class="portal-card-desc">توثيق ومتابعة ملفات التلاميذ في وضعية إعاقة أو وضعية صحية أو الذين يعانون من صعوبات التعلم، مع تسجيل الإجراءات والدعم المقدم.</div>
-      <button class="portal-card-btn" style="background:linear-gradient(135deg,#1d4ed8,#2563eb);">الدخول للأداة ←</button>
+
+    <!-- 7. الاتصالات وجلسات الأولياء -->
+    <div class="portal-door d-green" onclick="openTool('contacts')">
+      <div class="door-icon-wrap">📞</div>
+      <span class="door-label">الاتصالات<br>والأولياء</span>
     </div>
+
+    <!-- 8. الورشات والأنشطة -->
+    <div class="portal-door d-amber" onclick="openTool('workshops')">
+      <div class="door-icon-wrap">🎯</div>
+      <span class="door-label">الورشات<br>والأنشطة</span>
+    </div>
+
+    <!-- 9. الإشعارات والمتابعات -->
+    <div class="portal-door d-violet" onclick="openTool('notifications')">
+      <div class="door-icon-wrap">🔔</div>
+      <span class="door-label">الإشعارات<br>والمتابعات</span>
+    </div>
+
+    <!-- 10. وضعية إعاقة وصعوبات التعلم -->
+    <div class="portal-door d-blue" onclick="openTool('specialneeds')">
+      <div class="door-icon-wrap">♿</div>
+      <span class="door-label">وضعية<br>الإعاقة</span>
+    </div>
+
   </div>
 
   <!-- Weekly Report Quick Download -->
-  <div style="margin-top:20px;background:linear-gradient(135deg,#0f2744,#1a3a5c);border-radius:14px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:2px solid rgba(200,169,74,0.4);">
+  <div style="margin: 16px 16px 0; background:linear-gradient(135deg,#0a1f3d,#1a3a5c);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;border:1.5px solid rgba(200,169,74,0.3);box-shadow:0 4px 20px rgba(10,31,61,0.3);">
     <div style="display:flex;align-items:center;gap:12px;">
-      <span style="font-size:2rem;">📥</span>
+      <div style="width:42px;height:42px;border-radius:10px;background:rgba(200,169,74,0.15);border:1px solid rgba(200,169,74,0.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">📥</div>
       <div>
-        <div style="color:#f0d97a;font-weight:800;font-size:0.95rem;">التقرير الأسبوعي الشامل</div>
-        <div style="color:rgba(255,255,255,0.7);font-size:0.78rem;margin-top:2px;">يتضمن: سجل المهام الأوتوماتيكي — المقابلات — الإدماج — الغياب — العنف</div>
+        <div style="color:#f0d97a;font-weight:800;font-size:0.9rem;">التقرير الأسبوعي الشامل</div>
+        <div style="color:rgba(255,255,255,0.55);font-size:0.72rem;margin-top:3px;">المقابلات · الإدماج · الغياب · العنف · سجل المهام</div>
       </div>
     </div>
-    <button onclick="downloadWeeklyReportExcel()" style="background:linear-gradient(135deg,#c8a94a,#f0d97a);color:#0f2744;border:none;border-radius:10px;padding:11px 24px;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;">⬇️ تحميل Excel</button>
-    <button onclick="downloadWeeklyReportPDF()" style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;border:none;border-radius:10px;padding:11px 24px;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;">📄 تحميل PDF</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button onclick="downloadWeeklyReportExcel()" style="background:linear-gradient(135deg,#c8a94a,#f0d97a);color:#0f2744;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;white-space:nowrap;">⬇️ Excel</button>
+      <button onclick="downloadWeeklyReportPDF()" style="background:linear-gradient(135deg,#dc2626,#b91c1c);color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:0.82rem;font-weight:800;cursor:pointer;white-space:nowrap;">📄 PDF</button>
+    </div>
   </div>
 </div>
 
@@ -2848,7 +3035,7 @@ function iGenerateReport() {
     </div>
     <div class="print-accent-bar"></div>
     <div class="report-official-header">
-      <div class="kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
+      <div class="kingdom dynamic-dir-kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
       <div class="report-main-title">تقرير المقابلة الفردية</div>
       <h2>${val('i_school') || 'المؤسسة التعليمية'}</h2>
     </div>
@@ -3435,6 +3622,83 @@ async function authDoRegister() {
   }
 }
 
+// ── تحديث اسم المديرية في جميع أجزاء الواجهة ──
+function updateDirectorateUI() {
+  const dir = (userProfile && userProfile.school) ? userProfile.school : 'مديرية الحي الحسني';
+  const kingdom = `المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — ${dir}`;
+  const sub2 = `وزارة التربية الوطنية والتعليم الأولي والرياضة — ${dir}`;
+
+  // الهيدر الرئيسي
+  document.querySelectorAll('.dynamic-directorate').forEach(el => { el.textContent = dir; });
+  // لوحة الترحيب
+  const greetSub = document.getElementById('portalGreetingSub');
+  if (greetSub) greetSub.textContent = `المختص الاجتماعي · ${dir}`;
+  // بلوكات الطباعة (pm-directorate)
+  document.querySelectorAll('.pm-directorate').forEach(el => { el.textContent = dir; });
+  // kingdom lines في بلوكات الطباعة
+  document.querySelectorAll('.dynamic-dir-kingdom').forEach(el => { el.textContent = kingdom; });
+  // سطر وزارة التربية (p)
+  document.querySelectorAll('.dynamic-dir-sub2').forEach(el => { el.textContent = sub2; });
+  // سطر وزارة التربية (.sub)
+  document.querySelectorAll('.dynamic-dir-sub3').forEach(el => { el.textContent = `🏛 ${sub2}`; });
+  // سطر الإشعارات
+  document.querySelectorAll('.dynamic-dir-oh-sub').forEach(el => { el.textContent = `${dir} — المصلحة الاجتماعية`; });
+}
+
+// دالة مساعدة لقراءة اسم المديرية الحالي
+function getDirectorate() {
+  return (userProfile && userProfile.school) ? userProfile.school : 'مديرية الحي الحسني';
+}
+
+function updateDashboardStats() {
+  try {
+    // المقابلات
+    const interviews = JSON.parse(localStorage.getItem('interviews_archive') || '[]');
+    const intEl = document.getElementById('statInterviews');
+    if (intEl) { intEl.textContent = interviews.length; intEl.classList.remove('stat-loading'); }
+
+    // الغياب
+    const absence = JSON.parse(localStorage.getItem('absence_archive') || '[]');
+    const absEl = document.getElementById('statAbsence');
+    if (absEl) { absEl.textContent = absence.length; absEl.classList.remove('stat-loading'); }
+
+    // المتابعات القادمة (من الإشعارات)
+    const today = new Date(); today.setHours(0,0,0,0);
+    const nextWeek = new Date(today); nextWeek.setDate(today.getDate() + 7);
+    let notifCount = 0;
+    ['interviews_archive','absence_archive','reintegration_archive','violence_archive','contacts_archive','sn_archive'].forEach(key => {
+      try {
+        const arr = JSON.parse(localStorage.getItem(key) || '[]');
+        arr.forEach(e => {
+          const f = e.nextFollowup || e.next_followup || '';
+          if (f && f !== '—') {
+            const d = new Date(f.split('/').reverse ? f : f);
+            if (!isNaN(d) && d >= today && d <= nextWeek) notifCount++;
+          }
+        });
+      } catch {}
+    });
+    const notifEl = document.getElementById('statNotifs');
+    if (notifEl) { notifEl.textContent = notifCount; notifEl.classList.remove('stat-loading'); }
+
+    // حالات العنف
+    const violence = JSON.parse(localStorage.getItem('violence_archive') || '[]');
+    const violEl = document.getElementById('statViolence');
+    if (violEl) { violEl.textContent = violence.length; violEl.classList.remove('stat-loading'); }
+  } catch(e) { console.warn('Dashboard stats error:', e); }
+}
+
+// ── تاريخ اللوحة ──
+(function initDashDate() {
+  const now = new Date();
+  const days = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const months = ['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر'];
+  const dayEl = document.getElementById('portalDateDay');
+  const fullEl = document.getElementById('portalDateFull');
+  if (dayEl) dayEl.textContent = days[now.getDay()];
+  if (fullEl) fullEl.textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+})();
+
 function authEnterApp() {
   document.getElementById('authOverlay').classList.add('hidden');
   const bar = document.getElementById('userBar');
@@ -3481,6 +3745,10 @@ function authEnterApp() {
       }
     } catch(e) {}
   }, 500);
+  // Update portal dashboard stats
+  setTimeout(updateDashboardStats, 200);
+  // Update directorate name everywhere
+  setTimeout(updateDirectorateUI, 250);
   // Update bell badge
   setTimeout(updateNotifBadge, 300);
   // Update Firebase status display
@@ -3737,6 +4005,7 @@ async function saveProfile() {
   document.getElementById('userInitial').textContent = (userProfile.fullName || currentUser).charAt(0).toUpperCase();
   document.getElementById('userNameDisplay').textContent = userProfile.fullName || currentUser;
   updateProfileBanner();
+  updateDirectorateUI();
   const msg = document.getElementById('profileMsg');
   msg.textContent = '✅ تم حفظ البيانات الشخصية بنجاح.'; msg.style.color = '#16a34a';
   setTimeout(() => { msg.textContent = ''; }, 2500);
@@ -4134,7 +4403,7 @@ function printStudentList() {
 <body>
 <div class="print-header">
   <h1>🎓 لائحة التلاميذ — مؤسسة التعليم</h1>
-  <p>وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</p>
+  <p class="dynamic-dir-sub2">وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</p>
 </div>
 <div class="print-meta">
   <span>📅 تاريخ الطباعة: ${date}</span>
@@ -4204,40 +4473,56 @@ function importStudentListFromFile(input) {
     try {
       const data = new Uint8Array(e.target.result);
       const wb = XLSX.read(data, { type: 'array' });
-      const ws = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
 
-      if (rows.length < 2) { msg.style.color='#dc2626'; msg.textContent='❌ الملف فارغ أو لا يحتوي على بيانات.'; return; }
-
-      // Try to detect columns
-      const header = rows[0].map(h => String(h).trim());
-      let nameCol = -1, classCol = -1, genderCol = -1;
-      header.forEach((h, i) => {
-        const lh = h.toLowerCase();
-        if (lh.includes('اسم') || lh.includes('nom') || lh.includes('name')) nameCol = i;
-        if (lh.includes('قسم') || lh.includes('classe') || lh.includes('class')) classCol = i;
-        if (lh.includes('جنس') || lh.includes('genre') || lh.includes('gender') || lh.includes('sex')) genderCol = i;
-      });
-      // fallback: first 3 cols
-      if (nameCol === -1) nameCol = 0;
-      if (classCol === -1) classCol = 1;
-      if (genderCol === -1) genderCol = 2;
-
+      // ── قراءة جميع الأوراق (Sheets) وليس الأولى فقط ──
       const imported = [];
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        const name = String(row[nameCol] || '').trim();
-        if (!name) continue;
-        imported.push({
-          name,
-          class: String(row[classCol] || '').trim(),
-          gender: String(row[genderCol] || '').trim()
+      const sheetsInfo = [];
+
+      wb.SheetNames.forEach(sheetName => {
+        const ws = wb.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' });
+        if (rows.length < 2) return; // ورقة فارغة — تجاوز
+
+        // اكتشاف الأعمدة من رأس الجدول
+        const header = rows[0].map(h => String(h).trim());
+        let nameCol = -1, classCol = -1, genderCol = -1, massarCol = -1;
+        header.forEach((h, i) => {
+          const lh = h.toLowerCase();
+          if (lh.includes('اسم') || lh.includes('nom') || lh.includes('name')) nameCol = i;
+          if (lh.includes('قسم') || lh.includes('classe') || lh.includes('class') || lh.includes('niveau')) classCol = i;
+          if (lh.includes('جنس') || lh.includes('genre') || lh.includes('gender') || lh.includes('sex')) genderCol = i;
+          if (lh.includes('مسار') || lh.includes('massar') || lh.includes('رقم')) massarCol = i;
         });
-      }
+        // fallback: أعمدة افتراضية إذا لم يوجد رأس واضح
+        if (nameCol === -1) nameCol = 0;
+        if (classCol === -1) classCol = 1;
+        if (genderCol === -1) genderCol = 2;
 
-      if (!imported.length) { msg.style.color='#dc2626'; msg.textContent='❌ لم يتم العثور على أسماء صالحة.'; return; }
+        let sheetCount = 0;
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          const name = String(row[nameCol] || '').trim();
+          if (!name || name.length < 2) continue;
+          imported.push({
+            name,
+            fullName: name,
+            class: String(row[classCol] || sheetName).trim(), // إذا لم يوجد عمود قسم يُستخدم اسم الورقة
+            gender: String(row[genderCol] || '').trim(),
+            massar: massarCol !== -1 ? String(row[massarCol] || '').trim() : '',
+            _sheet: sheetName
+          });
+          sheetCount++;
+        }
+        if (sheetCount > 0) sheetsInfo.push(`${sheetName}: ${sheetCount} تلميذ(ة)`);
+      });
 
-      if (!confirm(`✅ تم اكتشاف ${imported.length} تلميذ(ة). هل تريد إضافتهم للقائمة؟\n(لن يتم حذف التلاميذ الحاليين)`)) {
+      if (!imported.length) { msg.style.color='#dc2626'; msg.textContent='❌ لم يتم العثور على أسماء صالحة في أي ورقة.'; return; }
+
+      const sheetsLabel = sheetsInfo.length > 1
+        ? `\n📋 الأوراق المُكتشفة:\n${sheetsInfo.join('\n')}`
+        : '';
+
+      if (!confirm(`✅ تم اكتشاف ${imported.length} تلميذ(ة) من ${wb.SheetNames.length} ورقة.${sheetsLabel}\n\nهل تريد إضافتهم للقائمة؟\n(لن يتم حذف التلاميذ الحاليين)`)) {
         msg.textContent = ''; input.value = ''; return;
       }
 
@@ -4245,15 +4530,26 @@ function importStudentListFromFile(input) {
       let added = 0;
       const baseList = typeof STUDENTS !== 'undefined' ? STUDENTS : [];
       imported.forEach(s => {
-        const exists = baseList.some(b => b.name === s.name) || custom.some(c => c.name === s.name);
+        const exists = baseList.some(b => b.name === s.name || b.fullName === s.name)
+                    || custom.some(c => c.name === s.name || c.fullName === s.name);
         if (!exists) { custom.push(s); added++; }
       });
       saveCustomStudents(custom);
       if (typeof STUDENT_DB !== 'undefined') {
-        custom.forEach(s => { if (!STUDENT_DB.find(b => b.name === s.name)) STUDENT_DB.push(s); });
+        custom.forEach(s => {
+          if (!STUDENT_DB.find(b => b.fullName === s.name || b.name === s.name)) {
+            STUDENT_DB.push({
+              fullName: s.name, firstName: s.name.split(' ')[0] || '',
+              lastName: s.name.split(' ').slice(1).join(' ') || '',
+              class: s.class || '', gender: s.gender || '', massar: s.massar || '', name: s.name
+            });
+          }
+        });
       }
       msg.style.color = '#16a34a';
-      msg.textContent = `✅ تم استيراد ${added} تلميذ(ة) جديد بنجاح! (${imported.length - added} موجود مسبقاً)`;
+      const dupCount = imported.length - added;
+      msg.textContent = `✅ تم استيراد ${added} تلميذ(ة) جديد من ${wb.SheetNames.length} ورقة بنجاح!`
+        + (dupCount > 0 ? ` (${dupCount} موجود مسبقاً)` : '');
       input.value = '';
     } catch(err) {
       msg.style.color = '#dc2626';
@@ -4551,7 +4847,7 @@ function downloadWeeklyReportPDF() {
 <div class="hdr">
   <div>
     <h1>📊 التقرير الأسبوعي الشامل للمختص الاجتماعي</h1>
-    <div class="sub">🏛 وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
+    <div class="sub dynamic-dir-sub3">🏛 وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
     <div class="sub" style="margin-top:2px;">📅 الفترة: <strong style="color:#f0d97a;">${dateStr}</strong></div>
   </div>
   <div class="badge">📅 ${dateAr}<br><span style="font-weight:400;font-size:6pt;">تاريخ الإصدار</span></div>
@@ -5027,7 +5323,7 @@ function rGenerateReport() {
     </div>
     <div class="print-accent-bar"></div>
     <div class="report-official-header">
-      <div class="kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
+      <div class="kingdom dynamic-dir-kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
       <div class="report-main-title">تتبع إعادة الإدماج المدرسي</div>
       <h2>${val('r_school') || 'المؤسسة التعليمية'}</h2>
     </div>
@@ -5732,7 +6028,7 @@ function abGenerateReport() {
     </div>
     <div class="print-accent-bar"></div>
     <div class="report-official-header">
-      <div class="kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
+      <div class="kingdom dynamic-dir-kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
       <div class="report-main-title">تتبع وضعية التلاميذ الأكثر غياباً</div>
       <h2>${val('ab_school') || 'المؤسسة التعليمية'}</h2>
     </div>
@@ -6746,7 +7042,7 @@ function stGenerateHTMLReport() {
         <div style="text-align:center;flex:1;">
           <div style="font-size:0.55rem;color:rgba(255,255,255,0.75);">المملكة المغربية</div>
           <div style="font-size:0.72rem;font-weight:800;color:#f0d97a;line-height:1.3;">وزارة التربية الوطنية والتعليم الأولي والرياضة</div>
-          <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);margin-top:1px;">مديرية الحي الحسني</div>
+          <div style="font-size:0.6rem;color:rgba(255,255,255,0.85);margin-top:1px;" class="dynamic-directorate">مديرية الحي الحسني</div>
         </div>
         <div style="font-size:0.5rem;color:rgba(255,255,255,0.7);text-align:left;line-height:1.5;">المختص الاجتماعي</div>
       </div>
@@ -8771,7 +9067,7 @@ function cfPrintFile() {
   <div class="oh-top">
     <div>
       <div class="oh-title">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة</div>
-      <div class="oh-sub">مديرية الحي الحسني — المصلحة الاجتماعية</div>
+      <div class="oh-sub dynamic-dir-oh-sub">مديرية الحي الحسني — المصلحة الاجتماعية</div>
     </div>
     <div style="text-align:center;">
       <div style="font-family:'Amiri',serif;font-size:1.3rem;color:white;font-weight:700;">ملف الحالة الشامل</div>
@@ -9290,7 +9586,7 @@ function wsGenerateReport() {
     </div>
     <div class="print-accent-bar"></div>
     <div class="report-official-header">
-      <div class="kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
+      <div class="kingdom dynamic-dir-kingdom">المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
       <div class="report-main-title">🎯 ${type || 'الورشة / النشاط التربوي'}</div>
       <h2>${wsVal('ws_school') || 'المؤسسة التعليمية'}</h2>
     </div>
@@ -9969,7 +10265,7 @@ function ctGenerateReport() {
       <span class="emblem">🎓</span>
       <div class="kingdom">المملكة المغربية</div>
       <div class="ministry">وزارة التربية الوطنية والتعليم الأولي والرياضة</div>
-      <div class="directorate">مديرية الحي الحسني — ${ctVal('ct_school') || 'المؤسسة التعليمية'}</div>
+      <div class="directorate">${getDirectorate()} — ${ctVal('ct_school') || 'المؤسسة التعليمية'}</div>
     </div>
 
     <div class="ct-rpt-title">${type === 'اتصال هاتفي' ? '📱 سجل الاتصال الهاتفي' : type === 'جلسة استماع مع ولي الأمر' ? '🤝 سجل جلسة الاستماع مع ولي الأمر' : type ? '📄 تقرير التواصل: ' + type : '📄 تقرير التواصل مع ولي الأمر'}</div>
@@ -10292,7 +10588,7 @@ function snGenerateReport() {
       <span class="emblem">🎓</span>
       <div class="kingdom">المملكة المغربية</div>
       <div class="ministry">وزارة التربية الوطنية والتعليم الأولي والرياضة</div>
-      <div class="directorate">مديرية الحي الحسني — ${snVal('sn_school') || 'المؤسسة التعليمية'}</div>
+      <div class="directorate">${getDirectorate()} — ${snVal('sn_school') || 'المؤسسة التعليمية'}</div>
     </div>
     <div class="sn-rpt-title">♿ تقرير متابعة التلميذ(ة) في وضعية إعاقة / صعوبات التعلم</div>
     <div class="sn-rpt-subtitle">التلميذ(ة): <strong>${studentName}</strong>${category ? ' — ' + category : ''} — بتاريخ: ${date}</div>
