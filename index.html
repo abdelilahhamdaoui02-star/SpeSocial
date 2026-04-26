@@ -14,21 +14,126 @@
              match /{document=**} { allow read, write: if true; }
            }
         }
-     6. ضع config الخاص بك في الكائن FIREBASE_CONFIG أدناه
+     6. أدخل بيانات Firebase عند أول تشغيل — لا حاجة لتعديل الكود
      ══════════════════════════════════════════════════════════ -->
+
+<!-- ══ نافذة إعداد Firebase ══ -->
+<style>
+#fb-setup-overlay {
+  display:none; position:fixed; inset:0; background:rgba(10,31,61,0.92);
+  z-index:99999; align-items:center; justify-content:center;
+  font-family:'Cairo',sans-serif; direction:rtl;
+}
+#fb-setup-overlay.active { display:flex; }
+#fb-setup-box {
+  background:#fff; border-radius:18px; padding:32px 28px; width:min(520px,94vw);
+  box-shadow:0 8px 40px rgba(0,0,0,0.35); max-height:90vh; overflow-y:auto;
+}
+#fb-setup-box h2 { color:#1a3a5c; font-size:1.1rem; margin:0 0 6px; }
+#fb-setup-box p  { color:#64748b; font-size:0.82rem; margin:0 0 18px; line-height:1.6; }
+#fb-setup-box label { display:block; font-size:0.78rem; font-weight:700; color:#374151; margin-bottom:3px; }
+#fb-setup-box input {
+  width:100%; padding:9px 12px; border:1.5px solid #cbd5e1; border-radius:8px;
+  font-size:0.82rem; margin-bottom:12px; box-sizing:border-box; direction:ltr;
+  font-family:monospace;
+}
+#fb-setup-box input:focus { outline:none; border-color:#0f766e; }
+#fb-setup-save {
+  width:100%; padding:11px; background:linear-gradient(135deg,#0a1f3d,#0f766e);
+  color:#fff; border:none; border-radius:10px; font-size:0.95rem; font-weight:700;
+  cursor:pointer; margin-top:4px;
+}
+#fb-setup-save:hover { opacity:0.9; }
+#fb-setup-skip {
+  width:100%; padding:8px; background:transparent; color:#94a3b8;
+  border:1px solid #e2e8f0; border-radius:10px; font-size:0.82rem;
+  cursor:pointer; margin-top:8px;
+}
+#fb-setup-msg { font-size:0.8rem; color:#dc2626; margin-top:8px; min-height:18px; }
+#fb-setup-steps {
+  background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px;
+  padding:12px 14px; margin-bottom:18px; font-size:0.76rem; color:#166534; line-height:1.9;
+}
+</style>
+
+<div id="fb-setup-overlay">
+  <div id="fb-setup-box">
+    <h2>🔥 إعداد قاعدة البيانات السحابية</h2>
+    <p>أدخل بيانات Firebase الخاصة بمؤسستك. يتم حفظها محلياً على جهازك فقط ولا تُشارَك مع أحد.</p>
+    <div id="fb-setup-steps">
+      📌 خطوات الحصول على هذه البيانات:<br>
+      1️⃣ اذهب إلى <strong>console.firebase.google.com</strong><br>
+      2️⃣ أنشئ مشروعاً جديداً ← أضف تطبيق ويب<br>
+      3️⃣ انسخ الـ config وألصقه في الحقول أدناه<br>
+      4️⃣ فعّل <strong>Firestore Database</strong> من قسم Build
+    </div>
+    <label>API Key *</label>
+    <input id="fb-inp-apiKey" type="text" placeholder="AIzaSy...">
+    <label>Auth Domain *</label>
+    <input id="fb-inp-authDomain" type="text" placeholder="your-app.firebaseapp.com">
+    <label>Project ID *</label>
+    <input id="fb-inp-projectId" type="text" placeholder="your-project-id">
+    <label>Storage Bucket</label>
+    <input id="fb-inp-storageBucket" type="text" placeholder="your-app.firebasestorage.app">
+    <label>Messaging Sender ID</label>
+    <input id="fb-inp-messagingSenderId" type="text" placeholder="123456789">
+    <label>App ID</label>
+    <input id="fb-inp-appId" type="text" placeholder="1:123456789:web:abc123">
+    <div id="fb-setup-msg"></div>
+    <button id="fb-setup-save" onclick="fbSetupSave()">💾 حفظ والاتصال بالسحابة</button>
+    <button id="fb-setup-skip" onclick="fbSetupSkip()">تخطي — استخدام الوضع المحلي فقط</button>
+  </div>
+</div>
+
+<script>
+function fbSetupSave() {
+  const cfg = {
+    apiKey:            document.getElementById('fb-inp-apiKey').value.trim(),
+    authDomain:        document.getElementById('fb-inp-authDomain').value.trim(),
+    projectId:         document.getElementById('fb-inp-projectId').value.trim(),
+    storageBucket:     document.getElementById('fb-inp-storageBucket').value.trim(),
+    messagingSenderId: document.getElementById('fb-inp-messagingSenderId').value.trim(),
+    appId:             document.getElementById('fb-inp-appId').value.trim(),
+  };
+  const msg = document.getElementById('fb-setup-msg');
+  if (!cfg.apiKey || !cfg.projectId || !cfg.authDomain) {
+    msg.textContent = '⚠️ يرجى ملء الحقول الإلزامية (API Key, Auth Domain, Project ID)';
+    return;
+  }
+  try {
+    localStorage.setItem('app:firebase:config', JSON.stringify(cfg));
+    document.getElementById('fb-setup-overlay').classList.remove('active');
+    msg.textContent = '';
+    location.reload();
+  } catch(e) {
+    msg.textContent = '❌ خطأ في الحفظ: ' + e.message;
+  }
+}
+function fbSetupSkip() {
+  localStorage.setItem('app:firebase:skipped', '1');
+  document.getElementById('fb-setup-overlay').classList.remove('active');
+}
+function fbShowSetup() {
+  // ملء الحقول بالقيم المحفوظة إن وجدت
+  try {
+    const saved = localStorage.getItem('app:firebase:config');
+    if (saved) {
+      const c = JSON.parse(saved);
+      ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'].forEach(k => {
+        const el = document.getElementById('fb-inp-' + k);
+        if (el && c[k]) el.value = c[k];
+      });
+    }
+  } catch {}
+  document.getElementById('fb-setup-overlay').classList.add('active');
+}
+window.fbShowSetup = fbShowSetup;
+</script>
+
 <script type="module">
   // ══════════════════════════════════════════════════════════════
-  //  🔥 FIREBASE CONFIG — الإعداد الافتراضي
+  //  🔥 FIREBASE CONFIG — يُحمَّل من localStorage فقط (لا مفاتيح في الكود)
   // ══════════════════════════════════════════════════════════════
-
-  const DEFAULT_CONFIG = {
-    apiKey:            "AIzaSyDAoVZOaTaGIY6jFm5U4FPvPscLSksW2Fk",
-    authDomain:        "spesocial-f0d40.firebaseapp.com",
-    projectId:         "spesocial-f0d40",
-    storageBucket:     "spesocial-f0d40.firebasestorage.app",
-    messagingSenderId: "749090667654",
-    appId:             "1:749090667654:web:b454a62bba1c24ecabe507"
-  };
 
   function loadConfig() {
     try {
@@ -40,7 +145,7 @@
         }
       }
     } catch {}
-    return DEFAULT_CONFIG;
+    return null; // لا توجد مفاتيح افتراضية — يجب على كل مؤسسة إدخال بياناتها
   }
 
   const FIREBASE_CONFIG = loadConfig();
@@ -48,10 +153,18 @@
   // كشف Config للنافذة حتى يمكن تحديثه لاحقاً
   window._getFirebaseConfig = () => FIREBASE_CONFIG;
   window._isFirebaseConfigured = () =>
+    FIREBASE_CONFIG &&
     FIREBASE_CONFIG.apiKey &&
     !FIREBASE_CONFIG.apiKey.startsWith('REPLACE') &&
     FIREBASE_CONFIG.projectId &&
     !FIREBASE_CONFIG.projectId.startsWith('REPLACE');
+
+  // إذا لم يكن هناك إعداد محفوظ، افتح نافذة الإعداد تلقائياً
+  if (!FIREBASE_CONFIG && !localStorage.getItem('app:firebase:skipped')) {
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => window.fbShowSetup && window.fbShowSetup(), 600);
+    });
+  }
 
   import { initializeApp }            from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, query, where, getDocs }
