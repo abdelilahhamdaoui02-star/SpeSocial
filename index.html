@@ -18828,4 +18828,118 @@ window.iipInit=function(){load();if(!cur||!cur.id)cur=blank();domSel();bind();ac
   run();
 })();
 </script>
+<!-- ============================================================
+     MOBILE-FIX v1 — تكييف الهاتف: الحساب الشخصي كصفحة كاملة + إصلاح الجزء العلوي المخفي
+     ============================================================ -->
+<style id="mobile-fix-v1">
+@media screen and (max-width:820px){
+
+  /* 1) الهيدر يتحرك مع الصفحة بدل أن يبقى ملتصقاً ويغطي أعلى البوابات */
+  html body .site-header{ position:relative !important; top:auto !important; z-index:5 !important; }
+  .tool-page, .tool-page > *{ scroll-margin-top:12px; }
+
+  /* 2) الحساب الشخصي = صفحة كاملة فوق كل شيء (كان z-index:500 مثل الهيدر فيغطيه) */
+  #profileModal{
+    z-index:100000 !important; background:#eef3fb; padding:0 !important;
+    height:100vh; height:100dvh; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  }
+  body.dark-mode #profileModal{ background:#0f172a; }
+  #profileModal .profile-box{
+    max-width:none !important; width:100% !important; margin:0 !important;
+    border-radius:0 !important; box-shadow:none !important; min-height:100%;
+  }
+  #profileModal .profile-header{
+    position:sticky; top:0; z-index:20; gap:10px;
+    padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px !important;
+    background:var(--hdr-teal,#0b5a5f) !important;
+  }
+  #profileModal .profile-header h3{ font-size:1rem; margin:0; flex:1; }
+  #profileModal .profile-header .profile-close,
+  #profileCloseFixed{ display:none !important; }          /* نستبدلهما بزر «رجوع» */
+  #profileModal .pf-back{
+    background:rgba(255,255,255,.16); border:1.5px solid rgba(255,255,255,.55); color:#fff;
+    border-radius:999px; padding:7px 16px; font:700 .9rem 'Cairo',sans-serif; cursor:pointer;
+    white-space:nowrap;
+  }
+  #profileModal .profile-body{
+    padding:16px 14px calc(140px + env(safe-area-inset-bottom,0px)) !important;  /* مساحة للوحة المفاتيح */
+  }
+  /* 16px تمنع تكبير iOS التلقائي عند الضغط على الحقل */
+  #profileModal input, #profileModal select{ font-size:16px !important; min-height:44px; }
+  #profileModal input, #profileModal select, #profileModal .profile-field{ scroll-margin-top:90px; scroll-margin-bottom:140px; }
+  #profileModal .profile-save-btn{ min-height:48px; font-size:1rem; }
+
+  /* 3) الإعدادات كذلك صفحة كاملة (تُفتح من داخل الحساب الشخصي) */
+  #settingsModal{ z-index:100001 !important; padding:0 !important; align-items:stretch !important; background:#eef3fb; }
+  body.dark-mode #settingsModal{ background:#0f172a; }
+  #settingsModal .settings-box{
+    max-width:none !important; max-height:none !important; height:100vh; height:100dvh;
+    border-radius:0 !important; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  #settingsModal .settings-header{
+    border-radius:0 !important; padding:calc(14px + env(safe-area-inset-top,0px)) 14px 14px !important;
+  }
+  #settingsModal .settings-body{ padding:16px 14px calc(120px + env(safe-area-inset-bottom,0px)); }
+  #settingsModal input, #settingsModal select{ font-size:16px; }
+
+  /* 4) القائمة الجانبية الثابتة كانت تغطي الحافة اليمنى (بداية النص بالعربية) ← شريط سفلي أفقي */
+  #frozenNav{
+    top:auto !important; bottom:0; left:0; right:0 !important; transform:none !important;
+    flex-direction:row !important; max-height:none !important; overflow-x:auto; overflow-y:hidden;
+    border-radius:14px 14px 0 0 !important; padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px)) !important;
+    z-index:300;
+  }
+  #frozenNav .frozen-card{ width:60px; padding:6px 4px 5px; }
+  #frozenNav .frozen-card-label{ font-size:.55rem; }
+  body:has(#frozenNav.visible){ padding-bottom:84px; }
+
+  /* 5) تفادي التمرير الأفقي */
+  html, body{ overflow-x:hidden; max-width:100%; }
+  .page-wrapper{ min-width:0; }
+  img, canvas, svg{ max-width:100%; }
+}
+html.pf-lock, html.pf-lock body{ overflow:hidden !important; }
+</style>
+<script id="mobile-fix-v1-js">
+(function(){
+  var mq = window.matchMedia('(max-width:820px)');
+
+  // زر «رجوع» داخل ترويسة الحساب الشخصي
+  function addBack(){
+    var h = document.querySelector('#profileModal .profile-header');
+    if(!h || h.querySelector('.pf-back')) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'pf-back'; b.textContent = '→ رجوع';
+    b.onclick = function(){ window.closeProfile(); };
+    h.insertBefore(b, h.firstChild);
+  }
+  addBack();
+
+  var _open  = window.openProfile;
+  var _close = window.closeProfile;
+
+  window.openProfile = function(){
+    _open.apply(this, arguments);
+    if(mq.matches){
+      document.documentElement.classList.add('pf-lock');
+      try{ history.pushState({pf:1}, ''); }catch(e){}   // زر الرجوع في الهاتف يغلق الصفحة
+    }
+  };
+
+  window.closeProfile = function(){
+    if(mq.matches && history.state && history.state.pf){ history.back(); return; }
+    _close.apply(this, arguments);
+    document.documentElement.classList.remove('pf-lock');
+  };
+
+  window.addEventListener('popstate', function(){
+    var m = document.getElementById('profileModal');
+    if(m && m.classList.contains('open')){
+      _close();
+      document.documentElement.classList.remove('pf-lock');
+    }
+  });
+})();
+</script>
+
 </body></html>
