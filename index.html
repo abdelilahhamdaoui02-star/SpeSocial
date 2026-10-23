@@ -5696,7 +5696,7 @@ function mkGate(o) {
       } else if (a === 'edit') { const r = arr().find(x => String(x.id) === id); if (!r) return; editId = id; o.fields.forEach(f => val(f.k).value = r[f.k] || ''); root.scrollIntoView({ behavior: 'smooth' }); }
       else if (a === 'del') { if (!confirm('حذف هذا السجل؟')) return; appData[o.key] = arr().filter(x => String(x.id) !== id); await saveUserKey(o.key); draw(); o.after && o.after(); }
       else if (a === 'prt') pgPrintReport(o.print, o.fields, arr().filter(r => !q || JSON.stringify(r).indexOf(q) !== -1));
-      else if (a === 'exp') { const ws = XLSX.utils.json_to_sheet(arr().map(r => Object.fromEntries(o.fields.map(f => [f.l, r[f.k] || ''])))); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'سجل'); XLSX.writeFile(wb, o.file + '.xlsx'); }
+      else if (a === 'exp') pgExportXlsx(o, arr().filter(r => !q || JSON.stringify(r).indexOf(q) !== -1));
     };
     root.oninput = e => { if (e.target.dataset.a === 'q') { q = e.target.value.trim(); draw(); } };
     root.onchange = e => { if (e.target.dataset.a !== 'file' || !e.target.files[0]) return; const fr = new FileReader(); fr.onload = async () => {
@@ -5740,6 +5740,33 @@ function initFollowup() {
   _pg.fu.refresh();
 }
 
+
+async function pgExportXlsx(o, rows) {
+  const F = o.fields, n = F.length + 1, title = o.print || o.file;
+  const sub = getDirectorate() + ' — ' + ((userProfile && userProfile.institution) || '') + ' — ' + new Date().toLocaleDateString('ar-MA');
+  if (!window.ExcelJS) { // احتياطي: تصدير مبسّط باتجاه من اليمين لليسار
+    const ws = XLSX.utils.json_to_sheet(rows.map(r => Object.fromEntries(F.map(f => [f.l, r[f.k] || '']))));
+    ws['!cols'] = F.map(() => ({ wch: 22 })); const wb = XLSX.utils.book_new(); wb.Workbook = { Views: [{ RTL: true }] };
+    XLSX.utils.book_append_sheet(wb, ws, 'السجل'); XLSX.writeFile(wb, o.file + '.xlsx'); return;
+  }
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('السجل', { views: [{ rightToLeft: true, state: 'frozen', ySplit: 3 }], pageSetup: { paperSize: 9, orientation: 'landscape', fitToPage: true, fitToWidth: 1, fitToHeight: 0 } });
+  const thin = { style: 'thin', color: { argb: 'FF94A3B8' } }, bd = { top: thin, left: thin, bottom: thin, right: thin };
+  ws.mergeCells(1, 1, 1, n); const t = ws.getCell(1, 1); t.value = title; t.font = { name: 'Arial', size: 15, bold: true, color: { argb: 'FF1A3A5C' } }; t.alignment = { horizontal: 'center', vertical: 'middle' }; ws.getRow(1).height = 28;
+  ws.mergeCells(2, 1, 2, n); const u = ws.getCell(2, 1); u.value = sub; u.font = { name: 'Arial', size: 10, color: { argb: 'FF64748B' } }; u.alignment = { horizontal: 'center' };
+  const hr = ws.getRow(3); hr.height = 24;
+  ['#'].concat(F.map(f => f.l)).forEach((h, i) => { const c = hr.getCell(i + 1); c.value = h; c.font = { name: 'Arial', bold: true, color: { argb: 'FFFFFFFF' } }; c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1A3A5C' } }; c.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }; c.border = bd; });
+  rows.forEach((r, i) => {
+    const row = ws.addRow([i + 1].concat(F.map(f => String(r[f.k] || ''))));
+    row.eachCell({ includeEmpty: true }, (c, ci) => { c.font = { name: 'Arial', size: 11 }; c.border = bd; c.numFmt = '@'; c.alignment = { horizontal: ci === 1 ? 'center' : 'right', vertical: 'top', wrapText: true, readingOrder: 'rtl' }; if (i % 2) c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } }; });
+  });
+  ws.getColumn(1).width = 5;
+  F.forEach((f, i) => { const mx = Math.max(f.l.length, ...rows.map(r => String(r[f.k] || '').length)); ws.getColumn(i + 2).width = Math.min(Math.max(mx + 4, 12), f.t === 'area' ? 48 : 30); });
+  ws.autoFilter = { from: { row: 3, column: 1 }, to: { row: 3, column: n } };
+  const buf = await wb.xlsx.writeBuffer();
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+  a.download = o.file + '.xlsx'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+}
 function pgPrintReport(title, fields, rows) {
   const th = 'padding:6px 8px;text-align:right;border:1px solid #0f2a4a;background:#1a3a5c;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;';
   const td = 'padding:5px 8px;border:1px solid #cbd5e1;vertical-align:top;';
@@ -11206,6 +11233,7 @@ function exportAbArchiveCSV() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <!-- SheetJS for Excel export/import -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 
 <script>
 // ======= TASK LOG (TOOL 3) =======
