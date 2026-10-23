@@ -71,6 +71,11 @@
   .chk input { width: auto; }
   .hint { font-size: .74rem; color: var(--muted); margin-top: 3px; }
   .empty { text-align: center; color: var(--muted); padding: 22px 0; font-size: .86rem; }
+  .nw-hr { border: none; border-top: 1px dashed var(--border); margin: 22px 0 16px; }
+  .nw-c { display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px; margin-top: 8px; background: #f8fafc; }
+  .nw-c b { display: block; font-size: .86rem; line-height: 1.6; } .nw-c small { color: var(--muted); font-size: .74rem; }
+  .nw-c a { color: var(--primary-light); font-size: .74rem; }
+  button.btn.ic { padding: 4px 9px; font-size: .74rem; }
 </style>
 </head>
 <body>
@@ -127,6 +132,47 @@
         <button class="btn gray" onclick="stopNotice()">⏹ إيقاف الظهور</button>
       </div>
       <div class="msg" id="sMsg"></div>
+    </div>
+
+    <div class="card" id="nwCard">
+      <h2>📰 أخبار وقوانين المختصين (تظهر في الصفحة الرئيسية)</h2>
+      <div class="row">
+        <div class="field"><label>النوع</label>
+          <select id="nwType"><option value="news">📰 خبر</option><option value="law">⚖️ قانون / نص مؤطِّر</option><option value="circ">📄 مذكرة / تعميم</option></select></div>
+        <div class="field"><label>العنوان</label><input type="text" id="nwTitle" placeholder="مثال: مذكرة وزارية حول مراقبة التغيبات"></div>
+      </div>
+      <div class="field"><label>ملخص (اختياري)</label><textarea id="nwText" style="min-height:70px" placeholder="سطر أو سطران يلخصان الخبر أو النص القانوني..."></textarea></div>
+      <div class="row">
+        <div class="field"><label>رابط المصدر (اختياري)</label><input type="text" id="nwUrl" class="ltr" placeholder="https://..."></div>
+        <div class="field"><label>الجهة / المصدر (اختياري)</label><input type="text" id="nwSource" placeholder="مثال: وزارة التربية الوطنية"></div>
+      </div>
+      <label class="chk"><input type="checkbox" id="nwPin"> 📌 تثبيت في أعلى القائمة</label>
+      <div class="actions">
+        <button class="btn" id="nwAddBtn" onclick="nwSave()">💾 نشر</button>
+        <button class="btn gray hidden" id="nwCancel" onclick="nwReset()">إلغاء التعديل</button>
+      </div>
+      <div class="msg" id="nwMsg"></div>
+      <div class="table-scroll"><table>
+        <thead><tr><th>#</th><th>النوع</th><th>العنوان</th><th>التاريخ</th><th>إجراءات</th></tr></thead>
+        <tbody id="nwBody"></tbody>
+      </table></div>
+
+      <hr class="nw-hr">
+      <h2>🌐 أخبار Google (جلب ثم مراجعة واعتماد)</h2>
+      <div class="field"><label>الكلمات المفتاحية <span class="sub">(كلمة أو عبارة في كل سطر، حتى 8)</span></label>
+        <textarea id="nwKeywords" style="min-height:80px" placeholder="التوجيه المدرسي&#10;الإرشاد النفسي بالمدرسة&#10;وزارة التربية الوطنية مذكرة"></textarea></div>
+      <div class="row">
+        <div class="field"><label>عدد الأخبار لكل كلمة (1–10)</label><input type="text" id="nwCount" class="ltr" value="5"></div>
+        <div class="field"><label>عنوان وسيط مخصص (اختياري)</label><input type="text" id="nwProxy" class="ltr" placeholder="https://my-worker.workers.dev/?url=">
+          <div class="hint">يُجرَّب أولاً إن وُجد، ثم وسطاء عامون. لا تنشر هنا أي مفاتيح سرية.</div></div>
+      </div>
+      <div class="actions">
+        <button class="btn" id="nwFetchBtn" onclick="nwFetch()">🔎 جلب الأخبار الآن</button>
+        <button class="btn gray" id="nwKwBtn" onclick="nwSaveKw()">💾 حفظ الإعدادات</button>
+        <button class="btn amber hidden" id="nwAllBtn" onclick="nwApproveAll()">✅ اعتماد الكل</button>
+      </div>
+      <div class="msg" id="nwKwMsg"></div>
+      <div id="nwCands"></div>
     </div>
 
     <div class="card">
@@ -307,6 +353,7 @@
     $('sTitle').value = n.title || ''; $('sText').value = n.text || ''; $('sLevel').value = n.level || 'info';
     $('mName').value = siteCfg.ministry || MIN_DEFAULT; $('pName').value = siteCfg.platform || '';
     GATES.forEach(function (g) { $('g_' + g[0]).value = (siteCfg.gates || {})[g[0]] || ''; });
+    try { nwInit(); } catch (e) {}
     if (n.on) say('sMsg', '🟢 الميزاجور ظاهر حاليًا للمستخدمين.', 'ok');
   }
   async function saveSite(msgId, btnId, okText) {
@@ -335,6 +382,154 @@
     siteCfg.ministry = (m && m !== MIN_DEFAULT) ? m : ''; siteCfg.platform = $('pName').value.trim(); siteCfg.gates = g;
     saveSite('nmMsg', 'nmBtn', '✅ تم حفظ الأسماء — تظهر عند فتح المنصة أو تحديثها.');
   };
+
+  // ── أخبار وقوانين المختصين ──
+  var NW_TYPES = { news: '📰 خبر', law: '⚖️ قانون', circ: '📄 مذكرة', google: '🌐 Google' };
+  var NW_MAX = 80, NW_GOOGLE_MAX = 40, nwEditId = null, nwCands = [];
+  function nwData() {
+    if (!siteCfg.news || typeof siteCfg.news !== 'object') siteCfg.news = {};
+    var n = siteCfg.news;
+    if (!Array.isArray(n.items)) n.items = [];
+    if (!Array.isArray(n.keywords)) n.keywords = [];
+    return n;
+  }
+  function nwUrl(u) { u = (u || '').trim(); return /^https?:\/\//i.test(u) ? u : ''; }
+  function nwInit() {
+    var n = nwData();
+    $('nwKeywords').value = n.keywords.join('\n'); $('nwCount').value = n.perKeyword || 5; $('nwProxy').value = n.proxy || '';
+    nwRender();
+  }
+  function nwRender() {
+    var n = nwData(), tb = $('nwBody'); tb.innerHTML = '';
+    if (!n.items.length) { tb.innerHTML = '<tr><td colspan="5" class="empty">لا توجد عناصر منشورة.</td></tr>'; return; }
+    n.items.forEach(function (it, i) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td></td><td></td><td></td><td></td><td><div class="actions"></div></td>';
+      tr.children[0].textContent = i + 1;
+      tr.children[1].textContent = (it.pinned ? '📌 ' : '') + (NW_TYPES[it.type] || NW_TYPES.news);
+      tr.children[2].textContent = it.title || ''; tr.children[2].style.fontWeight = '700';
+      tr.children[3].textContent = it.date || '—';
+      var a = tr.querySelector('.actions');
+      function mk(txt, cls, fn, title) { var b = document.createElement('button'); b.className = 'btn ic ' + cls; b.textContent = txt; b.title = title || ''; b.onclick = fn; a.appendChild(b); }
+      mk('↑', 'gray', function () { nwMove(i, -1); }, 'تقديم'); mk('↓', 'gray', function () { nwMove(i, 1); }, 'تأخير');
+      mk('📌', it.pinned ? 'amber' : 'gray', function () { it.pinned = !it.pinned; nwPersist('✅ تم تحديث التثبيت.'); }, 'تثبيت');
+      if (it.type !== 'google') mk('✏️', 'gray', function () { nwEdit(it); }, 'تعديل');
+      mk('🗑', 'red', function () { if (confirm('حذف هذا العنصر؟')) { n.items.splice(i, 1); nwPersist('✅ تم الحذف.'); } }, 'حذف');
+      tb.appendChild(tr);
+    });
+  }
+  function nwPersist(okText) { nwRender(); saveSite('nwMsg', 'nwAddBtn', okText); }
+  function nwMove(i, d) {
+    var arr = nwData().items, j = i + d; if (j < 0 || j >= arr.length) return;
+    var x = arr[i]; arr[i] = arr[j]; arr[j] = x; nwPersist('✅ تم تغيير الترتيب.');
+  }
+  window.nwReset = function () {
+    nwEditId = null; ['nwTitle', 'nwText', 'nwUrl', 'nwSource'].forEach(function (k) { $(k).value = ''; });
+    $('nwType').value = 'news'; $('nwPin').checked = false; $('nwCancel').classList.add('hidden'); $('nwAddBtn').textContent = '💾 نشر';
+  };
+  function nwEdit(it) {
+    nwEditId = it.id; $('nwType').value = it.type || 'news'; $('nwTitle').value = it.title || ''; $('nwText').value = it.text || '';
+    $('nwUrl').value = it.url || ''; $('nwSource').value = it.source || ''; $('nwPin').checked = !!it.pinned;
+    $('nwCancel').classList.remove('hidden'); $('nwAddBtn').textContent = '💾 حفظ التعديل'; $('nwTitle').focus();
+    $('nwCard').scrollIntoView({ behavior: 'smooth' });
+  }
+  window.nwSave = function () {
+    var title = $('nwTitle').value.trim(); if (!title) return say('nwMsg', '⚠️ العنوان إجباري.', 'err');
+    var url = $('nwUrl').value.trim(); if (url && !nwUrl(url)) return say('nwMsg', '⚠️ الرابط يجب أن يبدأ بـ http:// أو https://', 'err');
+    var n = nwData(), data = { type: $('nwType').value, title: title, text: $('nwText').value.trim(), url: url, source: $('nwSource').value.trim(), pinned: $('nwPin').checked };
+    if (nwEditId) {
+      var it = n.items.filter(function (x) { return x.id === nwEditId; })[0];
+      if (it) Object.assign(it, data);
+    } else {
+      if (n.items.length >= NW_MAX) return say('nwMsg', '⚠️ بلغت الحد الأقصى (' + NW_MAX + ' عنصرًا). احذف بعض العناصر القديمة.', 'err');
+      data.id = 'n' + Date.now(); data.date = new Date().toLocaleDateString('ar-MA'); n.items.unshift(data);
+    }
+    var wasEdit = !!nwEditId; window.nwReset(); nwPersist(wasEdit ? '✅ تم حفظ التعديل.' : '✅ تم النشر — يظهر في الصفحة الرئيسية للمستخدمين.');
+  };
+  window.nwSaveKw = function () {
+    var n = nwData();
+    n.keywords = $('nwKeywords').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, 8);
+    var c = parseInt($('nwCount').value, 10); n.perKeyword = (c >= 1 && c <= 10) ? c : 5; $('nwCount').value = n.perKeyword;
+    var px = $('nwProxy').value.trim(); if (px && !nwUrl(px)) return say('nwKwMsg', '⚠️ عنوان الوسيط يجب أن يبدأ بـ https://', 'err');
+    n.proxy = px; saveSite('nwKwMsg', 'nwKwBtn', '✅ تم حفظ إعدادات أخبار Google.');
+  };
+
+  // جلب RSS عبر وسطاء (المتصفح لا يستطيع طلب Google News مباشرة بسبب CORS)
+  async function nwGet(url) {
+    var ctrl = new AbortController(), tm = setTimeout(function () { ctrl.abort(); }, 12000);
+    try { var r = await fetch(url, { signal: ctrl.signal }); if (!r.ok) throw new Error('HTTP ' + r.status); return await r.text(); }
+    finally { clearTimeout(tm); }
+  }
+  function nwParse(xml) {
+    var d = new DOMParser().parseFromString(xml, 'text/xml');
+    if (d.querySelector('parsererror')) throw new Error('XML');
+    return Array.prototype.map.call(d.querySelectorAll('item'), function (it) {
+      var g = function (s) { var e = it.querySelector(s); return e ? e.textContent.trim() : ''; };
+      var title = g('title'), src = g('source');
+      if (src && title.slice(-(src.length + 3)) === ' - ' + src) title = title.slice(0, -(src.length + 3));
+      return { title: title, url: g('link'), source: src, pub: g('pubDate') };
+    }).filter(function (x) { return x.title && nwUrl(x.url); });
+  }
+  async function nwFetchRss(kw) {
+    var rss = 'https://news.google.com/rss/search?q=' + encodeURIComponent(kw) + '&hl=ar&gl=MA&ceid=MA:ar';
+    var px = ($('nwProxy').value || '').trim(), tries = [];
+    if (nwUrl(px)) tries.push(px + encodeURIComponent(rss));
+    tries.push('https://api.allorigins.win/raw?url=' + encodeURIComponent(rss));
+    tries.push('https://corsproxy.io/?' + encodeURIComponent(rss));
+    for (var i = 0; i < tries.length; i++) {
+      try { var list = nwParse(await nwGet(tries[i])); if (list.length) return list; } catch (e) {}
+    }
+    try {
+      var j = JSON.parse(await nwGet('https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rss)));
+      if (j.items && j.items.length) return j.items.map(function (x) { return { title: x.title, url: x.link, source: (x.author || ''), pub: x.pubDate }; }).filter(function (x) { return nwUrl(x.url); });
+    } catch (e) {}
+    throw new Error('تعذّر جلب «' + kw + '» — جرّب لاحقًا أو أضف وسيطًا مخصصًا.');
+  }
+  window.nwFetch = async function () {
+    var kws = $('nwKeywords').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, 8);
+    if (!kws.length) return say('nwKwMsg', '⚠️ أضف كلمة مفتاحية واحدة على الأقل.', 'err');
+    var per = Math.min(10, Math.max(1, parseInt($('nwCount').value, 10) || 5)), n = nwData(), errs = [];
+    $('nwFetchBtn').disabled = true; nwCands = []; nwRenderCands(); say('nwKwMsg', '⏳ جارٍ جلب الأخبار...', '');
+    var seen = {}; n.items.forEach(function (x) { seen[(x.title || '').trim()] = 1; if (x.url) seen[x.url] = 1; });
+    for (var i = 0; i < kws.length; i++) {
+      try {
+        (await nwFetchRss(kws[i])).slice(0, per).forEach(function (x) {
+          if (seen[x.title] || seen[x.url]) return; seen[x.title] = seen[x.url] = 1;
+          var ds = ''; try { if (x.pub) ds = new Date(x.pub).toLocaleDateString('ar-MA'); } catch (e) {}
+          nwCands.push({ title: x.title, url: x.url, source: x.source, date: ds, kw: kws[i] });
+        });
+      } catch (e) { errs.push(e.message); }
+    }
+    $('nwFetchBtn').disabled = false; nwRenderCands();
+    say('nwKwMsg', (nwCands.length ? '✅ تم جلب ' + nwCands.length + ' خبرًا جديدًا — اعتمد ما يناسب المختصين.' : 'لا توجد أخبار جديدة.') + (errs.length ? ' ⚠️ ' + errs.join(' | ') : ''), errs.length && !nwCands.length ? 'err' : (errs.length ? 'warn' : 'ok'));
+  };
+  function nwRenderCands() {
+    var box = $('nwCands'); box.innerHTML = ''; $('nwAllBtn').classList.toggle('hidden', !nwCands.length);
+    nwCands.forEach(function (c, i) {
+      var d = document.createElement('div'); d.className = 'nw-c';
+      d.innerHTML = '<div><b></b><small></small> <a target="_blank" rel="noopener noreferrer">فتح الخبر ↗</a></div><div class="actions"></div>';
+      d.querySelector('b').textContent = c.title;
+      d.querySelector('small').textContent = [c.source, c.date, '🔎 ' + c.kw].filter(Boolean).join(' · ');
+      d.querySelector('a').href = c.url;
+      var a = d.querySelector('.actions');
+      var ok = document.createElement('button'); ok.className = 'btn sm'; ok.textContent = '✅ اعتماد'; ok.onclick = function () { nwApprove([c]); };
+      var no = document.createElement('button'); no.className = 'btn sm gray'; no.textContent = 'تجاهل';
+      no.onclick = function () { nwCands.splice(nwCands.indexOf(c), 1); nwRenderCands(); };
+      a.appendChild(ok); a.appendChild(no); box.appendChild(d);
+    });
+  }
+  function nwApprove(list) {
+    var n = nwData(), now = Date.now();
+    list.forEach(function (c, k) {
+      n.items.unshift({ id: 'g' + (now + k), type: 'google', title: c.title, text: '', url: c.url, source: c.source || 'Google News', date: c.date || new Date().toLocaleDateString('ar-MA'), pinned: false });
+      nwCands.splice(nwCands.indexOf(c), 1);
+    });
+    // الحد الأقصى لأخبار Google والإجمالي: يُحذف الأقدم
+    var g = 0; n.items = n.items.filter(function (x) { if (x.type !== 'google') return true; g++; return g <= NW_GOOGLE_MAX; });
+    if (n.items.length > NW_MAX) n.items.length = NW_MAX;
+    nwRenderCands(); nwPersist('✅ تم اعتماد ' + list.length + ' — يظهر في تبويب «أخبار Google» بالصفحة الرئيسية.');
+  }
+  window.nwApproveAll = function () { if (nwCands.length) nwApprove(nwCands.slice()); };
 
   // ── دخول الأدمين ──
   async function enterPanel() {
