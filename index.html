@@ -2949,21 +2949,21 @@ body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
 @media print {
   /* هوامش @page صفرية = يختفي التاريخ والعنوان ورابط الملف ورقم الصفحة؛ الهوامش الفعلية تُطبَّق بالحشو أسفله */
   @page i-report { size: A4 portrait; margin: 0; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal).open { page: i-report; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open { page: i-report; }
   html.i-print-mode, html.i-print-mode body { width: auto !important; max-width: none !important; }
   html.i-print-mode .page-wrapper { width: 100% !important; max-width: 100% !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal).open .modal-box { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal).open .modal-body { width: 100% !important; margin: 0 auto !important; padding: 16mm 18mm 18mm !important; box-sizing: border-box !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .new-report-header { margin-bottom: 10px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .report-section-title { font-size: .72rem !important; margin: 10px 0 5px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .info-table-report { font-size: .68rem !important; margin-bottom: 8px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .info-table-report td { font-size: .68rem !important; padding: 4px 8px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .proc-table-report { font-size: .66rem !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .proc-table-report th { font-size: .68rem !important; padding: 5px 8px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .proc-table-report td { font-size: .66rem !important; padding: 4px 8px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .proc-table-report tr { break-inside: avoid; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .report-summary-block { font-size: .7rem !important; line-height: 1.75 !important; padding: 6px 10px !important; margin-bottom: 8px !important; }
-  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal) .signatures { margin-top: 18px !important; break-inside: avoid; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open .modal-box { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open .modal-body { width: 100% !important; margin: 0 auto !important; padding: 16mm 18mm 18mm !important; box-sizing: border-box !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .new-report-header { margin-bottom: 10px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .report-section-title { font-size: .72rem !important; margin: 10px 0 5px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .info-table-report { font-size: .68rem !important; margin-bottom: 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .info-table-report td { font-size: .68rem !important; padding: 4px 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report { font-size: .66rem !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report th { font-size: .68rem !important; padding: 5px 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report td { font-size: .66rem !important; padding: 4px 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report tr { break-inside: avoid; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .report-summary-block { font-size: .7rem !important; line-height: 1.75 !important; padding: 6px 10px !important; margin-bottom: 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .signatures { margin-top: 18px !important; break-inside: avoid; }
 }
 /* متصفحات لا تدعم الصفحات المسمّاة: هوامش عبر الحشو */
 
@@ -4785,7 +4785,7 @@ function iRestoreProcRows(rows) {
 // الطباعة: وضع خاص بتقرير المقابلة (هوامش + تمركز)
 var __origDocTitle = null;
 window.addEventListener('beforeprint', function () {
-  if (document.querySelector('#interviewPrintModal.open, #snPrintModal.open, #reintegrationPrintModal.open, #absencePrintModal.open, #vioPrintModal.open, #wsPrintModal.open, #pdPrintModal.open')) {
+  if (document.querySelector('#interviewPrintModal.open, #snPrintModal.open, #reintegrationPrintModal.open, #absencePrintModal.open, #vioPrintModal.open, #wsPrintModal.open, #pdPrintModal.open, #pgPrintModal.open')) {
     document.documentElement.classList.add('i-print-mode');
     if (__origDocTitle === null) __origDocTitle = document.title;
     document.title = ' ';
@@ -5682,7 +5682,7 @@ function mkGate(o) {
     root.querySelector('tbody').innerHTML = rows.length ? rows.map((r, i) => '<tr><td>' + (i + 1) + '</td>' + o.fields.map(f => '<td>' + cell(f, r) + '</td>').join('') + '<td style="white-space:nowrap"><button class="pg-btn sm" data-a="edit" data-id="' + r.id + '">✏️</button> <button class="pg-btn sm red" data-a="del" data-id="' + r.id + '">🗑</button></td></tr>').join('') : '<tr><td colspan="' + (o.fields.length + 2) + '" style="text-align:center;color:var(--text-muted)">لا توجد سجلات.</td></tr>';
   }
   function build() {
-    root.innerHTML = '<div class="pg-card"><h3>' + o.title + '</h3><div class="pg-grid">' + o.fields.map(f => '<div class="pg-f' + (f.wide ? ' wide' : '') + '"><label>' + f.l + '</label>' + (f.opts ? '<select data-k="' + f.k + '">' + f.opts.map(x => '<option>' + x + '</option>').join('') + '</select>' : f.t === 'area' ? '<textarea rows="2" data-k="' + f.k + '"></textarea>' : '<input type="' + (f.t || 'text') + '" id="' + o.box + '_' + f.k + '" data-k="' + f.k + '">') + '</div>').join('') + '</div><div class="pg-act"><button class="pg-btn" data-a="save">💾 حفظ</button><button class="pg-btn gray" data-a="reset">إلغاء</button>' + (o.imp ? '<button class="pg-btn green" data-a="imp">📥 استيراد أرقام من Excel</button><input type="file" hidden accept=".xlsx,.xls,.csv" data-a="file">' : '') + '<button class="pg-btn gray" data-a="exp">📤 تصدير Excel</button><input class="pg-q" placeholder="🔍 بحث..." data-a="q"></div></div><div class="pg-card"><div class="pg-scroll"><table class="pg-tbl"><thead><tr><th>#</th>' + o.fields.map(f => '<th>' + f.l + '</th>').join('') + '<th></th></tr></thead><tbody></tbody></table></div></div>';
+    root.innerHTML = '<div class="pg-card"><h3>' + o.title + '</h3><div class="pg-grid">' + o.fields.map(f => '<div class="pg-f' + (f.wide ? ' wide' : '') + '"><label>' + f.l + '</label>' + (f.opts ? '<select data-k="' + f.k + '">' + f.opts.map(x => '<option>' + x + '</option>').join('') + '</select>' : f.t === 'area' ? '<textarea rows="2" data-k="' + f.k + '"></textarea>' : '<input type="' + (f.t || 'text') + '" id="' + o.box + '_' + f.k + '" data-k="' + f.k + '">') + '</div>').join('') + '</div><div class="pg-act"><button class="pg-btn" data-a="save">💾 حفظ</button><button class="pg-btn gray" data-a="reset">إلغاء</button>' + (o.imp ? '<button class="pg-btn green" data-a="imp">📥 استيراد أرقام من Excel</button><input type="file" hidden accept=".xlsx,.xls,.csv" data-a="file">' : '') + '<button class="pg-btn gray" data-a="exp">📤 تصدير Excel</button>' + (o.print ? '<button class="pg-btn" data-a="prt">🖨️ معاينة وطباعة</button>' : '') + '<input class="pg-q" placeholder="🔍 بحث..." data-a="q"></div></div><div class="pg-card"><div class="pg-scroll"><table class="pg-tbl"><thead><tr><th>#</th>' + o.fields.map(f => '<th>' + f.l + '</th>').join('') + '<th></th></tr></thead><tbody></tbody></table></div></div>';
     reset();
     root.onclick = async e => {
       const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, id = b.dataset.id;
@@ -5695,6 +5695,7 @@ function mkGate(o) {
         await saveUserKey(o.key); reset(); draw(); o.after && o.after();
       } else if (a === 'edit') { const r = arr().find(x => String(x.id) === id); if (!r) return; editId = id; o.fields.forEach(f => val(f.k).value = r[f.k] || ''); root.scrollIntoView({ behavior: 'smooth' }); }
       else if (a === 'del') { if (!confirm('حذف هذا السجل؟')) return; appData[o.key] = arr().filter(x => String(x.id) !== id); await saveUserKey(o.key); draw(); o.after && o.after(); }
+      else if (a === 'prt') pgPrintReport(o.print, o.fields, arr().filter(r => !q || JSON.stringify(r).indexOf(q) !== -1));
       else if (a === 'exp') { const ws = XLSX.utils.json_to_sheet(arr().map(r => Object.fromEntries(o.fields.map(f => [f.l, r[f.k] || ''])))); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'سجل'); XLSX.writeFile(wb, o.file + '.xlsx'); }
     };
     root.oninput = e => { if (e.target.dataset.a === 'q') { q = e.target.value.trim(); draw(); } };
@@ -5722,10 +5723,10 @@ const _pg = {};
 const _RES = ['لم يتم الاتصال بعد', 'تم الرد', 'لم يرد', 'رقم خاطئ / خارج الخدمة', 'طلب معاودة الاتصال', 'وعد بالحضور'];
 function initParents() {
   if (!_pg.calls) {
-    _pg.calls = mkGate({ box: 'pgCalls', key: 'parentCalls', req: 'name', ac: { nameId: 'pgCalls_name', massarId: 'pgCalls_massar' }, imp: 1, file: 'الاتصال-بالأولياء', title: '📞 سجل الاتصال الهاتفي بأولياء الأمور', fields: [
+    _pg.calls = mkGate({ box: 'pgCalls', key: 'parentCalls', req: 'name', ac: { nameId: 'pgCalls_name', massarId: 'pgCalls_massar' }, imp: 1, file: 'الاتصال-بالأولياء', print: 'سجل الاتصال الهاتفي بأولياء الأمور', title: '📞 سجل الاتصال الهاتفي بأولياء الأمور', fields: [
       { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'phone', l: 'هاتف ولي الأمر', t: 'tel' }, { k: 'time', l: 'وقت الاتصال', t: 'time' },
       { k: 'result', l: 'نتيجة الاتصال', opts: _RES }, { k: 'date', l: 'تاريخ الاتصال', t: 'date' }, { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 }] });
-    _pg.meet = mkGate({ box: 'pgMeet', key: 'parentMeetings', req: 'student', ac: { nameId: 'pgMeet_student', levelId: 'pgMeet_cls' }, file: 'مقابلات-الأولياء', title: '🤝 مقابلة مع ولي أمر', fields: [
+    _pg.meet = mkGate({ box: 'pgMeet', key: 'parentMeetings', req: 'student', ac: { nameId: 'pgMeet_student', levelId: 'pgMeet_cls' }, file: 'مقابلات-الأولياء', print: 'سجل مقابلات أولياء الأمور', title: '🤝 مقابلة مع ولي أمر', fields: [
       { k: 'student', l: 'الاسم الكامل للتلميذ' }, { k: 'cls', l: 'القسم' }, { k: 'parent', l: 'الاسم الكامل لولي الأمر' }, { k: 'cin', l: 'رقم البطاقة الوطنية' },
       { k: 'job', l: 'المهنة' }, { k: 'date', l: 'تاريخ المقابلة', t: 'date' }, { k: 'subject', l: 'موضوع المقابلة', t: 'area', wide: 1 }] });
   }
@@ -5733,11 +5734,27 @@ function initParents() {
 }
 function pgTab(n, btn) { btn.parentNode.querySelectorAll('button').forEach(b => b.classList.remove('on')); btn.classList.add('on'); document.getElementById('pgCalls').style.display = n ? 'none' : ''; document.getElementById('pgMeet').style.display = n ? '' : 'none'; }
 function initFollowup() {
-  if (!_pg.fu) _pg.fu = mkGate({ box: 'pgFu', key: 'followUp', req: 'name', ac: { nameId: 'pgFu_name', massarId: 'pgFu_massar', levelId: 'pgFu_cls' }, file: 'سجل-المتابعة', after: updateFollowBadge, title: '🔔 تتبع الحالات', fields: [
+  if (!_pg.fu) _pg.fu = mkGate({ box: 'pgFu', key: 'followUp', req: 'name', ac: { nameId: 'pgFu_name', massarId: 'pgFu_massar', levelId: 'pgFu_cls' }, file: 'سجل-المتابعة', print: 'سجل المتابعة وتتبع الحالات', after: updateFollowBadge, title: '🔔 تتبع الحالات', fields: [
     { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'cls', l: 'القسم' }, { k: 'status', l: 'الحالة', opts: ['قيد المتابعة', 'تعثر / يستدعي تدخلًا', 'تحسن', 'تمت المعالجة'], badge: 1 },
     { k: 'date', l: 'تاريخ المتابعة', t: 'date' }, { k: 'note', l: 'ملاحظة المتابعة', t: 'area', wide: 1 }] });
   _pg.fu.refresh();
 }
+
+function pgPrintReport(title, fields, rows) {
+  const th = 'padding:6px 8px;text-align:right;border:1px solid #0f2a4a;background:#1a3a5c;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;';
+  const td = 'padding:5px 8px;border:1px solid #cbd5e1;vertical-align:top;';
+  const body = rows.length ? rows.map((r, i) => '<tr><td style="' + td + 'text-align:center;">' + (i + 1) + '</td>' + fields.map(f => '<td style="' + td + '">' + (iEsc(r[f.k]) || '—') + '</td>').join('') + '</tr>').join('') : '<tr><td colspan="' + (fields.length + 1) + '" style="' + td + 'text-align:center;">لا توجد سجلات.</td></tr>';
+  document.getElementById('pgReportContent').innerHTML =
+    '<div class="new-report-header"><div class="nrh-logo"><img id="ministry-logo-img" src="" alt="شعار الوزارة" style="width:120px;height:120px;object-fit:contain;display:block;background:white;"></div>' +
+    '<div class="nrh-dir">' + iEsc(getDirectorate()) + '</div><div class="nrh-school">' + iEsc((userProfile && userProfile.institution) || 'المؤسسة التعليمية') + '</div><div class="nrh-title">' + iEsc(title) + '</div></div>' +
+    '<div class="report-section-title">عدد السجلات: ' + rows.length + ' — بتاريخ ' + new Date().toLocaleDateString('ar-MA') + '</div>' +
+    '<table class="proc-table-report" style="width:100%;border-collapse:collapse;font-size:0.8rem;font-family:\'Cairo\',sans-serif;"><thead><tr><th style="' + th + 'text-align:center;width:4%;">#</th>' + fields.map(f => '<th style="' + th + '">' + f.l + '</th>').join('') + '</tr></thead><tbody>' + body + '</tbody></table>' +
+    '<div class="signatures"><div class="sig-block"><div class="sig-line"></div>المختص الاجتماعي</div><div class="sig-block"><div class="sig-line"></div>مدير المؤسسة</div></div>';
+  const t = document.getElementById('pgPrintTitle'); t.textContent = '📄 ' + title; t.dataset.f = title.replace(/\s+/g, '_');
+  document.getElementById('pgPrintModal').classList.add('open');
+  document.querySelectorAll('#ministry-logo-img').forEach(img => { if (typeof MINISTRY_LOGO_B64 !== 'undefined' && MINISTRY_LOGO_B64) img.src = MINISTRY_LOGO_B64; });
+}
+function pgClosePrint() { document.getElementById('pgPrintModal').classList.remove('open'); }
 function updateFollowBadge() { const n = (appData.followUp || []).filter(r => r.status !== 'تمت المعالجة').length; const b = document.getElementById('fuBadge'); if (b) { b.textContent = n; b.style.display = n ? 'inline-flex' : 'none'; } }
 function applyPhoto() {
   const p = userProfile && userProfile.photo;
@@ -10150,6 +10167,17 @@ function exportRArchiveCSV() {
         <button class="btn btn-outline" onclick="closeAbModal()">إغلاق</button>
         <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>
         <button class="btn btn-success" onclick="exportToWord('abReportContent', 'تقرير_الغياب')" style="background:#1d6f42;color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">📝 تحميل Word</button>
+      </div>
+    </div>
+  </div>
+  <div id="pgPrintModal" class="print-modal">
+    <div class="modal-box">
+      <div class="modal-header"><h3 id="pgPrintTitle">📄 معاينة السجل</h3><button class="modal-close" onclick="pgClosePrint()">✕</button></div>
+      <div class="modal-body" id="pgReportContent"></div>
+      <div class="modal-footer" style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="pgClosePrint()">إغلاق</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>
+        <button class="btn btn-success" onclick="exportToWord('pgReportContent', document.getElementById('pgPrintTitle').dataset.f || 'السجل')" style="background:#1d6f42;color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;">📄 تحميل Word</button>
       </div>
     </div>
   </div>
@@ -18136,7 +18164,7 @@ html body.on-home .hp-btn{ border:1.5px solid var(--bk) !important; }
 @media print{
   html.i-print-mode #toolPrintdocs.active > .main-container,
   html.i-print-mode #toolPrintdocs.active > .pd-no-print{ display:none !important; }
-  html.i-print-mode #toolPrintdocs.active #pdPrintModal.open{ display:block !important; }
+  html.i-print-mode #toolPrintdocs.active #pdPrintModal.open, #pgPrintModal.open{ display:block !important; }
 }
 #pdPrintModal .report-summary-block{ white-space:pre-wrap; }
 #pdPrintModal .pd-proc-list{ margin:0; padding:0 18px 0 0; }
