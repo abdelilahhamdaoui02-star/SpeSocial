@@ -22,6 +22,10 @@
   .sub { color: var(--muted); font-size: .82rem; }
   header { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
   label { display: block; font-size: .82rem; font-weight: 600; margin-bottom: 5px; }
+  textarea, select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: inherit; font-size: .9rem; background: #fff; color: var(--text); }
+  textarea { min-height: 96px; resize: vertical; line-height: 1.7; }
+  .gates { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  @media (max-width: 600px) { .gates { grid-template-columns: 1fr; } }
   input[type=text], input[type=password] {
     width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
     font-family: inherit; font-size: .9rem; background: #fff; color: var(--text);
@@ -110,6 +114,32 @@
     </header>
 
     <div class="card">
+      <h2>📢 ميزاجور (إشعار تحديث يظهر في منصة INDEX)</h2>
+      <div class="row">
+        <div class="field"><label>العنوان</label><input type="text" id="sTitle" placeholder="مثال: تحديث جديد للمنصة"></div>
+        <div class="field"><label>النوع</label>
+          <select id="sLevel"><option value="info">ℹ️ معلومة (أزرق)</option><option value="warn">⚠️ تنبيه (برتقالي)</option><option value="urgent">🚨 عاجل (أحمر)</option></select></div>
+      </div>
+      <div class="field"><label>نص الميزاجور</label><textarea id="sText" placeholder="اكتب هنا ما تريد أن يقرأه المستخدمون في الصفحة الرئيسية..."></textarea>
+        <div class="hint">كل نشر جديد يظهر من جديد حتى لمن أغلق الإشعار السابق.</div></div>
+      <div class="actions">
+        <button class="btn" id="sPub" onclick="publishNotice()">📢 نشر الميزاجور</button>
+        <button class="btn gray" onclick="stopNotice()">⏹ إيقاف الظهور</button>
+      </div>
+      <div class="msg" id="sMsg"></div>
+    </div>
+
+    <div class="card">
+      <h2>🏛 الأسماء الظاهرة في المنصة</h2>
+      <div class="field"><label>اسم الوزارة</label><input type="text" id="mName"></div>
+      <div class="field"><label>اسم المنصة (العنوان تحت اسم المديرية)</label><input type="text" id="pName"></div>
+      <label>أسماء البوابات <span class="sub">(اتركها فارغة لاستعمال الاسم الافتراضي)</span></label>
+      <div class="gates" id="gatesBox"></div>
+      <div class="actions" style="margin-top:14px"><button class="btn" id="nmBtn" onclick="saveNames()">💾 حفظ الأسماء</button></div>
+      <div class="msg" id="nmMsg"></div>
+    </div>
+
+    <div class="card">
       <h2>➕ إنشاء حساب جديد</h2>
       <div class="row">
         <div class="field">
@@ -184,7 +214,7 @@
   var EMAIL_DOMAIN = '@vigilance.app'; // يجب أن يطابق index.html
   var USER_RE = /^[a-z0-9_\-\.]{2,30}$/;
   var RESERVED = ['auth', 'app', 'admin'];
-  var DATA_KEYS = ['interviewArchive','reintegrationArchive','absenceArchive','taskLog','violenceArchive','contactsArchive','workshopsArchive','specialNeedsArchive','vigilanceCases','behaviorFiles','pdAssocArchive','pdHealthArchive','profile','customStudents','abMonthly'];
+  var DATA_KEYS = ['interviewArchive','reintegrationArchive','absenceArchive','taskLog','violenceArchive','contactsArchive','workshopsArchive','specialNeedsArchive','vigilanceCases','behaviorFiles','pdAssocArchive','pdHealthArchive','profile','customStudents','abMonthly','parentCalls','parentMeetings','followUp'];
   function sanitizeKey(k) { return k.replace(/\//g, '__SLASH__').replace(/:/g, '__COLON__').replace(/\s/g, '__SPACE__'); }
 
   var session = { idToken: null, refreshToken: null, uid: null, exp: 0 };
@@ -254,10 +284,62 @@
   }
   function str(v) { return { stringValue: v }; }
 
+
+  // ── إعدادات المنصة: وثيقة site_config/main (حقل json) ──
+  var MIN_DEFAULT = 'وزارة التربية الوطنية والتعليم الأولي والرياضة';
+  var GATES = [['interview','المقابلات الفردية'],['reintegration','الإدماج المدرسي'],['absence','التلاميذ الأكثر غياباً'],['iip','البرنامج التدخلي الفردي'],['tasklog','سجل المهام اليومي'],['stats','الإحصاء البياني'],['casefile','ملف الحالة الشامل'],['violence','حالات العنف'],['workshops','الورشات والأنشطة'],['specialneeds','وضعية الإعاقة'],['vigilance','خلية اليقظة'],['printdocs','الإحالة والإخبار الصحي'],['behavior','رصد السلوك'],['parents','التواصل مع الأولياء'],['followup','المتابعة']];
+  var siteCfg = {};
+  function buildGates() {
+    var box = $('gatesBox'); if (box.children.length) return;
+    GATES.forEach(function (g) {
+      var d = document.createElement('div'); d.innerHTML = '<label></label><input type="text">';
+      d.firstChild.textContent = g[1]; var i = d.lastChild; i.id = 'g_' + g[0]; i.placeholder = g[1]; box.appendChild(d);
+    });
+  }
+  async function loadSite() {
+    buildGates();
+    try {
+      var r = await fs('GET', 'site_config/main');
+      if (r.ok && r.data.fields && r.data.fields.json) siteCfg = JSON.parse(r.data.fields.json.stringValue) || {};
+      else if (r.status !== 404 && !r.ok) throw new Error(errMsg(r));
+    } catch (e) { say('nmMsg', '❌ تعذّر تحميل الإعدادات: ' + (e.message || ''), 'err'); return; }
+    var n = siteCfg.notice || {};
+    $('sTitle').value = n.title || ''; $('sText').value = n.text || ''; $('sLevel').value = n.level || 'info';
+    $('mName').value = siteCfg.ministry || MIN_DEFAULT; $('pName').value = siteCfg.platform || '';
+    GATES.forEach(function (g) { $('g_' + g[0]).value = (siteCfg.gates || {})[g[0]] || ''; });
+    if (n.on) say('sMsg', '🟢 الميزاجور ظاهر حاليًا للمستخدمين.', 'ok');
+  }
+  async function saveSite(msgId, btnId, okText) {
+    $(btnId).disabled = true; say(msgId, '⏳ جارٍ الحفظ...', '');
+    try {
+      var w = await fs('PATCH', 'site_config/main', { fields: { json: str(JSON.stringify(siteCfg)), updatedAt: str(new Date().toISOString()), updatedBy: str(session.uid) } });
+      if (!w.ok) throw new Error(errMsg(w));
+      say(msgId, okText, 'ok');
+    } catch (e) { say(msgId, '❌ ' + (e.message || 'فشل الحفظ') + ' — تأكد من إضافة قاعدة site_config في Firestore Rules.', 'err'); }
+    finally { $(btnId).disabled = false; }
+  }
+  window.publishNotice = function () {
+    var t = $('sTitle').value.trim(), x = $('sText').value.trim();
+    if (!t && !x) return say('sMsg', '⚠️ اكتب عنوانًا أو نصًا.', 'err');
+    var now = new Date();
+    siteCfg.notice = { on: true, id: String(now.getTime()), title: t, text: x, level: $('sLevel').value, date: now.toLocaleDateString('ar-MA') };
+    saveSite('sMsg', 'sPub', '✅ تم نشر الميزاجور — يظهر للمستخدمين عند فتح المنصة.');
+  };
+  window.stopNotice = function () {
+    if (!siteCfg.notice) return say('sMsg', 'لا يوجد ميزاجور منشور.', 'warn');
+    siteCfg.notice.on = false; saveSite('sMsg', 'sPub', '✅ تم إيقاف ظهور الميزاجور.');
+  };
+  window.saveNames = function () {
+    var g = {}; GATES.forEach(function (x) { var v = $('g_' + x[0]).value.trim(); if (v) g[x[0]] = v; });
+    var m = $('mName').value.trim();
+    siteCfg.ministry = (m && m !== MIN_DEFAULT) ? m : ''; siteCfg.platform = $('pName').value.trim(); siteCfg.gates = g;
+    saveSite('nmMsg', 'nmBtn', '✅ تم حفظ الأسماء — تظهر عند فتح المنصة أو تحديثها.');
+  };
+
   // ── دخول الأدمين ──
   async function enterPanel() {
     $('gate').classList.add('hidden'); $('panel').classList.remove('hidden');
-    await window.loadUsers();
+    await window.loadUsers(); await loadSite();
   }
   async function verifyAdmin() {
     var r = await fs('GET', 'admins/' + session.uid);

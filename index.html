@@ -208,6 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       };
 
+      window._siteConfig = { get: async () => { try { const sn = await getDoc(doc(db, 'site_config', 'main')); return sn.exists() ? sn.data() : null; } catch (e) { return null; } } };
       window._firebaseStatus = 'connected';
       console.log('✅ Firebase Firestore متصل — وضع التخزين السحابي نشط');
       return true;
@@ -2971,6 +2972,37 @@ body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
   .wa-help .wa-ico { width: 30px; height: 30px; border-radius: 50%; background: #25D366; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .wa-help .wa-ico svg { width: 18px; height: 18px; fill: #fff; }
 </style>
+<style>
+.site-notice{display:flex;align-items:flex-start;gap:12px;margin:14px auto 0;max-width:1100px;padding:13px 16px;border-radius:12px;border:1.5px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;font-family:'Cairo',sans-serif;box-shadow:0 2px 10px rgba(26,58,92,.08)}
+.site-notice.lv-warn{background:#fffbeb;border-color:#fcd34d;color:#78350f}
+.site-notice.lv-urgent{background:#fef2f2;border-color:#fca5a5;color:#7f1d1d}
+.site-notice .sn-ico{font-size:1.4rem;line-height:1.2}
+.site-notice .sn-body{flex:1}
+.site-notice b{display:block;font-size:.98rem;margin-bottom:3px}
+.site-notice p{margin:0;font-size:.86rem;line-height:1.8;white-space:pre-line}
+.site-notice small{display:block;margin-top:5px;opacity:.7;font-size:.72rem}
+.site-notice button{background:none;border:none;cursor:pointer;font-size:1rem;color:inherit;opacity:.6}
+.site-notice button:hover{opacity:1}
+body.dark-mode .site-notice{background:#1e293b;color:#e2e8f0;border-color:#475569}
+</style>
+<style>
+.pg-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.pg-card h3{margin:0 0 12px;color:var(--primary);font-size:1rem}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.pg-f.wide{grid-column:1/-1}.pg-f label{display:block;font-size:.78rem;font-weight:600;margin-bottom:4px}
+.pg-f input,.pg-f select,.pg-f textarea,.pg-q{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.86rem;background:var(--surface);color:var(--text)}
+.pg-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.pg-q{max-width:230px;margin-right:auto}
+.pg-btn{border:none;border-radius:8px;padding:8px 14px;cursor:pointer;color:#fff;font-family:inherit;font-weight:700;font-size:.8rem;background:var(--primary-light)}
+.pg-btn.gray{background:#64748b}.pg-btn.green{background:#16a34a}.pg-btn.red{background:#dc2626}.pg-btn.sm{padding:4px 9px;font-size:.72rem}
+.pg-scroll{overflow-x:auto}.pg-tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.pg-tbl th,.pg-tbl td{padding:8px;border-bottom:1px solid var(--border);text-align:right;vertical-align:top}.pg-tbl th{background:var(--bg);color:var(--text-muted)}
+.pg-st{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.74rem;font-weight:700;background:#e0f2fe;color:#075985}
+.pg-st.s1{background:#fef3c7;color:#92400e}.pg-st.s2{background:#fee2e2;color:#991b1b}.pg-st.s3{background:#dcfce7;color:#166534}
+.pg-tabs{display:flex;gap:8px;margin-bottom:14px}.pg-tabs button{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer}
+.pg-tabs button.on{background:var(--primary-light);color:#fff;border-color:var(--primary-light)}
+.pp-row{display:flex;gap:8px;justify-content:center;margin:0 0 14px}
+.fu-badge{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#dc2626;color:#fff;font-size:.72rem;font-weight:700;align-items:center;justify-content:center;margin-inline-start:6px}
+</style>
 </head>
 <body>
 <div class="page-wrapper">
@@ -3104,6 +3136,9 @@ body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
           <div id="profileSecurityBadge" style="display:none;" class="profile-security-badge">🔒 هاتف مُحقَّق</div>
         </div>
       </div>
+      <div class="pp-row"><input type="file" id="profilePhotoInput" accept="image/*" hidden onchange="pickPhoto(this)">
+        <button type="button" class="pg-btn" onclick="document.getElementById('profilePhotoInput').click()">📷 الصورة الشخصية</button>
+        <button type="button" class="pg-btn gray" onclick="removePhoto()">🗑 حذف</button></div>
       <!-- ===== EDIT FIELDS ===== -->
       <div class="profile-field">
         <label>الاسم الكامل</label>
@@ -3392,7 +3427,7 @@ body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
       <div class="header-emblem">🎓</div>
       <div class="header-text">
         <h1>المملكة المغربية</h1>
-        <p>وزارة التربية الوطنية والتعليم الأولي والرياضة</p>
+        <p class="dyn-ministry">وزارة التربية الوطنية والتعليم الأولي والرياضة</p>
         <p class="dynamic-directorate">مديرية الحي الحسني</p>
       </div>
     </div>
@@ -3424,7 +3459,7 @@ body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
     <div class="hp-min">
       <img id="hpMinistryLogo" alt="شعار الوزارة" src="">
       <b>المملكة المغربية</b>
-      <span>وزارة التربية الوطنية والتعليم الأولي والرياضة</span>
+      <span class="dyn-ministry">وزارة التربية الوطنية والتعليم الأولي والرياضة</span>
     </div>
     <div class="hp-center">
       <div class="hp-center-txt">
@@ -3460,12 +3495,13 @@ body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
 
 <!-- ===== PORTAL LANDING — v24 (لوحة المؤسسة) ===== -->
 <div id="portalLanding">
+  <div id="siteNotice" class="site-notice" style="display:none"></div>
   <div class="hp-main">
 
     <!-- بوابات أخرى -->
     <section class="hp-panel hp-others" aria-label="بوابات أخرى">
       <h3 class="hp-panel-title"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg><span>بوابات أخرى</span></h3>
-      <div class="hp-list"><button type="button" class="hp-tile c-blue" onclick="openTool('interview')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span><span class="hp-lbl">المقابلات الفردية</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-coral" onclick="openTool('violence')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></span><span class="hp-lbl">حالات العنف</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-indigo" onclick="openTool('specialneeds')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/></svg></span><span class="hp-lbl">وضعية الإعاقة</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-teal" onclick="openTool('reintegration')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"/></svg></span><span class="hp-lbl">الإدماج المدرسي</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-amber" onclick="openTool('vigilance')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span><span class="hp-lbl">خلية اليقظة</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-teal" onclick="openTool('behavior')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3H9z"/><path d="M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M8 14l3 3 5-6"/></svg></span><span class="hp-lbl">رصد السلوك</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button></div>
+      <div class="hp-list"><button type="button" class="hp-tile c-blue" onclick="openTool('interview')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span><span class="hp-lbl">المقابلات الفردية</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-coral" onclick="openTool('violence')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></span><span class="hp-lbl">حالات العنف</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-indigo" onclick="openTool('specialneeds')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6"/></svg></span><span class="hp-lbl">وضعية الإعاقة</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-teal" onclick="openTool('reintegration')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2.5 9 2.5 12 0v-5"/></svg></span><span class="hp-lbl">الإدماج المدرسي</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-amber" onclick="openTool('vigilance')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span><span class="hp-lbl">خلية اليقظة</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-teal" onclick="openTool('behavior')"><span class="hp-ico"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6v3H9z"/><path d="M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M8 14l3 3 5-6"/></svg></span><span class="hp-lbl">رصد السلوك</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-teal" onclick="openTool('parents')"><span class="hp-ico">📞</span><span class="hp-lbl">التواصل مع الأولياء</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button><button type="button" class="hp-tile c-amber" onclick="openTool('followup')"><span class="hp-ico">🔔</span><span class="hp-lbl">المتابعة</span><span id="fuBadge" class="fu-badge" style="display:none">0</span><svg class="hp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 5l-7 7 7 7"/></svg></button></div>
     </section>
 
     <!-- الإحصائيات + الرسم البياني -->
@@ -4268,8 +4304,10 @@ const TOOL_TITLES = {
   vigilance:     '🚨 خلية اليقظة — الحالات الحرجة',
   printdocs:     '🏥 بوابة الإحالة والإخبار الصحي',
   behavior:      '🧭 رصد السلوك — الدعم وخطة التدخل',
+  parents:       '📞 التواصل مع أولياء الأمور',
+  followup:      '🔔 المتابعة وتتبع الحالات',
 };
-const ALL_TOOLS = ['toolInterview','toolReintegration','toolAbsence','toolIip','toolTasklog','toolStats','toolCasefile','toolViolence','toolWorkshops','toolSpecialNeeds','toolVigilance','toolPrintdocs','toolBehavior'];
+const ALL_TOOLS = ['toolInterview','toolReintegration','toolAbsence','toolIip','toolTasklog','toolStats','toolCasefile','toolViolence','toolWorkshops','toolSpecialNeeds','toolVigilance','toolPrintdocs','toolBehavior','toolParents','toolFollowup'];
 let _currentTool = null;
 
 function openTool(tool) {
@@ -4283,7 +4321,7 @@ function openTool(tool) {
     casefile:'toolCasefile',
     violence:'toolViolence', workshops:'toolWorkshops',
     specialneeds:'toolSpecialNeeds', vigilance:'toolVigilance',
-    printdocs:'toolPrintdocs', behavior:'toolBehavior'
+    printdocs:'toolPrintdocs', behavior:'toolBehavior', parents:'toolParents', followup:'toolFollowup'
   };
   const toolId = toolIdMap[tool];
   if (!toolId) return;
@@ -4295,7 +4333,9 @@ function openTool(tool) {
   document.getElementById('frozenNav').classList.add('visible');
 
   // Init tool
-  if (tool === 'interview')          initInterview();
+  if (tool === 'parents') initParents();
+  else if (tool === 'followup') initFollowup();
+  else if (tool === 'interview')          initInterview();
   else if (tool === 'reintegration') initReintegration();
   else if (tool === 'absence')       initAbsence();
   else if (tool === 'iip')           { try { iipInit(); } catch(e) { console.error(e); } }
@@ -4455,11 +4495,13 @@ function _buildFrozenNav(activeTool) {
     { key:'vigilance',     icon:'🚨',  label:'خلية اليقظة' },
     { key:'printdocs',     icon:'🏥',  label:'الإحالة والإخبار' },
     { key:'behavior',      icon:'🧭',  label:'رصد السلوك' },
+    { key:'parents',       icon:'📞',  label:'الأولياء' },
+    { key:'followup',      icon:'🔔',  label:'المتابعة' },
   ];
   nav.innerHTML = tools.map(t => `
     <div class="frozen-card${t.key === activeTool ? ' active-tool' : ''}" onclick="openTool('${t.key}')" title="${TOOL_TITLES[t.key]}">
       <div class="frozen-card-icon">${t.icon}</div>
-      <div class="frozen-card-label">${t.label}</div>
+      <div class="frozen-card-label">${((SITE_CFG.gates && SITE_CFG.gates[t.key]) || '').trim() || t.label}</div>
     </div>
   `).join('');
 }
@@ -5105,7 +5147,8 @@ const appData = {
   vigilanceCases: [],
   behaviorFiles: [],
   pdAssocArchive: [],
-  pdHealthArchive: []
+  pdHealthArchive: [],
+  parentCalls: [], parentMeetings: [], followUp: []
 };
 
 // ── Storage layer — DUAL: always localStorage + Firebase Firestore ──
@@ -5207,7 +5250,7 @@ window.addEventListener('load', () => {
 });
 
 async function loadUserData() {
-  const keys = ['interviewArchive','reintegrationArchive','absenceArchive','taskLog','violenceArchive','contactsArchive','workshopsArchive','specialNeedsArchive','vigilanceCases','behaviorFiles','pdAssocArchive','pdHealthArchive'];
+  const keys = ['parentCalls','parentMeetings','followUp','interviewArchive','reintegrationArchive','absenceArchive','taskLog','violenceArchive','contactsArchive','workshopsArchive','specialNeedsArchive','vigilanceCases','behaviorFiles','pdAssocArchive','pdHealthArchive'];
   // ✅ تحميل متوازي بدلاً من المتسلسل — أسرع بكثير
   await Promise.all(keys.map(async key => {
     try {
@@ -5580,11 +5623,141 @@ async function authDoLogin() {
   }
 }
 
+// ══════ إعدادات المنصة من لوحة الأدمين (site_config/main): اسم الوزارة، أسماء البوابات، ميزاجور ══════
+const DEFAULT_MINISTRY = 'وزارة التربية الوطنية والتعليم الأولي والرياضة';
+const DEFAULT_TITLES = Object.assign({}, TOOL_TITLES);
+let SITE_CFG = {};
+function getMinistry() { return ((SITE_CFG && SITE_CFG.ministry) || '').trim() || DEFAULT_MINISTRY; }
+function _setTxt(el, v) { if (!el) return; if (el.dataset.def === undefined) el.dataset.def = el.textContent; el.textContent = (v || '').trim() || el.dataset.def; }
+function applySiteConfig(cfg) {
+  SITE_CFG = cfg || {};
+  const g = SITE_CFG.gates || {};
+  document.querySelectorAll('.dyn-ministry').forEach(e => { e.textContent = getMinistry(); });
+  document.querySelectorAll('.hp-sub, .auth-title').forEach(e => _setTxt(e, SITE_CFG.platform));
+  Object.keys(DEFAULT_TITLES).forEach(k => {
+    const n = (g[k] || '').trim();
+    TOOL_TITLES[k] = n ? DEFAULT_TITLES[k].split(' ')[0] + ' ' + n : DEFAULT_TITLES[k];
+  });
+  document.querySelectorAll('.hp-tile').forEach(b => {
+    const m = (b.getAttribute('onclick') || '').match(/openTool\('(\w+)'\)/);
+    if (m) _setTxt(b.querySelector('.hp-lbl'), g[m[1]]);
+  });
+  document.querySelectorAll('.frozen-card[data-tool]').forEach(c => _setTxt(c.querySelector('.frozen-card-label'), g[c.dataset.tool]));
+  if (_currentTool) _buildFrozenNav(_currentTool);
+  try { updateDirectorateUI(); } catch (e) {}
+  renderSiteNotice();
+}
+function renderSiteNotice() {
+  const box = document.getElementById('siteNotice'); if (!box) return;
+  const n = (SITE_CFG && SITE_CFG.notice) || {};
+  let dis = ''; try { dis = localStorage.getItem('site:notice:dismissed') || ''; } catch (e) {}
+  if (!n.on || !(n.text || n.title) || dis === n.id) { box.style.display = 'none'; return; }
+  box.className = 'site-notice lv-' + (n.level || 'info'); box.style.display = 'flex';
+  box.innerHTML = '<div class="sn-ico">📢</div><div class="sn-body"><b></b><p></p><small></small></div><button type="button" aria-label="إغلاق">✕</button>';
+  box.querySelector('b').textContent = n.title || 'ميزاجور';
+  box.querySelector('p').textContent = n.text || '';
+  box.querySelector('small').textContent = n.date || '';
+  box.querySelector('button').onclick = () => { try { localStorage.setItem('site:notice:dismissed', n.id); } catch (e) {} box.style.display = 'none'; };
+}
+async function loadSiteConfig() {
+  try { const c = localStorage.getItem('site:cfg'); if (c) applySiteConfig(JSON.parse(c)); } catch (e) {}
+  try {
+    await window._firebaseReady;
+    const d = window._siteConfig && await window._siteConfig.get();
+    if (d && d.json) { try { localStorage.setItem('site:cfg', d.json); } catch (e) {} applySiteConfig(JSON.parse(d.json)); }
+  } catch (e) {}
+}
+
+
+// ═══ بوابات: التواصل مع الأولياء + المتابعة + الصورة الشخصية ═══
+const _esc = v => String(v == null ? '' : v).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function mkGate(o) {
+  const root = document.getElementById(o.box); let editId = null, q = '';
+  const arr = () => appData[o.key] || (appData[o.key] = []);
+  const val = k => root.querySelector('[data-k="' + k + '"]');
+  function reset() { editId = null; o.fields.forEach(f => { const e = val(f.k); e.value = f.t === 'date' ? new Date().toISOString().slice(0, 10) : (f.opts ? f.opts[0] : ''); }); }
+  function cell(f, r) { const v = r[f.k] || ''; if (!f.badge) return _esc(v); const i = o.fields.find(x => x.k === f.k).opts.indexOf(v); return '<span class="pg-st s' + Math.max(i, 0) % 4 + '">' + _esc(v) + '</span>'; }
+  function draw() {
+    const rows = arr().filter(r => !q || JSON.stringify(r).indexOf(q) !== -1);
+    root.querySelector('tbody').innerHTML = rows.length ? rows.map((r, i) => '<tr><td>' + (i + 1) + '</td>' + o.fields.map(f => '<td>' + cell(f, r) + '</td>').join('') + '<td style="white-space:nowrap"><button class="pg-btn sm" data-a="edit" data-id="' + r.id + '">✏️</button> <button class="pg-btn sm red" data-a="del" data-id="' + r.id + '">🗑</button></td></tr>').join('') : '<tr><td colspan="' + (o.fields.length + 2) + '" style="text-align:center;color:var(--text-muted)">لا توجد سجلات.</td></tr>';
+  }
+  function build() {
+    root.innerHTML = '<div class="pg-card"><h3>' + o.title + '</h3><div class="pg-grid">' + o.fields.map(f => '<div class="pg-f' + (f.wide ? ' wide' : '') + '"><label>' + f.l + '</label>' + (f.opts ? '<select data-k="' + f.k + '">' + f.opts.map(x => '<option>' + x + '</option>').join('') + '</select>' : f.t === 'area' ? '<textarea rows="2" data-k="' + f.k + '"></textarea>' : '<input type="' + (f.t || 'text') + '" data-k="' + f.k + '">') + '</div>').join('') + '</div><div class="pg-act"><button class="pg-btn" data-a="save">💾 حفظ</button><button class="pg-btn gray" data-a="reset">إلغاء</button>' + (o.imp ? '<button class="pg-btn green" data-a="imp">📥 استيراد أرقام من Excel</button><input type="file" hidden accept=".xlsx,.xls,.csv" data-a="file">' : '') + '<button class="pg-btn gray" data-a="exp">📤 تصدير Excel</button><input class="pg-q" placeholder="🔍 بحث..." data-a="q"></div></div><div class="pg-card"><div class="pg-scroll"><table class="pg-tbl"><thead><tr><th>#</th>' + o.fields.map(f => '<th>' + f.l + '</th>').join('') + '<th></th></tr></thead><tbody></tbody></table></div></div>';
+    reset();
+    root.onclick = async e => {
+      const b = e.target.closest('[data-a]'); if (!b) return; const a = b.dataset.a, id = b.dataset.id;
+      if (a === 'reset') reset();
+      else if (a === 'imp') root.querySelector('[data-a=file]').click();
+      else if (a === 'save') {
+        const d = {}; o.fields.forEach(f => d[f.k] = val(f.k).value.trim());
+        if (!d[o.req]) return alert('⚠️ الحقل «' + o.fields.find(f => f.k === o.req).l + '» إجباري.');
+        if (editId) Object.assign(arr().find(r => String(r.id) === String(editId)) || {}, d); else arr().unshift(Object.assign({ id: Date.now() + '' + Math.floor(Math.random() * 99) }, d));
+        await saveUserKey(o.key); reset(); draw(); o.after && o.after();
+      } else if (a === 'edit') { const r = arr().find(x => String(x.id) === id); if (!r) return; editId = id; o.fields.forEach(f => val(f.k).value = r[f.k] || ''); root.scrollIntoView({ behavior: 'smooth' }); }
+      else if (a === 'del') { if (!confirm('حذف هذا السجل؟')) return; appData[o.key] = arr().filter(x => String(x.id) !== id); await saveUserKey(o.key); draw(); o.after && o.after(); }
+      else if (a === 'exp') { const ws = XLSX.utils.json_to_sheet(arr().map(r => Object.fromEntries(o.fields.map(f => [f.l, r[f.k] || ''])))); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'سجل'); XLSX.writeFile(wb, o.file + '.xlsx'); }
+    };
+    root.oninput = e => { if (e.target.dataset.a === 'q') { q = e.target.value.trim(); draw(); } };
+    root.onchange = e => { if (e.target.dataset.a !== 'file' || !e.target.files[0]) return; const fr = new FileReader(); fr.onload = async () => {
+      try {
+        const rows = XLSX.utils.sheet_to_json(XLSX.read(new Uint8Array(fr.result), { type: 'array' }).Sheets[XLSX.read(new Uint8Array(fr.result), { type: 'array' }).SheetNames[0]], { header: 1, defval: '' });
+        const h = (rows[0] || []).map(x => String(x)); const hasH = h.some(x => /[^\d\s]/.test(x) && /(اسم|مسار|هاتف|phone|name|massar|tel)/i.test(x));
+        const ix = re => { const i = h.findIndex(x => re.test(x)); return hasH ? i : -1; };
+        let cn = ix(/اسم|name|nom/i), cm = ix(/مسار|massar|code/i), cp = ix(/هاتف|phone|tel|gsm|mobile|رقم/i);
+        if (cn < 0) cn = 0; if (cm < 0) cm = 1; if (cp < 0) cp = 2;
+        let n = 0; rows.slice(hasH ? 1 : 0).forEach(r => {
+          const name = String(r[cn] || '').trim(); let ph = String(r[cp] || '').replace(/\D/g, ''); if (ph.length === 9) ph = '0' + ph;
+          if (!name && !ph) return; if (arr().some(x => x.name === name && x.phone === ph)) return;
+          arr().push({ id: Date.now() + '' + n++, name, massar: String(r[cm] || '').trim(), phone: ph, time: '', result: o.fields.find(f => f.k === 'result').opts[0], notes: '', date: '' });
+        });
+        await saveUserKey(o.key); draw(); alert('✅ تم استيراد ' + n + ' سطرًا.');
+      } catch (er) { alert('❌ تعذّرت قراءة الملف.'); }
+    }; fr.readAsArrayBuffer(e.target.files[0]); e.target.value = ''; };
+    draw();
+  }
+  return { refresh: build };
+}
+const _pg = {};
+const _RES = ['لم يتم الاتصال بعد', 'تم الرد', 'لم يرد', 'رقم خاطئ / خارج الخدمة', 'طلب معاودة الاتصال', 'وعد بالحضور'];
+function initParents() {
+  if (!_pg.calls) {
+    _pg.calls = mkGate({ box: 'pgCalls', key: 'parentCalls', req: 'name', imp: 1, file: 'الاتصال-بالأولياء', title: '📞 سجل الاتصال الهاتفي بأولياء الأمور', fields: [
+      { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'phone', l: 'هاتف ولي الأمر', t: 'tel' }, { k: 'time', l: 'وقت الاتصال', t: 'time' },
+      { k: 'result', l: 'نتيجة الاتصال', opts: _RES }, { k: 'date', l: 'تاريخ الاتصال', t: 'date' }, { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 }] });
+    _pg.meet = mkGate({ box: 'pgMeet', key: 'parentMeetings', req: 'student', file: 'مقابلات-الأولياء', title: '🤝 مقابلة مع ولي أمر', fields: [
+      { k: 'student', l: 'الاسم الكامل للتلميذ' }, { k: 'cls', l: 'القسم' }, { k: 'parent', l: 'الاسم الكامل لولي الأمر' }, { k: 'cin', l: 'رقم البطاقة الوطنية' },
+      { k: 'job', l: 'المهنة' }, { k: 'date', l: 'تاريخ المقابلة', t: 'date' }, { k: 'subject', l: 'موضوع المقابلة', t: 'area', wide: 1 }] });
+  }
+  _pg.calls.refresh(); _pg.meet.refresh();
+}
+function pgTab(n, btn) { btn.parentNode.querySelectorAll('button').forEach(b => b.classList.remove('on')); btn.classList.add('on'); document.getElementById('pgCalls').style.display = n ? 'none' : ''; document.getElementById('pgMeet').style.display = n ? '' : 'none'; }
+function initFollowup() {
+  if (!_pg.fu) _pg.fu = mkGate({ box: 'pgFu', key: 'followUp', req: 'name', file: 'سجل-المتابعة', after: updateFollowBadge, title: '🔔 تتبع الحالات', fields: [
+    { k: 'name', l: 'اسم التلميذ' }, { k: 'status', l: 'الحالة', opts: ['قيد المتابعة', 'تعثر / يستدعي تدخلًا', 'تحسن', 'تمت المعالجة'], badge: 1 },
+    { k: 'date', l: 'تاريخ المتابعة', t: 'date' }, { k: 'note', l: 'ملاحظة المتابعة', t: 'area', wide: 1 }] });
+  _pg.fu.refresh();
+}
+function updateFollowBadge() { const n = (appData.followUp || []).filter(r => r.status !== 'تمت المعالجة').length; const b = document.getElementById('fuBadge'); if (b) { b.textContent = n; b.style.display = n ? 'inline-flex' : 'none'; } }
+function applyPhoto() {
+  const p = userProfile && userProfile.photo;
+  document.querySelectorAll('#profileInfoAvatar,#userInitial,.bb-avatar').forEach(e => {
+    e.style.backgroundImage = p ? 'url("' + p + '")' : ''; e.style.backgroundSize = 'cover'; e.style.backgroundPosition = 'center';
+    e.style.color = p ? 'transparent' : ''; if (p) e.style.borderRadius = '50%';
+  });
+}
+function pickPhoto(inp) {
+  const f = inp.files && inp.files[0]; if (!f) return; const r = new FileReader();
+  r.onload = () => { const im = new Image(); im.onload = async () => { const S = 240, c = document.createElement('canvas'); c.width = c.height = S; const m = Math.min(im.width, im.height);
+    c.getContext('2d').drawImage(im, (im.width - m) / 2, (im.height - m) / 2, m, m, 0, 0, S, S); userProfile.photo = c.toDataURL('image/jpeg', 0.85); applyPhoto(); await saveProfile(); }; im.src = r.result; };
+  r.readAsDataURL(f); inp.value = '';
+}
+function removePhoto() { delete userProfile.photo; applyPhoto(); saveProfile(); }
+
 // ── تحديث اسم المديرية في جميع أجزاء الواجهة ──
 function updateDirectorateUI() {
   const dir = (userProfile && userProfile.school) ? userProfile.school : 'مديرية الحي الحسني';
-  const kingdom = `المملكة المغربية — وزارة التربية الوطنية والتعليم الأولي والرياضة — ${dir}`;
-  const sub2 = `وزارة التربية الوطنية والتعليم الأولي والرياضة — ${dir}`;
+  const kingdom = `المملكة المغربية — ${getMinistry()} — ${dir}`;
+  const sub2 = `${getMinistry()} — ${dir}`;
 
   // الهيدر الرئيسي
   document.querySelectorAll('.dynamic-directorate').forEach(el => { el.textContent = dir; });
@@ -5823,6 +5996,8 @@ function authEnterApp() {
   document.getElementById('authOverlay').classList.add('hidden');
   // إظهار البوابة الرئيسية
   document.getElementById('portalLanding').style.display = 'block';
+  loadSiteConfig();
+  updateFollowBadge(); applyPhoto();
   const bar = document.getElementById('userBar');
   bar.classList.add('visible');
   // Show search + notif bar
@@ -6124,6 +6299,7 @@ function updateProfileBanner() {
   document.getElementById('profileInfoPhone').innerHTML = phone ? `<span>📱</span><span dir="ltr">${phone}</span>` : '';
   const badge = document.getElementById('profileSecurityBadge');
   if (badge) badge.style.display = userProfile.phoneVerified ? 'inline-flex' : 'none';
+  applyPhoto();
 }
 
 function closeProfile() { document.getElementById('profileModal').classList.remove('open'); const btn = document.getElementById('profileCloseFixed'); if(btn) btn.style.display='none'; }
@@ -8269,7 +8445,7 @@ function downloadWeeklyReportPDFForRange(fromDate, toDate) {
 <div class="hdr">
   ${logoSrcWeekly ? `<img class="ministry-logo" src="${logoSrcWeekly}" alt="شعار الوزارة">` : ''}
   <h1>التقرير الأسبوعي الشامل للمختص الاجتماعي</h1>
-  <div class="sub">وزارة التربية الوطنية والتعليم الأولي والرياضة — مديرية الحي الحسني</div>
+  <div class="sub">${getMinistry()} — ${getDirectorate()}</div>
   <div class="period">الفترة: ${dateStr}</div>
 </div>
 
@@ -10627,6 +10803,16 @@ function exportAbArchiveCSV() {
 </script>
 
 <!-- ===== TOOL 3: TASK LOG ===== -->
+<div id="toolParents" class="tool-page">
+  <div class="back-bar"><div class="back-bar-right"><button class="back-btn" onclick="goBack()">← العودة للرئيسية</button><span class="back-bar-title">📞 التواصل مع أولياء الأمور</span></div>
+  <div class="back-bar-user" onclick="openProfile()"><div class="bb-avatar">؟</div><span class="bb-name">الحساب</span></div></div>
+  <div class="main-container"><div class="pg-tabs"><button class="on" onclick="pgTab(0,this)">📞 الاتصال الهاتفي</button><button onclick="pgTab(1,this)">🤝 مقابلات الأولياء</button></div><div id="pgCalls"></div><div id="pgMeet" style="display:none"></div></div>
+</div>
+<div id="toolFollowup" class="tool-page">
+  <div class="back-bar"><div class="back-bar-right"><button class="back-btn" onclick="goBack()">← العودة للرئيسية</button><span class="back-bar-title">🔔 المتابعة وتتبع الحالات</span></div>
+  <div class="back-bar-user" onclick="openProfile()"><div class="bb-avatar">؟</div><span class="bb-name">الحساب</span></div></div>
+  <div class="main-container"><div id="pgFu"></div></div>
+</div>
 <div id="toolTasklog" class="tool-page">
   <div class="back-bar">
     <div class="back-bar-right">
