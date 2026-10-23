@@ -5812,6 +5812,9 @@ async function pgExportXlsx(o, rows) {
   a.download = o.file + '.xlsx'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 3000);
 }
 function pgPrintReport(title, fields, rows) {
+  try { pgPrintReportInner(title, fields, rows); } catch (e) { console.error(e); alert('❌ تعذّر فتح المعاينة: ' + (e && e.message || e)); }
+}
+function pgPrintReportInner(title, fields, rows) {
   const th = 'padding:6px 8px;text-align:center;border:1px solid #0f2a4a;background:#1a3a5c;color:#fff;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact;';
   const td = 'padding:5px 8px;border:1px solid #cbd5e1;vertical-align:top;overflow-wrap:anywhere;';
   const body = rows.length ? rows.map((r, i) => '<tr><td style="' + td + 'text-align:center;">' + (i + 1) + '</td>' + fields.map(f => '<td style="' + td + '">' + (iEsc(r[f.k]) || '—') + '</td>').join('') + '</tr>').join('') : '<tr><td colspan="' + (fields.length + 1) + '" style="' + td + 'text-align:center;">لا توجد سجلات.</td></tr>';
@@ -5823,7 +5826,14 @@ function pgPrintReport(title, fields, rows) {
     '<table class="proc-table-report" style="width:100%;border-collapse:collapse;font-size:0.8rem;font-family:\'Cairo\',sans-serif;"><thead><tr><th style="' + th + 'width:4%;">#</th>' + fields.map(f => '<th style="' + th + '">' + f.l + '</th>').join('') + '</tr></thead><tbody>' + body + '</tbody></table>' +
     '<div class="signatures"><div class="sig-block"><div class="sig-line"></div>المختص الاجتماعي</div><div class="sig-block"><div class="sig-line"></div>مدير المؤسسة</div></div>';
   const t = document.getElementById('pgPrintTitle'); t.textContent = '📄 ' + title; t.dataset.f = title.replace(/\s+/g, '_');
-  document.getElementById('pgPrintModal').classList.add('open');
+  const m = document.getElementById('pgPrintModal'), act = document.querySelector('.tool-page.active');
+  if (act && m.parentNode !== act) act.appendChild(m); // داخل البوابة النشطة كبقية النوافذ ⇒ لا صفحة فارغة عند الطباعة
+  m.classList.add('open');
+}
+function pgDoPrint() {
+  document.documentElement.classList.add('i-print-mode');
+  try { window.print(); } catch (e) { alert('❌ تعذّرت الطباعة: ' + e.message); }
+  setTimeout(() => { if (!document.querySelector('#pgPrintModal.open')) document.documentElement.classList.remove('i-print-mode'); }, 1500);
 }
 function pgClosePrint() { document.getElementById('pgPrintModal').classList.remove('open'); }
 function updateFollowBadge() { const n = (appData.followUp || []).filter(r => r.status !== 'تمت المعالجة').length; const b = document.getElementById('fuBadge'); if (b) { b.textContent = n; b.style.display = n ? 'inline-flex' : 'none'; } }
@@ -10909,7 +10919,7 @@ function exportAbArchiveCSV() {
       <div class="modal-body" id="pgReportContent"></div>
       <div class="modal-footer" style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;gap:10px;justify-content:flex-end;">
         <button class="btn btn-outline" onclick="pgClosePrint()">إغلاق</button>
-        <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>
+        <button class="btn btn-primary" onclick="pgDoPrint()">🖨️ طباعة</button>
         <button class="btn btn-success" onclick="exportToWord('pgReportContent', document.getElementById('pgPrintTitle').dataset.f || 'السجل')" style="background:#1d6f42;color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;">📄 تحميل Word</button>
       </div>
     </div>
