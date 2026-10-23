@@ -166,6 +166,7 @@
         <div class="field"><label>عنوان وسيط مخصص (اختياري)</label><input type="text" id="nwProxy" class="ltr" placeholder="https://my-worker.workers.dev/?url=">
           <div class="hint">يُجرَّب أولاً إن وُجد، ثم وسطاء عامون. لا تنشر هنا أي مفاتيح سرية.</div></div>
       </div>
+      <label class="chk"><input type="checkbox" id="nwAuto" checked> 🔄 تحديث تلقائي يومي: تجلب الصفحة الرئيسية أخبار Google بنفسها مرة كل 24 ساعة وتعرضها فوراً بدون اعتماد (يتطلب كلمات مفتاحية ووسيطاً محفوظين).</label>
       <div class="actions">
         <button class="btn" id="nwFetchBtn" onclick="nwFetch()">🔎 جلب الأخبار الآن</button>
         <button class="btn gray" id="nwKwBtn" onclick="nwSaveKw()">💾 حفظ الإعدادات</button>
@@ -396,7 +397,7 @@
   function nwUrl(u) { u = (u || '').trim(); return /^https?:\/\//i.test(u) ? u : ''; }
   function nwInit() {
     var n = nwData();
-    $('nwKeywords').value = n.keywords.join('\n'); $('nwCount').value = n.perKeyword || 5; $('nwProxy').value = n.proxy || '';
+    $('nwKeywords').value = n.keywords.join('\n'); $('nwCount').value = n.perKeyword || 5; $('nwProxy').value = n.proxy || ''; $('nwAuto').checked = n.auto !== false;
     nwRender();
   }
   function nwRender() {
@@ -451,7 +452,7 @@
     n.keywords = $('nwKeywords').value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, 8);
     var c = parseInt($('nwCount').value, 10); n.perKeyword = (c >= 1 && c <= 10) ? c : 5; $('nwCount').value = n.perKeyword;
     var px = $('nwProxy').value.trim(); if (px && !nwUrl(px)) return say('nwKwMsg', '⚠️ عنوان الوسيط يجب أن يبدأ بـ https://', 'err');
-    n.proxy = px; saveSite('nwKwMsg', 'nwKwBtn', '✅ تم حفظ إعدادات أخبار Google.');
+    n.proxy = px; n.auto = $('nwAuto').checked; saveSite('nwKwMsg', 'nwKwBtn', '✅ تم حفظ إعدادات أخبار Google.');
   };
 
   // جلب RSS عبر وسطاء (المتصفح لا يستطيع طلب Google News مباشرة بسبب CORS)
