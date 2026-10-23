@@ -5815,7 +5815,7 @@ function pgPrintReport(title, fields, rows) {
   try { pgPrintReportInner(title, fields, rows); } catch (e) { console.error(e); alert('❌ تعذّر فتح المعاينة: ' + (e && e.message || e)); }
 }
 function pgPrintReportInner(title, fields, rows) {
-  const th = 'padding:6px 8px;text-align:center;border:1px solid #0f2a4a;background:#1a3a5c;color:#fff;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact;';
+  const th = 'padding:6px 8px;text-align:center;border:1px solid #000;background:#fff;color:#000;font-weight:800;-webkit-print-color-adjust:exact;print-color-adjust:exact;';
   const td = 'padding:5px 8px;border:1px solid #cbd5e1;vertical-align:top;overflow-wrap:anywhere;';
   const body = rows.length ? rows.map((r, i) => '<tr><td style="' + td + 'text-align:center;">' + (i + 1) + '</td>' + fields.map(f => '<td style="' + td + '">' + (iEsc(r[f.k]) || '—') + '</td>').join('') + '</tr>').join('') : '<tr><td colspan="' + (fields.length + 1) + '" style="' + td + 'text-align:center;">لا توجد سجلات.</td></tr>';
   const logo = (typeof MINISTRY_LOGO_B64 !== 'undefined' && MINISTRY_LOGO_B64) ? MINISTRY_LOGO_B64 : '';
@@ -18256,7 +18256,8 @@ html body.on-home .hp-btn{ border:1.5px solid var(--bk) !important; }
 <style id="pg-print-fix">
 @media print{
   #pgReportContent .proc-table-report thead{display:table-header-group}
-  #pgReportContent .proc-table-report th{background:#1a3a5c !important;color:#fff !important;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  #pgReportContent .proc-table-report thead tr,
+  #pgReportContent .proc-table-report th{background:#fff !important;color:#000 !important;font-weight:800 !important;border:1.5px solid #000 !important;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
   #pgReportContent .proc-table-report tr{break-inside:avoid}
   #pgReportContent .proc-table-report td{overflow-wrap:anywhere}
   #pgReportContent .nrh-logo img{display:block !important}
