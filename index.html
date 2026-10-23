@@ -18307,6 +18307,15 @@ body.dark-mode .hp-news-item{ background:#0f172a; border-color:#334155; }
 body.dark-mode a.hp-news-item:hover{ background:#1e293b; }
 body.dark-mode .hp-news-body b{ color:#e2e8f0; }
 body.dark-mode .hp-news-tab{ background:#1e293b; border-color:#334155; }
+/* ---- مؤشرات الإحصائيات: صف واحد مضغوط (8 مؤشرات) ---- */
+@media (min-width:1280px), (min-width:821px) and (max-width:1100px){
+  .hp-stats .hp-kpis{ grid-template-columns:repeat(8,minmax(0,1fr)); gap:6px; }
+  .hp-stats .hp-kpi{ column-gap:4px; row-gap:0; padding:6px 2px 5px; border-radius:11px; align-content:center; }
+  .hp-stats .hp-kpi svg{ width:16px; height:16px; }
+  .hp-stats .hp-kpi .dash-stat-num{ font-size:19px; line-height:1.1; }
+  .hp-stats .hp-kpi .dash-stat-lbl{ font-size:10.5px; line-height:1.25; white-space:normal; text-align:center; overflow:visible; text-overflow:clip; }
+  .hp-stats .hp-inner{ padding:10px; }
+}
 </style>
 <style id="pd-print-v29">
 @media print{
