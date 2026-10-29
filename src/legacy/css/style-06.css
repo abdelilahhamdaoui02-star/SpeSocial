@@ -1,0 +1,78 @@
+
+/* ── خيارات الملخص والملاحظات ── */
+.iopt-panel{border:1.5px solid var(--border);border-radius:12px;background:#f8fafc;margin-top:10px;overflow:hidden}
+.iopt-head{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:9px 12px;background:#eef4fb;border-bottom:1px solid #dbeafe;font-size:.76rem;font-weight:700;color:var(--primary)}
+.iopt-tools{display:flex;gap:6px;align-items:center}
+.iopt-search{border:1.5px solid #cbd5e1;border-radius:8px;padding:4px 9px;font-family:'Cairo',sans-serif;font-size:.74rem;width:170px;direction:rtl;background:#fff}
+.iopt-clear{background:#fff;border:1.5px solid #fecaca;color:#dc2626;border-radius:8px;padding:3px 10px;font-family:'Cairo',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer}
+.iopt-tabs{display:flex;flex-wrap:wrap;gap:6px;padding:9px 12px 0}
+.iopt-tab{background:#fff;border:1.5px solid #cbd5e1;color:var(--primary);border-radius:20px;padding:3px 11px;font-family:'Cairo',sans-serif;font-size:.74rem;font-weight:700;cursor:pointer}
+.iopt-tab:hover{border-color:var(--primary)}
+.iopt-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.iopt-list{max-height:300px;overflow-y:auto;padding:9px 12px 12px;display:flex;flex-direction:column;gap:6px}
+.iopt-item{display:flex;gap:9px;align-items:flex-start;text-align:right;width:100%;cursor:pointer;background:#fff;border:1.5px solid #dbeafe;border-radius:8px;padding:7px 10px;font-family:'Cairo',sans-serif;font-size:.8rem;line-height:1.7;color:var(--text)}
+.iopt-item:hover{border-color:var(--primary);background:#f5f9ff}
+.iopt-item.used{background:#ecfdf5;border-color:#34d399}
+.iopt-mark{flex-shrink:0;width:18px;height:18px;margin-top:3px;border:1.5px solid #94a3b8;border-radius:4px;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff}
+.iopt-item.used .iopt-mark{background:#059669;border-color:#059669}
+.iopt-item.used .iopt-mark::after{content:'✓'}
+.iopt-empty{font-size:.78rem;color:var(--text-muted);padding:6px 2px}
+body.dark-mode .iopt-panel{background:#0f172a}
+body.dark-mode .iopt-head{background:#1e293b;border-color:#334155;color:#93c5fd}
+body.dark-mode .iopt-item,body.dark-mode .iopt-tab,body.dark-mode .iopt-search{background:#1e293b;color:#e2e8f0;border-color:#334155}
+body.dark-mode .iopt-item.used{background:#064e3b;border-color:#10b981}
+/* ── جدول الإجراءات (اسم الإجراء / التاريخ / الملاحظات) ── */
+.iproc-table{width:100%;border-collapse:collapse;font-family:'Cairo',sans-serif;font-size:.8rem}
+.iproc-table th{background:linear-gradient(90deg,var(--primary),var(--primary-light));color:#fff;padding:8px 10px;border:1px solid var(--primary-light);text-align:right;font-weight:700}
+.iproc-table td{border:1px solid #dbeafe;padding:3px 5px;vertical-align:middle}
+.iproc-table tbody tr:nth-child(even){background:#f8fafc}
+.iproc-table td.c{text-align:center}
+.iproc-table td.nm{font-weight:600;padding:6px 10px}
+.iproc-table input[type=checkbox]{width:17px;height:17px;cursor:pointer;accent-color:var(--primary)}
+.iproc-table input[type=text],.iproc-table input[type=date]{width:100%;border:none;outline:none;background:transparent;padding:6px 6px;font-family:'Cairo',sans-serif;font-size:.78rem}
+.iproc-table input[type=date]{text-align:center}
+.iproc-table input:focus{background:#fffbea}
+.iproc-namewrap{display:flex;align-items:center;gap:4px}
+.iproc-del{background:none;border:none;color:#dc2626;cursor:pointer;font-size:.9rem;padding:2px 6px}
+.iproc-add{margin-top:8px;background:#eff6ff;border:1.5px dashed var(--primary-light);color:var(--primary);border-radius:8px;padding:6px 16px;font-family:'Cairo',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer}
+body.dark-mode .iproc-table td{border-color:#334155}
+body.dark-mode .iproc-table tbody tr:nth-child(even){background:#1e293b}
+body.dark-mode .iproc-table input[type=text],body.dark-mode .iproc-table input[type=date]{color:#e2e8f0}
+.iproc-table input[type=radio]{width:17px;height:17px;padding:0;cursor:pointer;accent-color:var(--primary)}
+.sn-cat-table tbody tr{cursor:pointer}
+.sn-cat-table tbody tr:hover{background:#eff6ff}
+.sn-cat-table tbody tr:has(input:checked){background:#dbeafe}
+.sn-cat-table tbody tr:has(input:checked) td.nm{color:#1d4ed8;font-weight:800}
+body.dark-mode .sn-cat-table tbody tr:hover{background:#1e3a5f}
+body.dark-mode .sn-cat-table tbody tr:has(input:checked){background:#1e40af}
+body.dark-mode .sn-cat-table tbody tr:has(input:checked) td.nm{color:#bfdbfe}
+
+#ab-summary-table th{background:linear-gradient(90deg,#92400e,#d97706);border-color:#d97706}
+#ab-summary-table input[type=checkbox]{accent-color:#d97706}
+#ab-summary-table + .x{}
+/* ── طباعة تقرير المقابلة: هوامش على الأربع جهات + تقرير متمركز ── */
+@media print {
+  /* هوامش @page صفرية = يختفي التاريخ والعنوان ورابط الملف ورقم الصفحة؛ الهوامش الفعلية تُطبَّق بالحشو أسفله */
+  @page i-report { size: A4 portrait; margin: 0; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open { page: i-report; }
+  html.i-print-mode, html.i-print-mode body { width: auto !important; max-width: none !important; }
+  html.i-print-mode .page-wrapper { width: 100% !important; max-width: 100% !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open .modal-box { width: 100% !important; max-width: 100% !important; margin: 0 auto !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open .modal-body { width: 100% !important; margin: 0 auto !important; padding: 16mm 18mm 18mm !important; box-sizing: border-box !important; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .new-report-header { margin-bottom: 10px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .report-section-title { font-size: .72rem !important; margin: 10px 0 5px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .info-table-report { font-size: .68rem !important; margin-bottom: 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .info-table-report td { font-size: .68rem !important; padding: 4px 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report { font-size: .66rem !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report th { font-size: .68rem !important; padding: 5px 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report td { font-size: .66rem !important; padding: 4px 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .proc-table-report tr { break-inside: avoid; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .report-summary-block { font-size: .7rem !important; line-height: 1.75 !important; padding: 6px 10px !important; margin-bottom: 8px !important; }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal) .signatures { margin-top: 18px !important; break-inside: avoid; }
+}
+/* متصفحات لا تدعم الصفحات المسمّاة: هوامش عبر الحشو */
+
+  .wa-help { display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 14px; padding: 10px 14px; border-radius: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; text-decoration: none; font-family: 'Cairo', sans-serif; font-size: .82rem; font-weight: 700; transition: background .15s, transform .15s; }
+  .wa-help:hover { background: #dcfce7; transform: translateY(-1px); }
+  .wa-help .wa-ico { width: 30px; height: 30px; border-radius: 50%; background: #25D366; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .wa-help .wa-ico svg { width: 18px; height: 18px; fill: #fff; }

@@ -1,0 +1,12 @@
+
+.abp-t{border-collapse:collapse;font-size:.8rem;width:max-content;min-width:100%}
+.abp-t th,.abp-t td{border:1px solid #d9dde3;padding:0;text-align:center;white-space:nowrap}
+.abp-t th{background:#f3f4f6;padding:6px 6px;position:sticky;top:0;color:#1b1f24;font-weight:800;z-index:2}
+.abp-t th.w,.abp-t td.w{background:#eceef2}
+.abp-t td.k,.abp-t th.k{position:sticky;right:0;min-width:46px;padding:4px 6px;background:#fff;color:#1b1f24;z-index:1}
+.abp-t th.k{background:#f3f4f6;z-index:3}
+.abp-t td.n,.abp-t th.nm{padding:4px 10px;text-align:right;position:sticky;right:46px;background:#fff;color:#1b1f24;min-width:150px}
+.abp-t th.nm{background:#f3f4f6;z-index:3}
+.abp-t td input{width:30px;border:0;background:transparent;color:inherit;text-align:center;font:inherit;padding:7px 0}
+.abp-t td.r{background:#f8b4b4}.abp-t td.y{background:#fde68a}.abp-t td.q{outline:2px dashed #d97706;outline-offset:-2px}
+.abp-t td.t{padding:4px 8px;font-weight:700;color:#1b1f24}

@@ -1,0 +1,397 @@
+
+<div class="page-wrapper">
+
+<!-- شاشة الدخول انتقلت إلى React: src/auth/LoginScreen.jsx -->
+
+<!-- ======= FIREBASE SETUP MODAL ======= -->
+<div id="firebaseSetupModal"><!-- المحتوى يرسمه React: src/firebase-setup/FirebaseSetupModal.jsx --></div>
+
+
+<!-- ======= PROFILE MODAL ======= -->
+<div id="profileModal"><!-- المحتوى يرسمه React: src/profile/ProfileModal.jsx --></div>
+
+
+<!-- ======= SETTINGS MODAL ======= -->
+<div id="settingsModal"><!-- المحتوى يرسمه React: src/settings/SettingsModal.jsx --></div>
+
+<!-- ======= FROZEN NAV (mini icons fixed on right while a tool is open) ======= -->
+<div id="frozenNav"><!-- البطاقات يرسمها React: src/nav/FrozenNav.jsx --></div>
+
+<!-- ===== MAIN HEADER ===== -->
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-brand">
+      <div class="header-emblem">🎓</div>
+      <div class="header-text">
+        <h1>المملكة المغربية</h1>
+        <p class="dyn-ministry">وزارة التربية الوطنية والتعليم الأولي والرياضة</p>
+        <p class="dynamic-directorate">مديرية الحي الحسني</p>
+      </div>
+    </div>
+    <div class="hdr-title" style="text-align:center; flex:1; padding: 0 16px;">
+      <h2 style="font-family:'Amiri',serif;font-size:1.45rem;font-weight:700;color:white;margin:0;">🗂 أدوات التوثيق</h2>
+    </div>
+    <div id="userBar"></div>
+  </div>
+  <!-- SEARCH + NOTIF BAR — shown after login -->
+  <div id="searchNotifBar" style="display:none;align-items:center;gap:10px;padding:8px 20px 10px;background:rgba(0,0,0,0.15);">
+    <!-- GLOBAL STUDENT SEARCH -->
+    <div id="globalSearchBar" style="flex:1;position:relative;"><!-- الحقل والقائمة يرسمهما React: src/search/GlobalSearch.jsx --></div>
+    <!-- جرس الإشعارات يرسمه React: src/tracking/TrackingModals.jsx -->
+    <div id="mountNotifBell"></div>
+  </div>
+  <!-- ===== HOME HERO (v24) ===== -->
+  <div class="home-hero">
+    <div class="hp-min">
+      <img id="hpMinistryLogo" alt="شعار الوزارة" src="">
+      <b>المملكة المغربية</b>
+      <span class="dyn-ministry">وزارة التربية الوطنية والتعليم الأولي والرياضة</span>
+    </div>
+    <div class="hp-center">
+      <div class="hp-center-txt">
+        <h2 class="hp-school dynamic-directorate">مديرية الحي الحسني</h2>
+        <p class="hp-sub">منصة التوثيق المهني</p>
+        <div class="hp-count"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.8 0 4.7 1.9 4.7 5"/></svg><span id="mountStudentCount"></span></div>
+      </div>
+      <svg class="hp-bld" viewBox="0 0 140 124" aria-hidden="true">
+  <line x1="70" y1="3" x2="70" y2="24" stroke="#d5deef" stroke-width="2"/>
+  <path d="M70 4h16l-4 4.5 4 4.5H70z" fill="#e5352b"/>
+  <polygon points="48,28 70,14 92,28" fill="#c62d2d"/>
+  <rect x="52" y="28" width="36" height="28" fill="#f4f7fd"/>
+  <rect x="60" y="34" width="8" height="10" rx="2" fill="#2f6fe4"/><rect x="72" y="34" width="8" height="10" rx="2" fill="#2f6fe4"/>
+  <rect x="9" y="50" width="122" height="7" rx="2" fill="#c62d2d"/>
+  <rect x="14" y="57" width="112" height="49" fill="#f8faff"/>
+  <g fill="#2f6fe4">
+    <rect x="21" y="64" width="11" height="11" rx="2"/><rect x="38" y="64" width="11" height="11" rx="2"/>
+    <rect x="91" y="64" width="11" height="11" rx="2"/><rect x="108" y="64" width="11" height="11" rx="2"/>
+    <rect x="21" y="83" width="11" height="11" rx="2"/><rect x="38" y="83" width="11" height="11" rx="2"/>
+    <rect x="91" y="83" width="11" height="11" rx="2"/><rect x="108" y="83" width="11" height="11" rx="2"/>
+  </g>
+  <path d="M60 106V86a10 10 0 0 1 20 0v20z" fill="#1f4fb8"/>
+  <rect x="5" y="106" width="130" height="6" rx="3" fill="#cfd8ea"/>
+</svg>
+    </div>
+    <div class="hp-date" id="portalDateBox">
+      <div id="mountHeroDate"></div>
+      <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="36" height="33" rx="6" fill="rgba(255,255,255,.14)"/><path d="M15 5v8M33 5v8M6 19h36"/><g fill="#fff" stroke="none"><rect x="13" y="25" width="5" height="4" rx="1"/><rect x="21.5" y="25" width="5" height="4" rx="1"/><rect x="30" y="25" width="5" height="4" rx="1"/><rect x="13" y="32" width="5" height="4" rx="1"/><rect x="21.5" y="32" width="5" height="4" rx="1"/><rect x="30" y="32" width="5" height="4" rx="1"/></g></svg>
+    </div>
+  </div>
+  <div class="accent-bar"></div>
+</header>
+
+<!-- ===== PORTAL LANDING — v24 (لوحة المؤسسة) ===== -->
+<div id="portalLanding">
+  <div id="mountSiteNotice"><!-- الميزاجور يرسمه React: src/notice/SiteNotice.jsx --></div>
+  <div class="hp-main">
+
+    <!-- بوابات أخرى -->
+    <section class="hp-panel hp-others" aria-label="بوابات أخرى">
+      <h3 class="hp-panel-title"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg><span>بوابات أخرى</span></h3>
+      <div class="hp-list" id="mountTilesOthers"></div>
+    </section>
+
+    <!-- الإحصائيات + الرسم البياني -->
+    <section class="hp-panel hp-stats" aria-label="إحصائيات">
+      <div class="hp-stats-head" id="mountStatsHead"></div>
+      <div class="hp-inner" id="mountStatsKpis">
+      </div>
+      <div class="hp-inner hp-chart-card" id="mountStatsChart"></div>
+
+      <!-- أخبار وقوانين المختصين (تُدار من لوحة الأدمين) — يرسمها React: src/news/NewsCard.jsx -->
+      <div class="hp-inner hp-news-card" id="mountNews"></div>
+    </section>
+
+    <!-- البوابات -->
+    <section class="hp-panel hp-portals" aria-label="البوابات">
+      <h3 class="hp-panel-title"><svg class="" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.8 0 4.7 1.9 4.7 5"/></svg><span>البوابات</span></h3>
+      <div class="hp-list" id="mountTilesPortals"></div>
+    </section>
+  </div>
+
+  <!-- التقرير الأسبوعي الشامل -->
+  <div class="hp-report" id="mountHomeReport"></div>
+</div>
+
+<!-- ===== TOOL: PRINT DOCUMENTS ===== -->
+<div id="toolPrintdocs" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🏥 بوابة الإحالة والإخبار الصحي</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatarPrint">؟</div>
+      <span class="bb-name" id="bbNamePrint">الحساب</span>
+    </div>
+  </div>
+
+  <!-- شريط عنوان البوابة والتبويبان يُرسمان في #mountPrintdocsHero، والنماذج في #mountPrintdocs (ابنان مباشران لـ.tool-page كي تنطبق قواعد العرض في style-19.css) -->
+  <div id="mountPrintdocsHero" style="background:linear-gradient(135deg,#0a1f3d 0%,#1a3a5c 55%,#1e4976 100%);padding:20px 20px 0;position:relative;overflow:hidden;"></div>
+  <div class="main-container" id="mountPrintdocs" style="padding-top:14px;"></div>
+
+  <!-- ===== نافذة معاينة وطباعة وثائق بوابة الطباعة ===== -->
+</div><!-- /toolPrintdocs -->
+
+<!-- ===== TOOL 1: INDIVIDUAL INTERVIEWS ===== -->
+<div id="toolInterview" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🗂 نموذج تقرير المقابلة الفردية</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountInterview"></div>
+
+</div>
+
+<!-- نافذة «سجل التلميذ» يرسمها React: src/history/StudentHistoryModal.jsx -->
+
+<!-- ===== TOOL 2: REINTEGRATION ===== -->
+<div id="toolReintegration" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">📋 نموذج تتبع إعادة الإدماج المدرسي</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountReintegration"></div>
+
+</div>
+
+
+
+
+<!-- ===== TOOL: INDIVIDUAL INTERVENTION PROGRAM ===== -->
+<div id="toolIip" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#0f5e63,#14909a);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🧩 البرنامج التدخلي الفردي — المختص الاجتماعي</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar">؟</div>
+      <span class="bb-name">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container"><div id="mountIip"></div></div>
+</div>
+
+<!-- ===== TOOL: MOST ABSENT STUDENTS ===== -->
+<div id="toolAbsence" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#92400e,#d97706);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🚨 نموذج تتبع التلاميذ الأكثر غياباً</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar">؟</div>
+      <span class="bb-name">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountAbsence"></div>
+
+</div>
+
+
+
+<!-- ===== TOOL 3: TASK LOG ===== -->
+<div id="toolParents" class="tool-page">
+  <div class="back-bar"><div class="back-bar-right"><button class="back-btn" onclick="goBack()">← العودة للرئيسية</button><span class="back-bar-title">📞 التواصل مع أولياء الأمور</span></div>
+  <div class="back-bar-user" onclick="openProfile()"><div class="bb-avatar">؟</div><span class="bb-name">الحساب</span></div></div>
+  <div class="main-container"><div id="mountParents"></div></div>
+</div>
+<div id="toolFollowup" class="tool-page">
+  <div class="back-bar"><div class="back-bar-right"><button class="back-btn" onclick="goBack()">← العودة للرئيسية</button><span class="back-bar-title">🔔 المتابعة وتتبع الحالات</span></div>
+  <div class="back-bar-user" onclick="openProfile()"><div class="bb-avatar">؟</div><span class="bb-name">الحساب</span></div></div>
+  <div class="main-container"><div id="mountFollowup"></div></div>
+</div>
+<!-- نافذة معاينة/طباعة بوابتي الأولياء والمتابعة (خارج أي أداة مخفية) -->
+<div id="toolTasklog" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">📝 سجل المهام اليومي للمختص الاجتماعي</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container"><div id="mountTasklog"></div></div>
+
+</div>
+
+<!-- ===== TOOL 4: STATISTICS ===== -->
+<div id="toolStats" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">📊 الإحصاء البياني لعمل المختص الاجتماعي</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountStatsPage"></div>
+
+
+</div>
+
+<!-- نافذتا معاينة وتعديل التقرير الأسبوعي وتعديل السجل صارتا في React (src/weeklypreview) وتُرسمان في document.body -->
+<!-- Chart.js CDN -->
+
+<!-- SheetJS for Excel export/import -->
+
+
+
+
+
+<!-- ===== TOOL 5: VIOLENCE INTERVENTION ===== -->
+<div id="toolViolence" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#991b1b,#dc2626);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🛡️ نموذج التدخل في حالات العنف</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar">؟</div>
+      <span class="bb-name">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountViolence"></div>
+
+</div>
+
+<!-- ===== TOOL 6: CASE FILE ===== -->
+<div id="toolCasefile" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#0f766e,#0d9488);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">📁 ملف الحالة الشامل</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar">؟</div>
+      <span class="bb-name">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountCasefile"></div>
+</div>
+
+
+<!-- ===== TOOL: WORKSHOPS & ACTIVITIES ===== -->
+<div id="toolWorkshops" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#92400e,#d97706);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🎯 الورشات والأنشطة التربوية</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatarWorkshops">؟</div>
+      <span class="bb-name" id="bbNameWorkshops">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountWorkshops"></div>
+
+</div>
+
+<!-- ===== TOOL: SPECIAL NEEDS / LEARNING DIFFICULTIES ===== -->
+<div id="toolSpecialNeeds" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">♿ وضعية إعاقة وصعوبات التعلم</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatarSN">؟</div>
+      <span class="bb-name" id="bbNameSN">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountSpecialNeeds"></div>
+
+  <!-- نافذة التتبع (بطاقة المتابعة) صارت في React (src/specialneeds) وتُرسم في document.body -->
+</div>
+
+
+
+<!-- ===== TOOL: VIGILANCE CELL — خلية اليقظة ===== -->
+<div id="toolVigilance" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title"> خلية اليقظة — التلاميذ في وضعية حرجة</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container" id="mountVigilance"></div>
+</div>
+
+
+<!-- ===== TOOL: BEHAVIOR MONITORING — رصد السلوك ===== -->
+<div id="toolBehavior" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title"> رصد السلوك — الجدول الأسبوعي للسلوكات</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container"><div id="mountBehavior"></div></div>
+</div>
+
+</div><!-- end page-wrapper -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ===== DEVELOPER FOOTER ===== -->
+<div class="dev-footer" style="background:linear-gradient(135deg,#0f2744,#1a3a5c);color:rgba(255,255,255,0.6);text-align:center;padding:12px 20px;font-size:0.74rem;direction:rtl;border-top:2px solid rgba(200,169,74,0.3);">
+  <span style="color:rgba(200,169,74,0.9);"> تم البرمجة والتطوير بواسطة:</span>
+  <strong style="color:#f0d97a;font-size:0.82rem;margin:0 6px;">عبدالإله حمداوي</strong>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <span style="color:rgba(255,255,255,0.55);margin-right:6px;">جميع الحقوق محفوظة © 2026</span>
+  <span style="color:rgba(255,255,255,0.4);">|</span>
+  <span style="color:rgba(200,169,74,0.7);margin-right:6px;">الإصدار v14 — 2026</span>
+</div>
+
+<!-- نافذة «اختر الأسبوع» صارت في React (src/weekpicker) وتُرسم في document.body -->
+
+<!-- نافذتا تعديل خلية اليقظة ومعاينة بطاقتها صارتا في React (src/vigilance) وتُرسمان في document.body -->
+
+<!-- ============================================================
+     MOBILE-FIX v1 — تكييف الهاتف: الحساب الشخصي كصفحة كاملة + إصلاح الجزء العلوي المخفي
+     ============================================================ -->
+
+
+

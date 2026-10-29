@@ -1,0 +1,17 @@
+
+.pg-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.pg-card h3{margin:0 0 12px;color:var(--primary);font-size:1rem}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}
+.pg-f.wide{grid-column:1/-1}.pg-f label{display:block;font-size:.78rem;font-weight:600;margin-bottom:4px}
+.pg-f input,.pg-f select,.pg-f textarea,.pg-q{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:.86rem;background:var(--surface);color:var(--text)}
+.pg-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}.pg-q{max-width:230px;margin-right:auto}
+.pg-btn{border:none;border-radius:8px;padding:8px 14px;cursor:pointer;color:#fff;font-family:inherit;font-weight:700;font-size:.8rem;background:var(--primary-light)}
+.pg-btn.gray{background:#64748b}.pg-btn.green{background:#16a34a}.pg-btn.red{background:#dc2626}.pg-btn.sm{padding:4px 9px;font-size:.72rem}
+.pg-scroll{overflow-x:auto}.pg-tbl{width:100%;border-collapse:collapse;font-size:.82rem}
+.pg-tbl th,.pg-tbl td{padding:8px;border-bottom:1px solid var(--border);text-align:right;vertical-align:top}.pg-tbl th{background:var(--bg);color:var(--text-muted)}
+.pg-st{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.74rem;font-weight:700;background:#e0f2fe;color:#075985}
+.pg-st.s1{background:#fef3c7;color:#92400e}.pg-st.s2{background:#fee2e2;color:#991b1b}.pg-st.s3{background:#dcfce7;color:#166534}
+.pg-tabs{display:flex;gap:8px;margin-bottom:14px}.pg-tabs button{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:inherit;font-weight:700;cursor:pointer}
+.pg-tabs button.on{background:var(--primary-light);color:#fff;border-color:var(--primary-light)}
+.pp-row{display:flex;gap:8px;justify-content:center;margin:0 0 14px}
+.fu-badge{min-width:20px;height:20px;padding:0 6px;border-radius:10px;background:#dc2626;color:#fff;font-size:.72rem;font-weight:700;align-items:center;justify-content:center;margin-inline-start:6px}

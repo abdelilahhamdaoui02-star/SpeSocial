@@ -1,0 +1,372 @@
+<!-- ===== TOOL: SPECIAL NEEDS / LEARNING DIFFICULTIES ===== -->
+<div id="toolSpecialNeeds" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">♿ وضعية إعاقة وصعوبات التعلم</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatarSN">؟</div>
+      <span class="bb-name" id="bbNameSN">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="info-box" style="background:#eff6ff;border-color:#93c5fd;color:#1d4ed8;">
+      ♿ <span>هذه البوابة مخصصة لتوثيق ومتابعة ملفات التلاميذ في وضعية إعاقة، أو في حالة صحية خاصة، أو الذين يعانون من صعوبات التعلم — مع تسجيل الإجراءات والدعم المقدم.</span>
+    </div>
+
+    <!-- SECTION 1: معلومات التلميذ -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);"><span class="step-badge" style="background:#bfdbfe;color:#1d4ed8;">١</span> معلومات التلميذ(ة)</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group"><label>اسم التلميذ(ة) الكامل *</label><input type="text" id="sn_studentName" placeholder="الاسم الكامل للتلميذ(ة)"></div>
+          <div class="form-group"><label>رقم مسار</label><input type="text" id="sn_studentMassar" placeholder="رقم مسار" readonly style="background:#f0f4ff;color:#1a3a5c;font-weight:700;"></div>
+          <div class="form-group"><label>المؤسسة التعليمية</label><input type="text" id="sn_school" value=""></div>
+          <div class="form-group"><label>القسم</label>
+            <select id="sn_level" class="level-select" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:7px 11px;font-family:'Cairo',sans-serif;font-size:0.875rem;color:var(--text);background:#fafbfc;direction:rtl;width:100%;"><option value="">— اختر القسم —</option></select>
+          </div>
+          <div class="form-group"><label>الجنس</label>
+            <div class="radio-group">
+              <label><input type="radio" name="sn_gender" value="ذكر"> ذكر</label>
+              <label><input type="radio" name="sn_gender" value="أنثى"> أنثى</label>
+            </div>
+          </div>
+          <div class="form-group"><label>هاتف ولي الأمر</label><input type="tel" id="sn_parentPhone" placeholder="06XXXXXXXX"></div>
+          <div class="form-group"><label>تاريخ فتح الملف</label><input type="date" id="sn_recordDate"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: نوع الوضعية -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);"><span class="step-badge" style="background:#bfdbfe;color:#1d4ed8;">٢</span> نوع الوضعية</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group col-span-2">
+            <label>تصنيف الوضعية *</label>
+            <div style="overflow-x:auto;">
+              <table id="sn-category-table" class="iproc-table sn-cat-table">
+                <thead>
+                  <tr>
+                    <th style="width:9%;text-align:center;">✓</th>
+                    <th>نوع الوضعية</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="إعاقة حركية"></td>
+                    <td class="nm">♿ إعاقة حركية</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="إعاقة بصرية"></td>
+                    <td class="nm">👁 إعاقة بصرية</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="إعاقة سمعية"></td>
+                    <td class="nm">👂 إعاقة سمعية</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="إعاقة ذهنية"></td>
+                    <td class="nm">🧠 إعاقة ذهنية</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="اضطراب التوحد"></td>
+                    <td class="nm">🌀 اضطراب التوحد</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="إعاقة متعددة"></td>
+                    <td class="nm">🔄 إعاقة متعددة</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="وضعية صحية مزمنة"></td>
+                    <td class="nm">🏥 وضعية صحية مزمنة</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="صعوبات التعلم"></td>
+                    <td class="nm">📚 صعوبات التعلم</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="عسر القراءة - الديسلكسيا"></td>
+                    <td class="nm">✍️ عسر القراءة</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="اضطراب نقص الانتباه TDAH"></td>
+                    <td class="nm">⚡ اضطراب نقص الانتباه (TDAH)</td>
+                  </tr>
+                  <tr onclick="var r=this.querySelector('input');if(r)r.checked=true;">
+                    <td class="c"><input type="radio" name="sn_category" value="أخرى"></td>
+                    <td class="nm">📌 أخرى</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="form-group col-span-2">
+            <label>وصف الوضعية / التشخيص الطبي أو التربوي</label>
+            <textarea id="sn_diagnosis" placeholder="اكتب وصفاً مختصراً للوضعية الصحية أو التشخيص الطبي / التربوي..." style="min-height:65px;"></textarea>
+            <div class="suggest-chips" style="margin-top:6px;">
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_diagnosis','يعاني(تعاني) التلميذ(ة) من إعاقة حركية تحول دون تنقله(ا) باستقلالية، مما يستوجب تهيئة البيئة المدرسية وتكييفها.')">♿ إعاقة حركية</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_diagnosis','تم تشخيص التلميذ(ة) بعسر القراءة (الديسلكسيا) من قِبَل أخصائي نفسي تربوي، مما يؤثر على تحصيله(ا) الدراسي ويستوجب تكيفات بيداغوجية.')">✍️ عسر القراءة</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_diagnosis','يعاني(تعاني) التلميذ(ة) من اضطراب نقص الانتباه وفرط الحركة (TDAH)، مما ينعكس سلباً على تركيزه(ا) داخل القسم ويستلزم متابعة مستمرة.')">⚡ اضطراب TDAH</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_diagnosis','يخضع(تخضع) التلميذ(ة) لمتابعة طبية دورية بسبب وضعية صحية مزمنة تؤثر على انتظامه(ا) الدراسي وتستوجب مرونة في التعامل.')">🏥 وضعية صحية مزمنة</button>
+            </div>
+          </div>
+          <div class="form-group"><label>هل يتوفر تقرير طبي أو نفسي؟</label>
+            <div class="radio-group">
+              <label><input type="radio" name="sn_has_report" value="نعم — موجود في الملف"> ✅ نعم</label>
+              <label><input type="radio" name="sn_has_report" value="لا — لم يُقدَّم بعد"> ❌ لا</label>
+              <label><input type="radio" name="sn_has_report" value="قيد الإنجاز"> ⏳ قيد الإنجاز</label>
+            </div>
+          </div>
+          <div class="form-group"><label>مصدر الإحالة</label>
+            <div class="radio-group">
+              <label><input type="radio" name="sn_referral" value="الأسرة"> 👨‍👩 الأسرة</label>
+              <label><input type="radio" name="sn_referral" value="الإدارة"> 🏫 الإدارة</label>
+              <label><input type="radio" name="sn_referral" value="الأستاذ"> 📖 الأستاذ</label>
+              <label><input type="radio" name="sn_referral" value="المرشد التربوي"> 🧑‍🏫 المرشد</label>
+              <label><input type="radio" name="sn_referral" value="الصحة المدرسية"> 🩺 الصحة المدرسية</label>
+              <label><input type="radio" name="sn_referral" value="ذاتي"> 🙋 ذاتي</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: الإجراءات المتخذة -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);"><span class="step-badge" style="background:#bfdbfe;color:#1d4ed8;">٣</span> الإجراءات المتخذة</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group col-span-2">
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:8px;">حدّد الإجراء المتخذ ثم أدخل <strong>التاريخ</strong> و<strong>الملاحظات</strong> (تُحدَّد الخانة تلقائياً عند الكتابة).</div>
+            <div style="overflow-x:auto;">
+              <table id="sn-summary-table" class="iproc-table">
+                <thead>
+                  <tr>
+                    <th style="width:7%;text-align:center;">✓</th>
+                    <th style="width:34%;">اسم الإجراء</th>
+                    <th style="width:18%;text-align:center;">التاريخ</th>
+                    <th>الملاحظات</th>
+                  </tr>
+                </thead>
+                <tbody>
+              <tr data-key="listening">
+                <td class="c"><input type="checkbox" id="sn_chk_listening"></td>
+                <td class="nm">🎧 جلسة استماع مع التلميذ</td>
+                <td><input type="date" id="sn_pdate_listening" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_listening" placeholder="مدة الجلسة، أبرز ما دار فيها..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="parent">
+                <td class="c"><input type="checkbox" id="sn_chk_parent"></td>
+                <td class="nm">📞 تواصل مع ولي الأمر</td>
+                <td><input type="date" id="sn_pdate_parent" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_parent" placeholder="طريقة التواصل وموضوعه..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="admin">
+                <td class="c"><input type="checkbox" id="sn_chk_admin"></td>
+                <td class="nm">🏫 تنسيق مع الإدارة</td>
+                <td><input type="date" id="sn_pdate_admin" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_admin" placeholder="الجهة المنسَّق معها..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="teachers">
+                <td class="c"><input type="checkbox" id="sn_chk_teachers"></td>
+                <td class="nm">📖 تنسيق مع هيئة التدريس</td>
+                <td><input type="date" id="sn_pdate_teachers" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_teachers" placeholder="الأساتذة المعنيون، التكيفات المتفق عليها..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="psych">
+                <td class="c"><input type="checkbox" id="sn_chk_psych"></td>
+                <td class="nm">🧠 إحالة على أخصائي نفسي</td>
+                <td><input type="date" id="sn_pdate_psych" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_psych" placeholder="اسم الأخصائي / الجهة..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="doctor">
+                <td class="c"><input type="checkbox" id="sn_chk_doctor"></td>
+                <td class="nm">🩺 إحالة على طبيب متخصص</td>
+                <td><input type="date" id="sn_pdate_doctor" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_doctor" placeholder="التخصص / الجهة..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="classenv">
+                <td class="c"><input type="checkbox" id="sn_chk_classenv"></td>
+                <td class="nm">🏫 تكييف بيئة الفصل</td>
+                <td><input type="date" id="sn_pdate_classenv" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_classenv" placeholder="نوع التكييف..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="support">
+                <td class="c"><input type="checkbox" id="sn_chk_support"></td>
+                <td class="nm">📚 دعم تربوي متخصص</td>
+                <td><input type="date" id="sn_pdate_support" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_support" placeholder="المواد المعنية، وتيرة الدعم..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="solidarity">
+                <td class="c"><input type="checkbox" id="sn_chk_solidarity"></td>
+                <td class="nm">🏛️ إحالة على مصالح التضامن</td>
+                <td><input type="date" id="sn_pdate_solidarity" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_solidarity" placeholder="الجهة المُحال إليها..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="institutions">
+                <td class="c"><input type="checkbox" id="sn_chk_institutions"></td>
+                <td class="nm">🤝 إشراك مؤسسات الدعم الاجتماعي</td>
+                <td><input type="date" id="sn_pdate_institutions" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_institutions" placeholder="اسم المؤسسة / الجمعية..." oninput="iAutoCheck(this)"></td>
+              </tr>
+              <tr data-key="council">
+                <td class="c"><input type="checkbox" id="sn_chk_council"></td>
+                <td class="nm">📋 اجتماع مجلس القسم</td>
+                <td><input type="date" id="sn_pdate_council" oninput="iAutoCheck(this)" onchange="iAutoCheck(this)"></td>
+                <td><input type="text" class="iproc-note" id="sn_pnote_council" placeholder="تاريخ الاجتماع والقرارات..." oninput="iAutoCheck(this)"></td>
+              </tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="iproc-add" onclick="snTblAddRow()">+ إضافة إجراء آخر</button>
+          </div>
+          <div class="form-group col-span-2">
+            <label>التكيفات البيداغوجية المعتمدة</label>
+            <div class="check-group">
+              <label><input type="checkbox" name="sn_adaptations" value="تمديد وقت الاختبار"> ⏰ تمديد وقت الاختبار</label>
+              <label><input type="checkbox" name="sn_adaptations" value="جلوس في مقدمة الفصل"> 🪑 جلوس في مقدمة الفصل</label>
+              <label><input type="checkbox" name="sn_adaptations" value="تكييف أوراق الامتحان"> 📝 تكييف أوراق الامتحان</label>
+              <label><input type="checkbox" name="sn_adaptations" value="امتحان شفهي"> 🗣️ امتحان شفهي</label>
+              <label><input type="checkbox" name="sn_adaptations" value="مرافق للمكفوفين"> 👁 مرافق للمكفوفين</label>
+              <label><input type="checkbox" name="sn_adaptations" value="تكييف محيط الإعاقة الحركية"> ♿ تكييف محيط الإعاقة الحركية</label>
+              <label><input type="checkbox" name="sn_adaptations" value="دعم لغوي إشاري"> 🤟 دعم لغوي إشاري</label>
+              <label><input type="checkbox" name="sn_adaptations" value="وثائق مبسّطة"> 📄 وثائق مبسّطة</label>
+              <label><input type="checkbox" name="sn_adaptations" value="أخرى"> 📌 أخرى</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: المتابعة والتوصيات -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);"><span class="step-badge" style="background:#bfdbfe;color:#1d4ed8;">٤</span> الخلاصة والتوصيات</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group"><label>الحالة الراهنة</label>
+            <div class="radio-group">
+              <label><input type="radio" name="sn_current_status" value="مستقرة — مندمج في المسار التعليمي"> 🟢 مستقرة</label>
+              <label><input type="radio" name="sn_current_status" value="قيد المتابعة"> 🔶 قيد المتابعة</label>
+              <label><input type="radio" name="sn_current_status" value="تحتاج تدخلاً عاجلاً"> 🔴 تحتاج تدخلاً عاجلاً</label>
+              <label><input type="radio" name="sn_current_status" value="محوّلة للجهات المختصة"> 🏛️ محوّلة للجهات المختصة</label>
+            </div>
+          </div>
+          <div class="form-group col-span-2">
+            <label>التوصية الختامية</label>
+            <textarea id="sn_recommendation" placeholder="اكتب التوصية الختامية للمختص الاجتماعي..." style="min-height:65px;"></textarea>
+            <div class="suggest-chips" style="margin-top:6px;">
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_recommendation','يُوصى باستمرار المتابعة الدورية للتلميذ(ة) وضمان توفير التكيفات البيداغوجية اللازمة مع إشراك أسرته في هذه العملية.')">🔄 متابعة دورية مع الأسرة</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_recommendation','يُقترح إحالة التلميذ(ة) إلى مركز متخصص في إعادة التأهيل لتقييم احتياجاته(ا) بشكل أدق وتقديم الدعم المناسب.')">🏥 إحالة إلى مركز متخصص</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_recommendation','يُنصح بالتنسيق مع هيئة التدريس لضمان تطبيق التكيفات البيداغوجية المعتمدة وتعزيز انخراط التلميذ(ة) في العملية التعليمية.')">📖 تنسيق مع هيئة التدريس</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('sn_recommendation','يُوصى بتفعيل آليات التعليم الدامج عبر إشراك كافة الأطراف التربوية في رسم خطة متكاملة لدعم التلميذ(ة).')">🌍 تفعيل التعليم الدامج</button>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:18px;">
+          <button class="btn btn-primary" style="background:linear-gradient(135deg,#1d4ed8,#2563eb);" onclick="snGenerateReport()">📄 معاينة التقرير وطباعته</button>
+          <button class="btn btn-success" onclick="snSaveToArchive()">🗄️ حفظ في الأرشيف</button>
+          <button class="btn btn-outline" onclick="snClearAll()">🔄 تفريغ النموذج</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- الأرشيف -->
+    <div class="archive-panel" style="border-color:#93c5fd;">
+      <div class="archive-header" onclick="toggleSnArchive()" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);">
+        <div class="archive-header-left"><span>🗄️</span><span>سجل الأرشيف — التلاميذ في وضعية إعاقة وصعوبات التعلم</span><span class="archive-badge" id="snArchiveCount">0</span></div>
+        <span id="snArchiveArrow">▼</span>
+      </div>
+      <div class="archive-body" id="snArchiveBody">
+        <div class="archive-stats" id="snArchiveStats"></div>
+        <div class="archive-search">
+          <input type="text" id="snArchiveSearch" placeholder="🔍 ابحث باسم التلميذ أو نوع الوضعية..." oninput="renderSnArchive()">
+          <button class="btn-sm btn-sm-danger" onclick="clearSnArchive()">🗑 مسح الأرشيف</button>
+        </div>
+        <div id="snArchiveList"><div class="archive-empty">📂 لا توجد ملفات محفوظة بعد.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Modal -->
+  <div id="snPrintModal" class="print-modal">
+    <div class="modal-box">
+      <div class="modal-header"><h3>♿ تقرير وضعية إعاقة / صعوبات التعلم</h3><button class="modal-close" onclick="document.getElementById('snPrintModal').classList.remove('open')">✕</button></div>
+      <div class="modal-body" id="snReportContent"></div>
+      <div class="modal-footer" style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="document.getElementById('snPrintModal').classList.remove('open')">إغلاق</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>
+        <button class="btn btn-success" onclick="exportToWord('snReportContent', 'تقرير_الإعاقة')" style="background:#1d6f42;color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">📝 تحميل Word</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tracking Card Modal -->
+  <div id="snTrackingModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:700;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:white;border-radius:16px;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);display:flex;flex-direction:column;" id="snTrackingBox">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#0f766e,#14b8a6);color:white;padding:18px 24px;border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;">
+        <div>
+          <div style="font-size:1rem;font-weight:800;display:flex;align-items:center;gap:8px;">📋 بطاقة المتابعة والتتبع</div>
+          <div style="font-size:0.78rem;opacity:0.85;margin-top:3px;" id="snTrackingStudentName">—</div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="snDownloadTrackingCard()" style="background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:white;border-radius:8px;padding:7px 13px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.8rem;font-weight:700;">⬇️ تحميل البطاقة</button>
+          <button onclick="snDownloadTrackingCardWord()" style="background:#166534;border:1px solid rgba(255,255,255,0.35);color:white;border-radius:8px;padding:7px 13px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.8rem;font-weight:700;">📝 تحميل Word</button>
+          <button onclick="document.getElementById('snTrackingModal').style.display='none'" style="background:rgba(255,255,255,0.15);border:none;color:white;font-size:1.3rem;cursor:pointer;border-radius:8px;padding:4px 10px;">✕</button>
+        </div>
+      </div>
+
+      <!-- Add tracking entry -->
+      <div style="padding:18px 20px;background:#f0fdfa;border-bottom:2px solid #99f6e4;">
+        <div style="font-size:0.82rem;font-weight:700;color:#0f766e;margin-bottom:10px;">➕ إضافة جلسة متابعة جديدة</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+          <div>
+            <label style="font-size:0.75rem;font-weight:600;color:#0f766e;display:block;margin-bottom:4px;">📅 تاريخ المتابعة *</label>
+            <input type="date" id="snTrackDate" style="width:100%;padding:8px 10px;border:1.5px solid #99f6e4;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;background:white;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem;font-weight:600;color:#0f766e;display:block;margin-bottom:4px;">📊 نتيجة المتابعة *</label>
+            <select id="snTrackResult" style="width:100%;padding:8px 10px;border:1.5px solid #99f6e4;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;background:white;">
+              <option value="">-- اختر النتيجة --</option>
+              <option value="✅ تحسن ملحوظ">✅ تحسن ملحوظ</option>
+              <option value="🟢 وضعية مستقرة">🟢 وضعية مستقرة</option>
+              <option value="🔶 لا يزال قيد المتابعة">🔶 لا يزال قيد المتابعة</option>
+              <option value="🔴 تراجع — يستدعي تدخلاً">🔴 تراجع — يستدعي تدخلاً</option>
+              <option value="🏛️ تمت الإحالة">🏛️ تمت الإحالة</option>
+              <option value="✔️ انتهت المتابعة">✔️ انتهت المتابعة</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-bottom:10px;">
+          <label style="font-size:0.75rem;font-weight:600;color:#0f766e;display:block;margin-bottom:4px;">📝 ملاحظات المتابعة</label>
+          <textarea id="snTrackNote" placeholder="اكتب ملاحظاتك حول هذه الجلسة..." style="width:100%;padding:8px 10px;border:1.5px solid #99f6e4;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;resize:vertical;min-height:60px;background:white;box-sizing:border-box;"></textarea>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:0.75rem;font-weight:600;color:#0f766e;display:block;margin-bottom:4px;">👤 اسم المتابِع</label>
+            <input type="text" id="snTrackBy" placeholder="اسم المختص / المعلم..." style="width:100%;padding:8px 10px;border:1.5px solid #99f6e4;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;background:white;box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.75rem;font-weight:600;color:#0f766e;display:block;margin-bottom:4px;">📅 موعد المتابعة القادمة</label>
+            <input type="date" id="snTrackNextDate" style="width:100%;padding:8px 10px;border:1.5px solid #99f6e4;border-radius:8px;font-family:'Cairo',sans-serif;font-size:0.82rem;background:white;box-sizing:border-box;">
+          </div>
+        </div>
+        <button onclick="snAddTrackingLog()" style="margin-top:12px;background:linear-gradient(135deg,#0f766e,#14b8a6);color:white;border:none;border-radius:8px;padding:9px 20px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.84rem;font-weight:700;width:100%;">💾 حفظ جلسة المتابعة</button>
+      </div>
+
+      <!-- Tracking table -->
+      <div style="padding:18px 20px;flex:1;">
+        <div style="font-size:0.82rem;font-weight:700;color:#1a3a5c;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
+          <span>🗂️ سجل جلسات المتابعة</span>
+          <span id="snTrackCount" style="background:#dbeafe;color:#1d4ed8;border-radius:12px;padding:2px 10px;font-size:0.72rem;">0 جلسة</span>
+        </div>
+        <div id="snTrackingTable"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

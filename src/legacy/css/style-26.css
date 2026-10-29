@@ -1,0 +1,9 @@
+
+@media print{
+  html.i-print-mode #toolPrintdocs.active > .main-container,
+  html.i-print-mode #toolPrintdocs.active > .pd-no-print{ display:none !important; }
+  html.i-print-mode #toolPrintdocs.active #pdPrintModal.open, #pgPrintModal.open{ display:block !important; }
+}
+#pdPrintModal .report-summary-block{ white-space:pre-wrap; }
+#pdPrintModal .pd-proc-list{ margin:0; padding:0 18px 0 0; }
+#pdPrintModal .pd-proc-list li{ margin-bottom:3px; }

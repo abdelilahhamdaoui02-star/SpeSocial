@@ -1,0 +1,261 @@
+<!-- ===== TOOL: WORKSHOPS & ACTIVITIES ===== -->
+<div id="toolWorkshops" class="tool-page">
+  <div class="back-bar" style="background:linear-gradient(90deg,#92400e,#d97706);">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">🎯 الورشات والأنشطة التربوية</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatarWorkshops">؟</div>
+      <span class="bb-name" id="bbNameWorkshops">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="info-box" style="background:#fffbeb;border-color:#fcd34d;color:#92400e;">
+      🎯 <span>هذه البوابة مخصصة لتخطيط وتوثيق الورشات التوعوية والأنشطة التربوية والبرامج الجماعية المنجزة لفائدة التلاميذ.</span>
+    </div>
+
+    <!-- SECTION 1: معلومات الورشة -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#92400e,#d97706);"><span class="step-badge" style="background:#fde68a;color:#92400e;">١</span> معلومات الورشة / النشاط</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group col-span-2">
+            <label>عنوان الورشة / النشاط *</label>
+            <input type="text" id="ws_title" placeholder="مثال: ورشة الوقاية من العنف المدرسي">
+          </div>
+          <div class="form-group">
+            <label>نوع النشاط</label>
+            <div class="radio-group">
+              <label><input type="radio" name="ws_type" value="ورشة توعوية"> 🎯 ورشة توعوية</label>
+              <label><input type="radio" name="ws_type" value="نشاط تربوي"> 🎨 نشاط تربوي</label>
+              <label><input type="radio" name="ws_type" value="برنامج جماعي"> 👥 برنامج جماعي</label>
+              <label><input type="radio" name="ws_type" value="حصة إرشادية"> 📢 حصة إرشادية</label>
+              <label><input type="radio" name="ws_type" value="رحلة تربوية"> 🚌 رحلة تربوية</label>
+              <label><input type="radio" name="ws_type" value="أخرى"> 📌 أخرى</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>محور النشاط</label>
+            <div class="check-group">
+              <label><input type="checkbox" name="ws_theme" value="الوقاية من العنف"> 🛡️ الوقاية من العنف</label>
+              <label><input type="checkbox" name="ws_theme" value="الصحة النفسية"> 🧠 الصحة النفسية</label>
+              <label><input type="checkbox" name="ws_theme" value="التوجيه المدرسي"> 🎓 التوجيه المدرسي</label>
+              <label><input type="checkbox" name="ws_theme" value="مهارات الحياة"> ✨ مهارات الحياة</label>
+              <label><input type="checkbox" name="ws_theme" value="التعاون والتضامن"> 🤝 التعاون والتضامن</label>
+              <label><input type="checkbox" name="ws_theme" value="الوقاية من الإدمان"> ⚠️ الوقاية من الإدمان</label>
+              <label><input type="checkbox" name="ws_theme" value="ثقافة المواطنة"> 🌍 ثقافة المواطنة</label>
+              <label><input type="checkbox" name="ws_theme" value="أخرى"> 📌 أخرى</label>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>المؤسسة التعليمية</label>
+            <input type="text" id="ws_school" value="" placeholder="اسم المؤسسة">
+          </div>
+          <div class="form-group">
+            <label>تاريخ الإنجاز</label>
+            <input type="date" id="ws_date">
+          </div>
+          <div class="form-group">
+            <label>مدة النشاط (بالساعات)</label>
+            <input type="number" id="ws_duration" placeholder="مثال: 2" min="0.5" step="0.5">
+          </div>
+          <div class="form-group">
+            <label>مكان الإنجاز</label>
+            <div class="radio-group">
+              <label><input type="radio" name="ws_place" value="قاعة متعددة الاستخدامات"> 🏫 قاعة متعددة</label>
+              <label><input type="radio" name="ws_place" value="داخل الفصل"> 📚 داخل الفصل</label>
+              <label><input type="radio" name="ws_place" value="فناء المؤسسة"> 🏟 الفناء</label>
+              <label><input type="radio" name="ws_place" value="خارج المؤسسة"> 🌳 خارج المؤسسة</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>الجهة المنظِمة</label>
+            <div class="check-group">
+              <label><input type="checkbox" name="ws_organizer" value="المختص الاجتماعي"> 👤 المختص الاجتماعي</label>
+              <label><input type="checkbox" name="ws_organizer" value="المرشد التربوي"> 🧑‍🏫 المرشد التربوي</label>
+              <label><input type="checkbox" name="ws_organizer" value="الإدارة"> 🏛️ الإدارة</label>
+              <label><input type="checkbox" name="ws_organizer" value="شراكة خارجية"> 🤝 شراكة خارجية</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: المشاركون -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#92400e,#d97706);"><span class="step-badge" style="background:#fde68a;color:#92400e;">٢</span> الفئة المستهدفة والمشاركون</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>الفئة المستهدفة</label>
+            <div class="check-group">
+              <label><input type="checkbox" name="ws_target" value="تلاميذ المستوى الأول"> 📚 المستوى الأول</label>
+              <label><input type="checkbox" name="ws_target" value="تلاميذ المستوى الثاني"> 📗 المستوى الثاني</label>
+              <label><input type="checkbox" name="ws_target" value="تلاميذ المستوى الثالث"> 📘 المستوى الثالث</label>
+              <label><input type="checkbox" name="ws_target" value="أولياء الأمور"> 👨‍👩 أولياء الأمور</label>
+              <label><input type="checkbox" name="ws_target" value="الأساتذة"> 👨‍🏫 الأساتذة</label>
+              <label><input type="checkbox" name="ws_target" value="جميع التلاميذ"> 👥 جميع التلاميذ</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>عدد المشاركين</label>
+            <div class="form-grid" style="grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;">
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.78rem;">ذكور</label>
+                <input type="number" id="ws_males" placeholder="0" min="0" style="text-align:center;">
+              </div>
+              <div class="form-group" style="margin:0;">
+                <label style="font-size:0.78rem;">إناث</label>
+                <input type="number" id="ws_females" placeholder="0" min="0" style="text-align:center;">
+              </div>
+            </div>
+            <div id="ws_total_display" style="margin-top:8px;text-align:center;font-size:0.85rem;font-weight:700;color:#92400e;background:#fffbeb;border-radius:6px;padding:6px;">
+              إجمالي المشاركين: <span id="ws_total_count">0</span>
+            </div>
+          </div>
+          <div class="form-group col-span-2">
+            <label>الأقسام / المجموعات المشاركة</label>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select id="ws_classes_select" class="level-select" style="border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:7px 11px;font-family:'Cairo',sans-serif;font-size:0.875rem;color:var(--text);background:#fafbfc;direction:rtl;flex:1;"><option value="">— اختر القسم —</option></select>
+              <button type="button" onclick="wsAddClassFromSelect()" style="background:linear-gradient(135deg,#92400e,#d97706);color:white;border:none;border-radius:var(--radius-sm);padding:7px 14px;font-family:'Cairo',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;white-space:nowrap;">+ إضافة</button>
+            </div>
+            <div id="ws_chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:0;"></div>
+            <input type="hidden" id="ws_classes">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: المحتوى والسير -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#92400e,#d97706);"><span class="step-badge" style="background:#fde68a;color:#92400e;">٣</span> محتوى النشاط وسيره</div>
+      <div class="section-body">
+        <div class="form-grid cols-1">
+          <div class="form-group">
+            <label>الأهداف المرجوة من النشاط</label>
+            <textarea id="ws_objectives" style="min-height:75px;" placeholder="اكتب الأهداف التربوية والوقائية المرجوة من هذا النشاط..."></textarea>
+            <div class="suggest-chips" style="margin-top:6px;">
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_objectives','تحسيس التلاميذ بمخاطر العنف المدرسي وأهمية الوقاية منه وتعزيز ثقافة الحوار واللاعنف.')">🛡️ الوقاية من العنف</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_objectives','تقوية مهارات التواصل والتعاون الإيجابي بين التلاميذ وتنمية روح الانتماء للمجموعة التربوية.')">🤝 تعزيز التواصل</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_objectives','تعريف التلاميذ بالتخصصات والمسالك الدراسية المتاحة ومساعدتهم على بناء مشروعهم الشخصي.')">🎓 التوجيه الدراسي</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_objectives','تزويد التلاميذ بمهارات التعامل مع الضغوط النفسية والتحكم في المشاعر السلبية وتعزيز الصحة النفسية.')">🧠 الصحة النفسية</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>ملخص مجريات النشاط</label>
+            <textarea id="ws_summary" style="min-height:100px;" placeholder="صف كيف جرى النشاط، المحاور المُتناولة، أسلوب العمل (مجموعات، عروض، نقاشات...)..."></textarea>
+            <div class="suggest-chips" style="margin-top:6px;">
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_summary','انطلقت الورشة بعرض تقديمي حول الموضوع، ثم تقسيم التلاميذ إلى مجموعات عمل صغيرة، وختمت بجلسة نقاش ومشاركة جماعية.')">📊 عرض + مجموعات</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_summary','جرى النشاط في أجواء إيجابية وتفاعلية، حيث أبدى التلاميذ اهتماماً ومشاركة فعّالة خلال جميع مراحل النشاط.')">✅ تفاعل إيجابي</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_summary','تضمّن النشاط عروضاً بالصور والفيديو، وتمارين عملية، ووزّعت على المشاركين مطويات توعوية في الختام.')">🎬 وسائط بصرية</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>الوسائل والأدوات المستخدمة</label>
+            <div class="check-group">
+              <label><input type="checkbox" name="ws_tools" value="عرض PowerPoint"> 💻 عرض PowerPoint</label>
+              <label><input type="checkbox" name="ws_tools" value="فيديو توعوي"> 🎬 فيديو توعوي</label>
+              <label><input type="checkbox" name="ws_tools" value="مطويات وملصقات"> 📄 مطويات وملصقات</label>
+              <label><input type="checkbox" name="ws_tools" value="لعب أدوار"> 🎭 لعب أدوار</label>
+              <label><input type="checkbox" name="ws_tools" value="عمل جماعي في مجموعات"> 👥 عمل في مجموعات</label>
+              <label><input type="checkbox" name="ws_tools" value="نقاش مفتوح"> 💬 نقاش مفتوح</label>
+              <label><input type="checkbox" name="ws_tools" value="استمارة تقييم"> 📝 استمارة تقييم</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: التقييم والنتائج -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#92400e,#d97706);"><span class="step-badge" style="background:#fde68a;color:#92400e;">٤</span> التقييم والنتائج والتوصيات</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>نتيجة النشاط العامة</label>
+            <div class="radio-group">
+              <label><input type="radio" name="ws_result" value="ناجح بامتياز"> 🏆 ناجح بامتياز</label>
+              <label><input type="radio" name="ws_result" value="ناجح"> ✅ ناجح</label>
+              <label><input type="radio" name="ws_result" value="متوسط"> 🔶 متوسط</label>
+              <label><input type="radio" name="ws_result" value="يحتاج تحسيناً"> 🔄 يحتاج تحسيناً</label>
+            </div>
+          </div>
+          <div class="form-group col-span-2">
+            <label>الملاحظات والتوصيات</label>
+            <textarea id="ws_notes" style="min-height:75px;" placeholder="اكتب ملاحظاتك ومقترحاتك لتحسين الأنشطة المستقبلية..."></textarea>
+            <div class="suggest-chips" style="margin-top:6px;">
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_notes','يُوصى بتكرار هذا النشاط مع باقي الأقسام نظراً للاستجابة الإيجابية التي لقيها من التلاميذ.')">🔄 تكرار النشاط</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_notes','يُقترح إدراج هذا النوع من الأنشطة ضمن المخطط السنوي للمختص الاجتماعي بصفة منتظمة.')">📅 إدراج في المخطط السنوي</button>
+              <button type="button" class="suggest-chip" onclick="appendSuggest('ws_notes','يُنصح بإشراك أولياء الأمور في النسخة القادمة من هذا النشاط لتعزيز أثره التربوي.')">👨‍👩 إشراك أولياء الأمور</button>
+            </div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:18px;">
+          <button class="btn btn-primary" style="background:linear-gradient(135deg,#92400e,#d97706);" onclick="wsGenerateReport()">📄 معاينة التقرير وطباعته</button>
+          <button class="btn btn-success" onclick="wsSaveToArchive()">🗄️ حفظ في الأرشيف</button>
+          <!-- زر تفريغ النموذج مخفي -->
+          <!-- <button class="btn btn-outline" onclick="wsClearAll()">🔄 تفريغ النموذج</button> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: صور النشاط -->
+    <div class="section-card">
+      <div class="section-header" style="background:linear-gradient(90deg,#92400e,#d97706);"><span class="step-badge" style="background:#fde68a;color:#92400e;">٥</span> 📷 صور النشاط</div>
+      <div class="section-body">
+        <input type="file" id="ws_photo_input" accept="image/*" multiple style="display:none" onchange="wsAddPhotos(this.files);this.value='';">
+        <div id="wsPhotoDrop" onclick="document.getElementById('ws_photo_input').click()"
+             ondragover="event.preventDefault();this.style.background='#fef3c7';"
+             ondragleave="this.style.background='#fffbeb';"
+             ondrop="event.preventDefault();this.style.background='#fffbeb';wsAddPhotos(event.dataTransfer.files);"
+             style="border:2px dashed #d97706;background:#fffbeb;border-radius:12px;padding:22px 14px;text-align:center;cursor:pointer;color:#92400e;font-weight:700;font-family:'Cairo',sans-serif;">
+          <div style="font-size:1.8rem;line-height:1.2;">📷</div>
+          <div>اضغط لاستيراد صور النشاط أو اسحبها وأفلتها هنا</div>
+          <div style="font-size:0.74rem;font-weight:600;opacity:.85;margin-top:4px;">حتى 12 صورة — تُضغط تلقائياً لتخفيف حجم الأرشيف</div>
+        </div>
+        <div id="wsPhotoBar" style="display:none;align-items:center;justify-content:space-between;gap:8px;margin-top:12px;font-size:0.82rem;font-weight:700;color:#92400e;">
+          <span>🖼️ عدد الصور: <span id="wsPhotoCount">0</span></span>
+          <button type="button" class="btn-sm btn-sm-danger" onclick="wsClearPhotos()">🗑 حذف كل الصور</button>
+        </div>
+        <div id="wsPhotoGrid" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;align-items:flex-start;"></div>
+        <div style="margin-top:10px;font-size:0.76rem;color:#64748b;line-height:1.8;">🖨️ عند الطباعة تُوضع الصور في ورقة مستقلة بعد التقرير، جنباً إلى جنب في صفحة واحدة، دون أي تأثير على صفحة التقرير نفسها.</div>
+      </div>
+    </div>
+
+    <!-- أرشيف الورشات -->
+    <div class="archive-panel" style="margin-top:6px;">
+      <div class="archive-header" onclick="toggleWsArchive()" style="background:linear-gradient(90deg,#92400e,#d97706);color:white;border-radius:var(--radius) var(--radius) 0 0;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+        <div class="archive-header-left" style="display:flex;align-items:center;gap:10px;font-weight:700;">
+          <span>🗄️</span><span>سجل الأرشيف — الورشات والأنشطة</span>
+          <span class="archive-badge" id="wsArchiveCount" style="background:rgba(255,255,255,0.25);color:white;border-radius:20px;padding:2px 10px;font-size:0.78rem;font-weight:800;">0</span>
+        </div>
+        <span id="wsArchiveArrow" style="color:white;">▼</span>
+      </div>
+      <div class="archive-body" id="wsArchiveBody">
+        <div class="archive-search">
+          <input type="text" id="wsArchiveSearch" placeholder="🔍 ابحث بعنوان الورشة أو المحور..." oninput="renderWsArchive()">
+          <button class="btn-sm btn-sm-danger" onclick="clearWsArchive()">🗑 مسح الأرشيف</button>
+        </div>
+        <div id="wsArchiveList"><div class="archive-empty">📂 لا توجد ورشات محفوظة بعد.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Modal -->
+  <div id="wsPrintModal" class="print-modal">
+    <div class="modal-box">
+      <div class="modal-header"><h3>🎯 تقرير الورشة / النشاط التربوي</h3><button class="modal-close" onclick="document.getElementById('wsPrintModal').classList.remove('open')">✕</button></div>
+      <div class="modal-body" id="wsReportContent"></div>
+      <div class="modal-footer" style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="document.getElementById('wsPrintModal').classList.remove('open')">إغلاق</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة</button>
+        <button class="btn btn-success" onclick="exportToWord('wsReportContent', 'تقرير_الورشة')" style="background:#1d6f42;color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">📝 تحميل Word</button>
+      </div>
+    </div>
+  </div>
+</div>
+

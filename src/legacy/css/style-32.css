@@ -1,0 +1,9 @@
+
+/* كتابة سوداء في جداول وأقسام الوثائق — كل البوابات */
+html body :is(.print-modal .modal-body, #weeklyPreviewModal) table, html body :is(.print-modal .modal-body, #weeklyPreviewModal) table :is(tr,td,th,thead,tbody,div,span,strong,b,i,small,label,li,p,ol,ul,input,textarea),
+html body :is(.print-modal .modal-body, #weeklyPreviewModal) :is(.report-section-title,.report-summary-block,.nrh-dir,.nrh-school,.nrh-title,.info-lbl,.info-val){ color:#000 !important; -webkit-text-fill-color:#000 !important; }
+html body :is(.print-modal .modal-body, #weeklyPreviewModal) table thead tr, html body :is(.print-modal .modal-body, #weeklyPreviewModal) table th, html body :is(.print-modal .modal-body, #weeklyPreviewModal) .info-table-report .info-lbl{ background:#e5e7eb !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+@media print{
+  html body :is(.print-modal .modal-body, #weeklyPreviewModal) table, html body :is(.print-modal .modal-body, #weeklyPreviewModal) table :is(tr,td,th,thead,tbody,div,span,strong,b,i,small,label,li,p,ol,ul),
+  html body :is(.print-modal .modal-body, #weeklyPreviewModal) :is(.report-section-title,.report-summary-block,.nrh-dir,.nrh-school,.nrh-title,.info-lbl,.info-val){ color:#000 !important; -webkit-text-fill-color:#000 !important; }
+}

@@ -1,0 +1,83 @@
+
+/* ============ v29 — ترويسة خضراء مزرقة + بدون أيقونة المدرسة + إطارات سوداء ============ */
+@media screen{
+:root{ --hdr-teal:#0b5a5f; --bk:#000; }
+html body .site-header,
+html body.on-home .site-header,
+html body:not(.on-home) .site-header{ background:var(--hdr-teal) !important; background-image:none !important; }
+html body.on-home .home-hero::before,html body.on-home .home-hero::after{ display:none !important; }
+html body.on-home .hp-count{ background:rgba(255,255,255,.16) !important; border-color:rgba(255,255,255,.35) !important; }
+
+/* حذف أيقونة المدرسة وتوسيط المديرية وعدد التلاميذ */
+html body.on-home .hp-bld{ display:none !important; }
+html body.on-home .home-hero{ grid-template-columns:1fr auto 1fr !important; }
+html body.on-home .hp-date{ justify-self:end !important; width:auto !important; }
+html body.on-home .hp-min{ justify-self:start !important; }
+html body.on-home .hp-center{ justify-content:center !important; text-align:center !important; }
+html body.on-home .hp-center-txt{ align-items:center !important; text-align:center !important; margin:0 auto !important; }
+html body.on-home .hp-school,html body.on-home .hp-sub{ text-align:center !important; }
+html body.on-home .hp-count{ margin-left:auto !important; margin-right:auto !important; }
+
+/* إطارات سوداء: البوابات، الإحصائيات، التقرير الأسبوعي */
+html body.on-home .hp-panel{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-tile{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-inner{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-kpi{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-chart-wrap{ border:1.5px solid var(--bk) !important; border-radius:6px; }
+html body.on-home .hp-season{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-report{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-report-in{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-report-ico{ border:1.5px solid var(--bk) !important; }
+html body.on-home .hp-btn{ border:1.5px solid var(--bk) !important; }
+}
+/* ---- أخبار وقوانين المختصين ---- */
+.hp-stats > .hp-news-card{ flex:1 1 auto; display:flex; flex-direction:column; min-height:190px; margin-top:12px; }
+.hp-news-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+.hp-news-head .hp-chart-title{ margin-bottom:0; }
+.hp-news-tabs{ display:flex; gap:6px; }
+.hp-news-tab{ font-family:inherit; font-size:12.5px; font-weight:700; padding:4px 12px; border-radius:20px; border:1.5px solid var(--hp-line); background:#fff; color:var(--hp-muted); cursor:pointer; }
+.hp-news-tab.on{ background:#1f4fd8; border-color:#1f4fd8; color:#fff; }
+.hp-news-list{ flex:1 1 0; min-height:120px; max-height:300px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding:2px; }
+.hp-news-item{ display:flex; align-items:flex-start; gap:10px; padding:9px 11px; border:1px solid var(--hp-line); border-radius:12px; background:#f8faff; text-decoration:none; color:inherit; }
+a.hp-news-item:hover{ background:#eef3ff; border-color:#9db8f0; }
+.hp-news-badge{ flex-shrink:0; font-size:11px; font-weight:800; padding:2px 9px; border-radius:20px; color:#fff; background:#2f6fe4; white-space:nowrap; margin-top:2px; }
+.hp-news-badge.t-law{ background:#7c3aed; } .hp-news-badge.t-circ{ background:#0d9488; } .hp-news-badge.t-google{ background:#d97706; }
+.hp-news-body{ min-width:0; flex:1; }
+.hp-news-body b{ display:block; font-size:14px; font-weight:800; color:var(--hp-ink); line-height:1.5; }
+.hp-news-body p{ margin:2px 0 0; font-size:12.5px; color:var(--hp-muted); line-height:1.6; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.hp-news-body small{ display:block; margin-top:3px; font-size:11px; color:var(--hp-muted); }
+.hp-news-empty{ margin:auto; text-align:center; font-size:13.5px; font-weight:600; color:var(--hp-muted); padding:18px 0; }
+body.dark-mode .hp-news-item{ background:#0f172a; border-color:#334155; }
+body.dark-mode a.hp-news-item:hover{ background:#1e293b; }
+body.dark-mode .hp-news-body b{ color:#e2e8f0; }
+body.dark-mode .hp-news-tab{ background:#1e293b; border-color:#334155; }
+/* ---- بدون فراغات بين البوابات: ارتفاع الصف تحدده البوابات، وبطاقة الأخبار تملأ المتبقي ---- */
+.hp-main > .hp-panel > .hp-list{ flex:0 0 auto; justify-content:flex-start; gap:12px; }
+.hp-stats > .hp-news-card{ min-height:0; }
+.hp-news-scroll{ position:relative; flex:1 1 auto; min-height:96px; }
+.hp-news-scroll > .hp-news-list{ position:absolute; inset:0; max-height:none; min-height:0; }
+@media (max-width:1100px){ .hp-news-scroll{ min-height:230px; } }
+/* ---- تدوير الأخبار تلقائياً: خبر واحد كل 5 ثوانٍ ---- */
+.hp-news-tabs{ align-items:center; gap:6px; }
+.hp-news-nb{ width:26px; height:26px; border-radius:50%; border:1.5px solid var(--hp-line); background:#fff; color:#1f4fd8; font-size:17px; font-weight:800; line-height:1; cursor:pointer; padding:0; }
+.hp-news-nb:hover{ background:#eef3ff; }
+.hp-news-cnt{ font-size:12px; font-weight:700; color:var(--hp-muted); min-width:44px; text-align:center; direction:ltr; }
+.hp-news-scroll > .hp-news-list{ display:flex; flex-direction:column; justify-content:center; overflow:hidden; }
+.hp-news-slide{ width:100%; box-sizing:border-box; animation:hpNwIn .45s ease both; }
+.hp-news-slide .hp-news-body b{ font-size:16px; line-height:1.6; }
+.hp-news-slide .hp-news-body p{ -webkit-line-clamp:3; font-size:13px; }
+.hp-news-prog{ height:3px; background:var(--hp-line); border-radius:3px; overflow:hidden; margin-top:8px; flex:0 0 auto; }
+.hp-news-prog i{ display:block; height:100%; background:#2f6fe4; transform-origin:right center; transform:scaleX(0); animation:hpNwProg 5s linear forwards; }
+.hp-news-card.paused .hp-news-prog i{ animation-play-state:paused; }
+@keyframes hpNwIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
+@keyframes hpNwProg{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+body.dark-mode .hp-news-nb{ background:#1e293b; border-color:#334155; color:#93c5fd; }
+/* ---- مؤشرات الإحصائيات: صف واحد مضغوط (8 مؤشرات) ---- */
+@media (min-width:1280px), (min-width:821px) and (max-width:1100px){
+  .hp-stats .hp-kpis{ grid-template-columns:repeat(8,minmax(0,1fr)); gap:6px; }
+  .hp-stats .hp-kpi{ column-gap:4px; row-gap:0; padding:6px 2px 5px; border-radius:11px; align-content:center; }
+  .hp-stats .hp-kpi svg{ width:16px; height:16px; }
+  .hp-stats .hp-kpi .dash-stat-num{ font-size:19px; line-height:1.1; }
+  .hp-stats .hp-kpi .dash-stat-lbl{ font-size:10.5px; line-height:1.25; white-space:normal; text-align:center; overflow:visible; text-overflow:clip; }
+  .hp-stats .hp-inner{ padding:10px; }
+}

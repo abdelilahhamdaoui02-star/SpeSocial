@@ -1,0 +1,6 @@
+// نافذة التقرير الأسبوعي: صارت من نافذة المعاينة الموحَّدة (src/preview). هنا غلاف يبقي الاسم القديم لاستدعاءات البوابة.
+import { openPreview } from '../preview/previewStore.js';
+
+export function openTaskReport(html) {
+  openPreview('tasklog', html);
+}

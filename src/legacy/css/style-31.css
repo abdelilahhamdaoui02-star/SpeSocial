@@ -1,0 +1,12 @@
+
+/* جداول التقارير والوثائق: إطار أسود بسمك 1.5 مثل إطارات الواجهة — كل البوابات */
+html body :is(.print-modal .modal-body, #weeklyPreviewModal) table:not([style*="border:none"]):not([style*="border: none"]) :is(td,th){
+  border:1.5px solid var(--bk,#000) !important;
+}
+html body :is(.print-modal .modal-body, #weeklyPreviewModal) table:not([style*="border-spacing"]){ border-collapse:collapse !important; }
+html body :is(.print-modal .modal-body, #weeklyPreviewModal) table:not([style*="border:none"]):not([style*="border: none"]){ border:1.5px solid var(--bk,#000) !important; }
+@media print{
+  html body :is(.print-modal .modal-body, #weeklyPreviewModal) table:not([style*="border:none"]):not([style*="border: none"]) :is(td,th){
+    border:1.5px solid #000 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;
+  }
+}

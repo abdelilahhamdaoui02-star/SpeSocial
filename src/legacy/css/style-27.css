@@ -1,0 +1,10 @@
+
+@media print{
+  #pgReportContent .proc-table-report thead{display:table-header-group}
+  #pgReportContent .proc-table-report thead tr,
+  #pgReportContent .proc-table-report th{background:#fff !important;color:#000 !important;font-weight:800 !important;border:1.5px solid #000 !important;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}
+  #pgReportContent .proc-table-report tr{break-inside:avoid}
+  #pgReportContent .proc-table-report td{overflow-wrap:anywhere}
+  #pgReportContent .nrh-logo img{display:block !important}
+}
+#pgReportContent .proc-table-report td{overflow-wrap:anywhere}

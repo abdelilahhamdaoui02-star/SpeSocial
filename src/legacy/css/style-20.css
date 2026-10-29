@@ -1,0 +1,16 @@
+
+/* ============ v27 — أزرق غامق + أبيض، وبقية الألوان تابعة لهما ============ */
+@media screen{
+:root{ --hp-a:#0b2250; --hp-b:#16407f; --hp-ink:#10265a; }
+/* كل البوابات: عنوان وأزرار وحقول بالأزرق الغامق نفسه */
+#toolInterview,#toolViolence,#toolSpecialNeeds,#toolReintegration,#toolAbsence,#toolIip,#toolTasklog,#toolStats,#toolCasefile,#toolWorkshops,#toolVigilance,#toolPrintdocs,#toolBehavior{ --c1:#5b97fa; --c2:#1f4fb8; --cd:#0b2250; --hero:linear-gradient(100deg,#16407f,#0b2250); }
+/* لون البوابة الخاص يظهر فقط في شارة رقم القسم */
+#toolInterview,#toolCasefile,#toolWorkshops,#toolTasklog{ --pa1:#2563d8; --pa2:#1348c4; }
+#toolViolence{ --pa1:#df3f3b; --pa2:#b3302c; }
+#toolSpecialNeeds,#toolPrintdocs{ --pa1:#4f56d6; --pa2:#3c43b8; }
+#toolReintegration,#toolStats,#toolBehavior,#toolIip{ --pa1:#0e8f98; --pa2:#0a6c75; }
+#toolVigilance,#toolAbsence{ --pa1:#e08e0b; --pa2:#a05a05; }
+.tool-page .step-badge{ background:linear-gradient(145deg,var(--pa1,#2563d8),var(--pa2,#1348c4)) !important; }
+.tool-page .section-card,.tool-page .archive-panel{ background:#fff; }
+.tool-page .section-header{ color:#0b2250 !important; }
+}

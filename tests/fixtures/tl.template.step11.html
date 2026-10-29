@@ -1,0 +1,207 @@
+<div id="toolTasklog" class="tool-page">
+  <div class="back-bar">
+    <div class="back-bar-right">
+      <button class="back-btn" onclick="goBack()">← العودة للرئيسية</button>
+      <span class="back-bar-title">📝 سجل المهام اليومي للمختص الاجتماعي</span>
+    </div>
+    <div class="back-bar-user" onclick="openProfile()" title="الحساب الشخصي">
+      <div class="bb-avatar" id="bbAvatar">؟</div>
+      <span class="bb-name" id="bbName">الحساب</span>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="info-box">
+      💡 <span>سجّل مهامك اليومية بشكل منظم: ورشات، جلسات إنصات، اتصالات، اجتماعات... ثم أنشئ تقريراً أسبوعياً شاملاً للطباعة أو الأرشفة.</span>
+    </div>
+
+    <!-- ADD TASK SECTION -->
+    <div class="section-card">
+      <div class="section-header"><span class="step-badge">١</span> إضافة مهمة جديدة</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>📅 التاريخ *</label>
+            <input type="date" id="tl_date">
+          </div>
+          <div class="form-group">
+            <label>🕐 الساعة</label>
+            <input type="time" id="tl_time" placeholder="HH:MM">
+          </div>
+          <div class="form-group">
+            <label>🏫 المؤسسة التعليمية</label>
+            <input type="text" id="tl_school" placeholder="الثانوية الإعدادية المختار السوسي" value="">
+          </div>
+          <div class="form-group col-span-2">
+            <label>نوع المهمة *</label>
+            <div class="radio-group" style="flex-wrap:wrap;gap:8px;">
+              <label><input type="radio" name="tl_type" value="مقابلة فردية"> 🗂 مقابلة فردية</label>
+              <label><input type="radio" name="tl_type" value="تقرير غياب"> 📋 تقرير غياب</label>
+              <label><input type="radio" name="tl_type" value="فتح ملف إدماج"> 🔄 فتح ملف إدماج</label>
+              <label><input type="radio" name="tl_type" value="تقرير حالة عنف"> 🛡️ تقرير حالة عنف</label>
+              <label><input type="radio" name="tl_type" value="اتصال بولي الأمر"> 📞 اتصال بولي الأمر</label>
+              <label><input type="radio" name="tl_type" value="جلسة مع ولي الأمر"> 🤝 جلسة مع ولي الأمر</label>
+              <label><input type="radio" name="tl_type" value="متابعة إعاقة"> ♿ متابعة إعاقة</label>
+              <label><input type="radio" name="tl_type" value="تتبع مدرسي"> 📊 تتبع مدرسي</label>
+              <label><input type="radio" name="tl_type" value="ورشة تكوينية"> 🎓 ورشة تكوينية</label>
+              <label><input type="radio" name="tl_type" value="جلسة إنصات"> 🎧 جلسة إنصات</label>
+              <label><input type="radio" name="tl_type" value="استدعاء ولي الأمر"> 🏫 استدعاء ولي الأمر</label>
+              <label><input type="radio" name="tl_type" value="زيارة ميدانية"> 🚗 زيارة ميدانية</label>
+              <label><input type="radio" name="tl_type" value="برنامج دعم"> 📚 برنامج دعم</label>
+              <label><input type="radio" name="tl_type" value="اجتماع مع الإدارة"> 🏛️ اجتماع مع الإدارة</label>
+              <label><input type="radio" name="tl_type" value="أخرى"> ✏️ أخرى</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>📌 العنوان / الموضوع</label>
+            <input type="text" id="tl_title" placeholder="مثال: ورشة الحضور والغياب، جلسة مع محمد...">
+          </div>
+          <div class="form-group">
+            <label>👤 المعني(ون) بالمهمة</label>
+            <input type="text" id="tl_target" placeholder="اسم التلميذ أو ولي الأمر أو الجهة...">
+          </div>
+          <div class="form-group col-span-2">
+            <label>🧩 طبيعة المهمة الخاصة بالمختص الاجتماعي</label>
+            <input type="text" id="tl_nature" placeholder="اكتب طبيعة المهمة أو اختر اقتراحاً...">
+            <div style="margin-top:6px;">
+              <div class="suggest-chips-label">💡 اقتراحات جاهزة:</div>
+              <div class="suggest-chips">
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='دعم اجتماعي فردي'">دعم اجتماعي فردي</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='وساطة اجتماعية'">وساطة اجتماعية</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='تشخيص اجتماعي'">تشخيص اجتماعي</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='توجيه وإرشاد'">توجيه وإرشاد</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='تنسيق مع شركاء خارجيين'">تنسيق مع شركاء خارجيين</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='إحالة ومتابعة'">إحالة ومتابعة</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='دعم نفسي اجتماعي'">دعم نفسي اجتماعي</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='تحسيس وتوعية'">تحسيس وتوعية</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='متابعة ميدانية'">متابعة ميدانية</button>
+                <button type="button" class="suggest-chip" onclick="document.getElementById('tl_nature').value='تقييم ورصد'">تقييم ورصد</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-span-2">
+            <label>📝 تفاصيل / ملاحظات</label>
+            <textarea id="tl_notes" placeholder="اكتب تفاصيل المهمة، ما تم، والنتيجة..." style="min-height:75px;"></textarea>
+            <div style="margin-top:6px;">
+              <div class="suggest-chips-label">💡 اقتراحات جاهزة:</div>
+              <div class="suggest-chips">
+                <button type="button" class="suggest-chip" onclick="appendSuggest('tl_notes','تم إجراء جلسة إنصات مع التلميذ(ة) وتم رصد وضعيته(ا) الاجتماعية والنفسية. أبدى(أبدت) تجاوباً إيجابياً مع المختص الاجتماعي.')">🎧 جلسة إنصات</button>
+                <button type="button" class="suggest-chip" onclick="appendSuggest('tl_notes','تم التواصل مع ولي الأمر وإبلاغه بوضعية التلميذ(ة) واتخاذ الإجراءات المناسبة بالتنسيق معه.')">📞 اتصال بولي الأمر</button>
+                <button type="button" class="suggest-chip" onclick="appendSuggest('tl_notes','عُقدت ورشة تكوينية للتلاميذ حول موضوع الوقاية والصحة النفسية. حضر عدد من التلاميذ وكانت التفاعلات إيجابية.')">🎓 ورشة تكوينية</button>
+                <button type="button" class="suggest-chip" onclick="appendSuggest('tl_notes','تم عقد اجتماع مع إدارة المؤسسة لمناقشة الحالات المستعجلة وتنسيق التدخلات الضرورية.')">🤝 اجتماع مع الإدارة</button>
+                <button type="button" class="suggest-chip" onclick="appendSuggest('tl_notes','أُجريت زيارة ميدانية للأسرة للوقوف على الوضعية الاجتماعية وتعزيز التواصل بين المؤسسة والمنزل.')">🚗 زيارة ميدانية</button>
+                <button type="button" class="suggest-chip" onclick="appendSuggest('tl_notes','تم استدعاء ولي الأمر إلى المؤسسة وعُقد لقاء لمناقشة وضعية التلميذ(ة) وتحديد خطة التدخل المشتركة.')">🏫 استدعاء ولي الأمر</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>النتيجة</label>
+            <div class="radio-group">
+              <label><input type="radio" name="tl_result" value="مُنجز"> ✅ مُنجز</label>
+              <label><input type="radio" name="tl_result" value="قيد المتابعة"> 🔄 قيد المتابعة</label>
+              <label><input type="radio" name="tl_result" value="لم يكتمل"> ❌ لم يكتمل</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>⏱ المدة (بالدقائق)</label>
+            <input type="number" id="tl_duration" placeholder="مثال: 45" min="5" max="480">
+          </div>
+        </div>
+        <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="tlAddTask()">➕ إضافة المهمة للسجل</button>
+          <button class="btn btn-outline" onclick="tlClearForm()">🗑 مسح النموذج</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER / WEEK SELECTOR -->
+    <div class="section-card">
+      <div class="section-header"><span class="step-badge">٢</span> عرض وتصفية السجل</div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>📅 من تاريخ</label>
+            <input type="date" id="tl_filter_from">
+          </div>
+          <div class="form-group">
+            <label>📅 إلى تاريخ</label>
+            <input type="date" id="tl_filter_to">
+          </div>
+          <div class="form-group">
+            <label>نوع المهمة</label>
+            <select id="tl_filter_type">
+              <option value="">— الكل —</option>
+              <option>مقابلة فردية</option>
+              <option>تقرير غياب</option>
+              <option>فتح ملف إدماج</option>
+              <option>تقرير حالة عنف</option>
+              <option>اتصال بولي الأمر</option>
+              <option>جلسة مع ولي الأمر</option>
+              <option>متابعة إعاقة</option>
+              <option>تتبع مدرسي</option>
+              <option>ورشة تكوينية</option>
+              <option>جلسة إنصات</option>
+              <option>استدعاء ولي الأمر</option>
+              <option>زيارة ميدانية</option>
+              <option>برنامج دعم</option>
+              <option>اجتماع مع الإدارة</option>
+              <option>أخرى</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>النتيجة</label>
+            <select id="tl_filter_result">
+              <option value="">— الكل —</option>
+              <option>مُنجز</option>
+              <option>قيد المتابعة</option>
+              <option>لم يكتمل</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          <button class="btn btn-outline" onclick="tlSetThisWeek()">📅 هذا الأسبوع</button>
+          <button class="btn btn-outline" onclick="tlSetLastWeek()">📅 الأسبوع الماضي</button>
+          <button class="btn btn-outline" onclick="tlSetThisMonth()">📆 هذا الشهر</button>
+          <button class="btn btn-outline" onclick="tlClearFilter()">× إلغاء التصفية</button>
+          <button class="btn btn-primary" onclick="tlRenderLog()">🔍 تطبيق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TASK LIST -->
+    <div class="archive-panel">
+      <div class="archive-header" onclick="toggleTaskLogPanel()">
+        <div class="archive-header-left">
+          <span>📋</span>
+          <span>سجل المهام المسجلة</span>
+          <span class="archive-badge" id="tlTaskCount">0</span>
+        </div>
+        <span id="tlPanelArrow">▼</span>
+      </div>
+      <div class="archive-body open" id="tlTaskBody">
+        <div class="archive-stats" id="tlStats"></div>
+        <div id="tlTaskList"><div class="archive-empty">📂 لا توجد مهام مسجلة بعد. أضف مهمتك الأولى أعلاه.</div></div>
+      </div>
+    </div>
+
+    <!-- WEEKLY REPORT BUTTONS -->
+    <div class="btn-row" style="margin-top:16px;">
+      <button class="btn btn-danger" onclick="tlClearAll()">🗑 حذف كل السجل</button>
+      <button class="btn btn-outline" onclick="tlSetThisWeek(); tlRenderLog(); tlGenerateReport();">📄 تقرير أسبوعي ←</button>
+      <button class="btn btn-primary" onclick="openWeekPickerModal()">📅 تقرير بأسبوع محدد</button>
+    </div>
+  </div>
+
+  <!-- Task Log Print Modal -->
+  <div id="tlPrintModal" class="print-modal">
+    <div class="modal-box" style="max-width:820px;">
+      <div class="modal-header"><h3>📄 التقرير الأسبوعي للمختص الاجتماعي</h3><button class="modal-close" onclick="document.getElementById('tlPrintModal').classList.remove('open')">✕</button></div>
+      <div class="modal-body" id="tlReportContent"></div>
+      <div class="modal-footer" style="padding:16px 24px;border-top:1px solid #e2e8f0;display:flex;gap:10px;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="document.getElementById('tlPrintModal').classList.remove('open')">إغلاق</button>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة / PDF</button>
+        <button class="btn btn-success" onclick="exportToWord('tlReportContent', 'التقرير_الأسبوعي')" style="background:#1d6f42;color:white;border:none;border-radius:8px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;">📝 تحميل Word</button>
+      </div>
+    </div>
+  </div>
+</div>
+
