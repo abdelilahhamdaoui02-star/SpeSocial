@@ -18,8 +18,8 @@ export function acSearch(query) {
   return studentDb().filter(s => {
     const full = acNormalize(s.fullName).toLowerCase();
     const fn = acNormalize(s.firstName).toLowerCase();
-   const AC_CFG = { nameId: 'i_studentName', massarId: 'i_studentMassar', schoolId: 'i_school', levelId: 'i_level', genderName: 'i_gender', phoneId: 'i_parentPhone' };    const ms = (s.massar||'').toLowerCase();
-    return full.includes(q) || fn.includes(q) || ln.includes(q) || ms.startsWith(q);
+    const ln = acNormalize(s.lastName).toLowerCase();
+    const ms = (s.massar||'').toLowerCase();    return full.includes(q) || fn.includes(q) || ln.includes(q) || ms.startsWith(q);
   }).slice(0, 15);
 }
 
