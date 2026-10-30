@@ -57,6 +57,8 @@ export function liveBaseTasks(c) {
   add(A('specialNeedsArchive'), 'sn', 'أخرى', (e) => 'وضعية إعاقة — ' + (e.studentName || ''), (e) => e.recordDate);
   add(A('pdAssocArchive'), 'pa', 'أخرى', (e) => 'إحالة لجمعية — ' + (e.studentName || ''), (e) => e.date, (e) => (e.fields || {})['pd3-school']);
   add(A('pdHealthArchive'), 'ph', 'أخرى', (e) => 'إخبار صحي — ' + (e.studentName || ''), (e) => e.date, (e) => (e.fields || {})['pd4-school']);
+  add(A('parentCalls'), 'pc', 'أخرى', (e) => 'اتصال بولي الأمر — ' + (e.name || ''), (e) => e.date);
+  add(A('parentMeetings'), 'pm', 'أخرى', (e) => 'مقابلة ولي أمر — ' + (e.student || ''), (e) => e.date);
   const manual = ((c && c.taskLog) || []).filter((t) => !t.auto);
   return manual.concat(out);
 }
@@ -74,7 +76,8 @@ export const ST_CATS = [
   { label: 'وضعيات الإعاقة', icon: '♿', color: '#7c3aed', filter: (t) => (t.title || '').startsWith('وضعية إعاقة') },
   { label: 'إحالات لجمعيات', icon: '🏛️', color: '#5b21b6', filter: (t) => (t.title || '').startsWith('إحالة لجمعية') },
   { label: 'إخبار بحالة صحية', icon: '🏥', color: '#b91c1c', filter: (t) => (t.title || '').startsWith('إخبار صحي') },
-];
+  { label: 'التواصل مع أولياء الأمور', icon: '📞', color: '#be185d',
+    filter: (t) => (t.title || '').startsWith('اتصال بولي الأمر') || (t.title || '').startsWith('مقابلة ولي أمر') },];
 
 export const RESULT_LABELS = ['مُنجز', 'قيد المتابعة', 'لم يكتمل'];
 export const RESULT_COLORS = ['#16a34a', '#d97706', '#dc2626'];
