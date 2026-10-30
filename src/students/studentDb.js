@@ -15,7 +15,7 @@ function entry(s, { withName = false } = {}) {
     fullName: name,
     firstName: name.split(' ')[0] || '',
     lastName: name.split(' ').slice(1).join(' ') || '',
-    class: (s && s.class) || '', gender: (s && s.gender) || '', massar: (s && s.massar) || '', dob: (s && s.dob) || '',
+    class: (s && s.class) || '', gender: (s && s.gender) || '', massar: (s && s.massar) || '', dob: (s && s.dob) || '', phone: (s && s.phone) || '',
     family: (s && s.family) || '', given: (s && s.given) || '',
   };
   return withName ? { fullName: name, name, ...e } : e;
