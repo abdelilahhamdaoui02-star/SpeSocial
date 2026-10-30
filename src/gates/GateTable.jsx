@@ -65,8 +65,9 @@ export default function GateTable({ gate, active, hidden = false }) {
     try { await setRows(removeRow(currentRows(gate), id)); } catch (e) { console.error(e); alert('❌ فشل حفظ البيانات'); }
   };
 
-  const print = () => openReport(gate.print, gate.fields, filterRows(currentRows(gate), q));
-
+  // حقول لا تظهر في الطباعة (تبقى في الاستمارة والجدول وExcel)
+  const HIDE_IN_PRINT = ['massar', 'school'];
+  const print = () => openReport(gate.print, gate.fields.filter((f) => gate.id !== 'calls' || !HIDE_IN_PRINT.includes(f.k)), filterRows(currentRows(gate), q));
   // التصدير إلى Excel (ExcelJS وشعار الوزارة) من طبقة الجلسة؛ لا يعتمد على حالة React
   const exportXlsx = () => { getSession().pgExportXlsx(gate, filterRows(currentRows(gate), q)); };
 
