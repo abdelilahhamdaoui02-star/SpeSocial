@@ -30,8 +30,10 @@ export function openWeeklyPreview() {
 export const closeWeeklyPreview = () => set({ open: false, editing: null });
 export const setPreviewTab = (tab) => set({ tab });
 // editSeq يتغيّر مع كل فتح فيُعاد تركيب النموذج من قيم السجل (حتى لو لا معرّف للسجل)
-export const openEditRow = (row) => set({ editing: row, editSeq: state.editSeq + 1 });
-export const closeEditRow = () => set({ editing: null });
+export const openEditRow = (row) => {
+  if (String(row._type).startsWith('parent')) { showToast('✏️ لتعديل هذا السجل افتح بوابة التواصل مع الأولياء'); return; }
+  set({ editing: row, editSeq: state.editSeq + 1 });
+};export const closeEditRow = () => set({ editing: null });
 
 function notifyArchiveChanged() {
   const b = bridge();
