@@ -98,6 +98,8 @@ export function buildPreviewRows(c, from, to) {
   w.violence.forEach((e) => rows.push(withMeta({ _type: 'violence', _label: 'حالة عنف 🛡️', _date: e.reportDate || '', _dateField: 'reportDate', _statusField: 'status' }, e)));
   w.workshops.forEach((e) => rows.push(withMeta({ _type: 'workshop', _label: 'ورشة/نشاط 🎓', _date: e.date || '', _dateField: 'date', _statusField: 'result' }, e)));
   w.specNeeds.forEach((e) => rows.push(withMeta({ _type: 'specNeeds', _label: 'وضعية إعاقة ♿', _date: e.date || '', _dateField: 'date', _statusField: 'currentStatus' }, e)));
+  w.calls.forEach((e) => rows.push(withMeta({ _type: 'parentCall', _label: 'اتصال بولي الأمر 📞', _date: e.date || '', _dateField: 'date', _statusField: 'result', studentName: e.name || '' }, e)));
+  w.meetings.forEach((e) => rows.push(withMeta({ _type: 'parentMeeting', _label: 'مقابلة ولي أمر 🤝', _date: e.date || '', _dateField: 'date', _statusField: 'status', studentName: e.student || '' }, e)));
   rows.sort((a, b) => (a._date || '').localeCompare(b._date || ''));
   return rows;
 }
