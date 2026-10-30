@@ -18,10 +18,12 @@ export const NO_RECORDS_TEXT = 'لا توجد سجلات.';
 export const GATES = {
   calls: {
     id: 'calls', tool: 'parents',
-    box: 'pgCalls', key: 'parentCalls', req: 'name', ac: { nameId: 'pgCalls_name', massarId: 'pgCalls_massar', levelId: 'pgCalls_cls', schoolId: 'pgCalls_school' }, imp: 1,    file: 'الاتصال-بالأولياء', print: 'سجل الاتصال الهاتفي بأولياء الأمور', title: '📞 سجل الاتصال الهاتفي بأولياء الأمور',
+    box: 'pgCalls', key: 'parentCalls', req: 'name', ac: { nameId: 'pgCalls_name', massarId: 'pgCalls_massar', levelId: 'pgCalls_cls', schoolId: 'pgCalls_school' }, imp: 1,
+    file: 'الاتصال-بالأولياء', print: 'سجل الاتصال الهاتفي بأولياء الأمور', title: '📞 سجل الاتصال الهاتفي بأولياء الأمور',
     fields: [
-      { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'phone', l: 'هاتف ولي الأمر', t: 'tel' }, { k: 'time', l: 'وقت الاتصال', t: 'time' },
-      { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'cls', l: 'القسم' }, { k: 'school', l: 'المؤسسة' }, { k: 'phone', l: 'هاتف ولي الأمر', t: 'tel' }, { k: 'time', l: 'وقت الاتصال', t: 'time' },    ],
+      { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'cls', l: 'القسم' }, { k: 'school', l: 'المؤسسة' }, { k: 'phone', l: 'هاتف ولي الأمر', t: 'tel' }, { k: 'time', l: 'وقت الاتصال', t: 'time' },
+      { k: 'result', l: 'نتيجة الاتصال', opts: RES }, { k: 'date', l: 'تاريخ الاتصال', t: 'date' }, { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 },
+    ],
   },
   meet: {
     id: 'meet', tool: 'parents',
