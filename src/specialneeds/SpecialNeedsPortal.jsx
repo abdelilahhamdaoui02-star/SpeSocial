@@ -18,8 +18,7 @@ import { getLogo } from '../settings/logoStore.js';
 import { getInstitution } from '../institution/institutionStore.js';
 
 // الإكمال التلقائي للتلاميذ ما زال من الكود القديم (acSetup): يكتب في حقول البوابة مباشرة (المسار والمؤسسة والقسم والجنس)
-const AC_CFG = { nameId: 'sn_studentName', massarId: 'sn_studentMassar', schoolId: 'sn_school', levelId: 'sn_level', genderName: 'sn_gender' };
-// حقول النص غير المتحكَّم بها (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere مباشرة في DOM) → معرّفاتها القديمة
+const AC_CFG = { nameId: 'sn_studentName', massarId: 'sn_studentMassar', schoolId: 'sn_school', levelId: 'sn_level', genderName: 'sn_gender', phoneId: 'sn_parentPhone' };// حقول النص غير المتحكَّم بها (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere مباشرة في DOM) → معرّفاتها القديمة
 const TEXT_IDS = {
   studentName: 'sn_studentName', massar: 'sn_studentMassar', school: 'sn_school', parentPhone: 'sn_parentPhone',
   recordDate: 'sn_recordDate', diagnosis: 'sn_diagnosis', recommendation: 'sn_recommendation',
