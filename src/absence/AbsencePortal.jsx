@@ -18,8 +18,7 @@ import { getLogo } from '../settings/logoStore.js';
 import { getInstitution } from '../institution/institutionStore.js';
 
 // الإكمال التلقائي ما زال من الكود القديم (acSetup/acFillField)؛ يكتب في حقول البوابة مباشرة بمعرّفاتها القديمة
-const AC_CFG = { nameId: 'ab_studentName', massarId: 'ab_studentMassar', schoolId: 'ab_school', levelId: 'ab_level', genderName: 'ab_gender' };
-// حقول لا يملكها React (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere وتعبئة الاستيراد الشهري مباشرة) → معرّفاتها القديمة
+const AC_CFG = { nameId: 'ab_studentName', massarId: 'ab_studentMassar', schoolId: 'ab_school', levelId: 'ab_level', genderName: 'ab_gender', phoneId: 'ab_parentPhone' };// حقول لا يملكها React (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere وتعبئة الاستيراد الشهري مباشرة) → معرّفاتها القديمة
 const TEXT_IDS = {
   studentName: 'ab_studentName', massar: 'ab_studentMassar', school: 'ab_school', level: 'ab_level', parentPhone: 'ab_parentPhone', recordDate: 'ab_recordDate',
   totalHours: 'ab_totalHours', justifiedHours: 'ab_justifiedHours', unjustifiedHours: 'ab_unjustifiedHours',
