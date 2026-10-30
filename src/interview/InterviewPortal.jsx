@@ -18,8 +18,7 @@ import { getLogo } from '../settings/logoStore.js';
 import { getInstitution } from '../institution/institutionStore.js';
 
 // الإكمال التلقائي ما زال من الكود القديم (acSetup)؛ يكتب في حقول البوابة مباشرة، ومنها الجنس (genderName)
-const AC_CFG = { nameId: 'i_studentName', massarId: 'i_studentMassar', schoolId: 'i_school', levelId: 'i_level', genderName: 'i_gender' };
-// حقول لا يملكها React (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere وupdateAllLevelSelects مباشرة) → معرّفاتها القديمة
+const AC_CFG = { nameId: 'i_studentName', massarId: 'i_studentMassar', schoolId: 'i_school', levelId: 'i_level', genderName: 'i_gender', phoneId: 'i_parentPhone' };// حقول لا يملكها React (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere وupdateAllLevelSelects مباشرة) → معرّفاتها القديمة
 const REF_IDS = { studentName: 'i_studentName', massar: 'i_studentMassar', school: 'i_school', level: 'i_level' };
 // نفس نمط قوائم الأقسام في بقية البوابات (class="level-select")
 const SEL = { border: '1.5px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '7px 11px', fontFamily: "'Cairo',sans-serif", fontSize: '0.875rem', color: 'var(--text)', background: '#fafbfc', direction: 'rtl', width: '100%' };
