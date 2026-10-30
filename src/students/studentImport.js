@@ -16,6 +16,8 @@ const PLACE = (h) => h.includes('مكان') || /lieu|place|ville|مدينة/i.te
 const DOB_KEYS = (h, lh) => h.includes('الازدياد') || h.includes('الإزدياد') || h.includes('ازدياد') || h.includes('إزدياد')
   || h.includes('ميلاد') || lh.includes('naissance') || lh.includes('birth') || lh.includes('dob') || lh.includes('ddn');
 const DATE_WORD = (h, lh) => h.includes('تاريخ') || h.includes('ت.') || lh.includes('date');
+const PHONE_KEYS = (h, lh) => h.includes('هاتف') || h.includes('نقال') || h.includes('محمول') || lh.includes('phone') || lh.includes('tel') || lh.includes('gsm') || lh.includes('mobile');
+const cleanPhone = (v) => { let p = String(v == null ? '' : v).split(/[\/،,;]/)[0].replace(/\D/g, ''); if (p.length === 9) p = '0' + p; return p; };
 
 // من بين أعمدة الازدياد: نتجاهل «المكان»، ونفضّل ما فيه «تاريخ/date»، وإلا فالأخير كما في القديم
 function pickDobCol(cands) {
@@ -26,7 +28,7 @@ function pickDobCol(cands) {
 }
 
 // يُرجِع { headerRowIdx, nameCol, familyCol, genderCol, massarCol, numCol, classCol, dobCol }
-export function detectColumns(rows) {
+export function detectColumns(rows) {  let phoneCol = -1;
   let headerRowIdx = -1;
   let nameCol = -1, familyCol = -1, genderCol = -1, massarCol = -1, numCol = -1, classCol = -1, dobCol = -1;
 
@@ -46,6 +48,7 @@ export function detectColumns(rows) {
         if (h.includes('الرمز') || h.includes('مسار') || lh.includes('massar') || lh.includes('code')) massarCol = idx;
         if (h.includes('ر.ت') || h === 'رقم' || h === 'رقم التلميذ') numCol = idx;
         if (h.includes('القسم') || h.includes('الفوج') || lh.includes('classe')) classCol = idx;
+        if (PHONE_KEYS(h, lh)) phoneCol = idx;
         if (DOB_KEYS(h, lh)) dobCands.push({ idx, place: PLACE(h) || PLACE(lh), date: DATE_WORD(h, lh) });
       });
       dobCol = pickDobCol(dobCands);
@@ -69,8 +72,8 @@ export function detectColumns(rows) {
     if (nameCol === -1) nameCol = 0;
     headerRowIdx = 0;
   }
-  return { headerRowIdx, nameCol, familyCol, genderCol, massarCol, numCol, classCol, dobCol };
-}
+  return { headerRowIdx, nameCol, familyCol, genderCol, massarCol, numCol, classCol, dobCol, phoneCol };
+  }
 
 // قيمة تشبه اسم قسم (مثل 1BACSEF-2 أو 3APIC 4)
 export const looksLikeClass = (v) => {
@@ -100,7 +103,7 @@ export function parseSheet(rows, sheetName, fileName) {
   if (!rows || rows.length < 2) return out;
 
   const cols = detectColumns(rows);
-  const { headerRowIdx, nameCol, familyCol, genderCol, massarCol } = cols;
+  const { headerRowIdx, nameCol, familyCol, genderCol, massarCol, phoneCol } = cols;
   let { classCol, dobCol } = cols;
   out.dobColumn = dobCol !== -1 ? 'header' : 'none';
 
@@ -176,6 +179,7 @@ export function parseSheet(rows, sheetName, fileName) {
 
     const gender = genderCol !== -1 ? String(row[genderCol] || '').trim() : '';
     const massar = massarCol !== -1 ? String(row[massarCol] || '').trim() : '';
+    const phone = phoneCol !== -1 ? cleanPhone(row[phoneCol]) : '';
     const rowClass = classCol !== -1 ? cleanClassValue(row[classCol]) : '';
 
     // تاريخ الازدياد: لا يُخزَّن إلا تاريخ صالح (YYYY-MM-DD) كي يُملأ في حقول <input type="date">
@@ -188,7 +192,7 @@ export function parseSheet(rows, sheetName, fileName) {
       name: fullName, fullName,
       family: famPart, given: givPart, dob,
       class: rowClass || metaClass2 || cleanClassValue(sheetName),
-      gender, massar,
+      gender, massar, phone,
       _sheet: sheetName, _file: fileName,
     });
     out.count++;
