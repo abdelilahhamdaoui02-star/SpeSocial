@@ -16,9 +16,19 @@ const PLACE = (h) => h.includes('مكان') || /lieu|place|ville|مدينة/i.te
 const DOB_KEYS = (h, lh) => h.includes('الازدياد') || h.includes('الإزدياد') || h.includes('ازدياد') || h.includes('إزدياد')
   || h.includes('ميلاد') || lh.includes('naissance') || lh.includes('birth') || lh.includes('dob') || lh.includes('ddn');
 const DATE_WORD = (h, lh) => h.includes('تاريخ') || h.includes('ت.') || lh.includes('date');
-const PHONE_KEYS = (h, lh) => h.includes('هاتف') || h.includes('نقال') || h.includes('محمول') || lh.includes('phone') || lh.includes('tel') || lh.includes('gsm') || lh.includes('mobile');
-const cleanPhone = (v) => { let p = String(v == null ? '' : v).split(/[\/،,;]/)[0].replace(/\D/g, ''); if (p.length === 9) p = '0' + p; return p; };
+const PHONE_KEYS = (h, lh) => h.includes('هاتف') || h.includes('نقال') || h.includes('محمول') || h.includes('جوال') || h.includes('واتس')
+  || /phone|tel|tél|gsm|mobile|whatsapp/i.test(lh);
 
+const cleanPhone = (v) => {
+  let p = String(v == null ? '' : v).trim().split(/[\/،,;]/)[0]
+    .replace(/\.0+$/, '')                                        // 625149865.0
+    .replace(/[\u0660-\u0669]/g, (d) => d.charCodeAt(0) - 0x660) // الأرقام العربية
+    .replace(/\D/g, '');
+  if (p.startsWith('00212')) p = '0' + p.slice(5);
+  else if (p.startsWith('212') && p.length === 12) p = '0' + p.slice(3);
+  else if (p.length === 9 && /^[5-7]/.test(p)) p = '0' + p;      // الصفر الذي يحذفه Excel
+  return p;
+};
 // من بين أعمدة الازدياد: نتجاهل «المكان»، ونفضّل ما فيه «تاريخ/date»، وإلا فالأخير كما في القديم
 function pickDobCol(cands) {
   const ok = cands.filter((c) => !c.place);
@@ -56,7 +66,7 @@ export function detectColumns(rows) {  let phoneCol = -1;
     }
   }
 
-  // إذا لم يوجد رأس واضح — استخدام الطريقة القديمة (الصف الأول كرأس)
+// إذا لم يوجد رأس واضح — استخدام الطريقة القديمة (الصف الأول كرأس)
   if (headerRowIdx === -1) {
     const header = rows[0].map((h) => str(h));
     const dobCands = [];
@@ -65,7 +75,8 @@ export function detectColumns(rows) {  let phoneCol = -1;
       if (lh.includes('اسم') || lh.includes('nom') || lh.includes('name')) nameCol = i;
       if (lh.includes('قسم') || lh.includes('فوج') || lh.includes('classe') || lh.includes('class') || lh.includes('niveau')) classCol = i;
       if (lh.includes('جنس') || lh.includes('genre') || lh.includes('gender') || lh.includes('sex')) genderCol = i;
-      if (lh.includes('مسار') || lh.includes('massar') || lh.includes('رقم')) massarCol = i;
+      if (PHONE_KEYS(lh, lh)) phoneCol = i;
+      else if (lh.includes('مسار') || lh.includes('massar') || lh.includes('رقم')) massarCol = i;
       if (DOB_KEYS(lh, lh)) dobCands.push({ idx: i, place: PLACE(lh), date: DATE_WORD(lh, lh) });
     });
     dobCol = pickDobCol(dobCands);
@@ -246,6 +257,13 @@ export function dobLine(st) {
   return t;
 }
 
+export function phoneLine(unique) {
+  const n = unique.filter((s) => s.phone).length;
+  return n
+    ? `\n📞 أرقام الهاتف: قُرئت لـ ${n} من ${unique.length} تلميذ(ة)`
+    : '\n⚠️ لم تُقرأ أي أرقام هاتف — تأكد من وجود عمود في رأس الجدول يحمل كلمة «هاتف».';
+}
+
 // ── نصوص التأكيد والنتيجة (حرفياً كالقديم، مع سطر الازدياد) ──
 export const MSG = {
   READING: '⏳ جاري قراءة الملفات...',
@@ -313,5 +331,5 @@ export function commitImport(unique, results, filesCount, env) {
     classNote = classesText(env.getImportedClasses(), unique);
   } catch { /* كما في القديم */ }
 
-  return doneText(unique.length, filesCount) + schoolNote + classNote + dobLine(dobStats(unique, results));
+  return doneText(unique.length, filesCount) + schoolNote + classNote + dobLine(dobStats(unique, results)) + phoneLine(unique);
 }
