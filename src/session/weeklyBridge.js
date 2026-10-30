@@ -12,6 +12,8 @@ export function createWeeklyBridge(d) {
     violence:      { get: () => ar.getVioArchive(), save: (a) => ar.saveVioArchive(a) },
     workshop:      { get: () => A.workshopsArchive || [], save: (a) => { A.workshopsArchive = a; d.saveUserKey('workshopsArchive'); } },
     specNeeds:     { get: () => ar.getSnArchive(), save: (a) => ar.saveSnArchive(a) },
+    parentCall:    { get: () => A.parentCalls || [],    save: (a) => { A.parentCalls = a; d.saveUserKey('parentCalls'); } },
+    parentMeeting: { get: () => A.parentMeetings || [], save: (a) => { A.parentMeetings = a; d.saveUserKey('parentMeetings'); } },
   };
 
   function wkCollections() {
