@@ -41,6 +41,7 @@ export function acFillField(cfg, student) {
   if (nameEl) nameEl.value = student.fullName;
   if (cfg.massarId) { const el = document.getElementById(cfg.massarId); if (el) el.value = student.massar || ''; }
   if (cfg.dobId) fillDob(document.getElementById(cfg.dobId), student.dob);
+  if (cfg.phoneId) { const el = document.getElementById(cfg.phoneId); if (el) el.value = student.phone || ''; }
   if (cfg.schoolId) {
     const el = document.getElementById(cfg.schoolId);
     const profile = userProfile();
