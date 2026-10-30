@@ -18,7 +18,7 @@ export const NO_RECORDS_TEXT = 'لا توجد سجلات.';
 export const GATES = {
   calls: {
     id: 'calls', tool: 'parents',
-    box: 'pgCalls', key: 'parentCalls', req: 'name', ac: { nameId: 'pgCalls_name', massarId: 'pgCalls_massar', levelId: 'pgCalls_cls', schoolId: 'pgCalls_school' }, imp: 1,
+    box: 'pgCalls', key: 'parentCalls', req: 'name', ac: { nameId: 'pgCalls_name', massarId: 'pgCalls_massar', levelId: 'pgCalls_cls', schoolId: 'pgCalls_school', phoneId: 'pgCalls_phone', }, imp: 1,
     file: 'الاتصال-بالأولياء', print: 'سجل الاتصال الهاتفي بأولياء الأمور', title: '📞 سجل الاتصال الهاتفي بأولياء الأمور',
     fields: [
       { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'cls', l: 'القسم' }, { k: 'school', l: 'المؤسسة' }, { k: 'phone', l: 'هاتف ولي الأمر', t: 'tel' }, { k: 'time', l: 'وقت الاتصال', t: 'time' },
