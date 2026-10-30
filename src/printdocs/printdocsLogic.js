@@ -89,9 +89,8 @@ export const STATE_FIELDS = {
   4: FIELD_IDS[4].filter((id) => !REF_FIELDS[4].includes(id)),
 };
 export const AC_CFGS = [
-  { nameId: 'pd3-name', massarId: 'pd3-massar', schoolId: 'pd3-school', levelId: 'pd3-level', dobId: 'pd3-dob' },
-  { nameId: 'pd4-name', massarId: 'pd4-massar', schoolId: 'pd4-school', levelId: 'pd4-level', dobId: 'pd4-dob' },
-];
+  { nameId: 'pd3-name', massarId: 'pd3-massar', schoolId: 'pd3-school', levelId: 'pd3-level', dobId: 'pd3-dob', phoneId: 'pd3-phone' },
+  { nameId: 'pd4-name', massarId: 'pd4-massar', schoolId: 'pd4-school', levelId: 'pd4-level', dobId: 'pd4-dob' }, ];
 export const ARCHIVE_KEY = { 3: 'pdAssocArchive', 4: 'pdHealthArchive' };
 export const NAME_ID = { 3: 'pd3-name', 4: 'pd4-name' };
 export const ARCHIVE_META = {
