@@ -12,10 +12,11 @@ export const TABS = [
   { id: 'violence', label: '🛡️ عنف' },
   { id: 'workshop', label: '🎓 ورشات' },
   { id: 'specNeeds', label: '♿ إعاقة' },
+  { id: 'parents', label: '📞 الأولياء' },
 ];
 
-export const TYPE_LABELS = { interview: 'مقابلات', reintegration: 'إدماج', absence: 'غياب', violence: 'عنف', workshop: 'ورشات', specNeeds: 'إعاقة' };
-export const TYPE_COLORS = { interview: '#1a3a5c', reintegration: '#0f766e', absence: '#d97706', violence: '#dc2626', workshop: '#7c3aed', specNeeds: '#0891b2' };
+  export const TYPE_LABELS = { interview: 'مقابلات', reintegration: 'إدماج', absence: 'غياب', violence: 'عنف', workshop: 'ورشات', specNeeds: 'إعاقة', parentCall: 'اتصالات الأولياء', parentMeeting: 'مقابلات الأولياء' };
+  export const TYPE_COLORS = { interview: '#1a3a5c', reintegration: '#0f766e', absence: '#d97706', violence: '#dc2626', workshop: '#7c3aed', specNeeds: '#0891b2', parentCall: '#be185d', parentMeeting: '#9d174d' };
 
 export const PRIORITIES = ['عاجلة', 'عالية', 'متوسطة', 'عادية', '—'];
 export const STATUSES = ['مُنجز', 'قيد المتابعة', 'جارية', 'منتهية', 'مُغلق', 'أخرى'];
@@ -40,7 +41,7 @@ export function resolveRange(storage, now = new Date()) {
 }
 
 // ── التصفية والإحصاء ──
-export const filterRows = (rows, tab) => (tab === 'all' ? rows : rows.filter((r) => r._type === tab));
+  export const filterRows = (rows, tab) => (tab === 'all' ? rows : tab === 'parents' ? rows.filter((r) => r._type === 'parentCall' || r._type === 'parentMeeting') : rows.filter((r) => r._type === tab));
 
 // الإجمالي ثم عدد كل نوع بترتيب أول ظهور في الصفوف (كما كانت wprRenderStats تفعل)
 export function statsOf(rows) {
