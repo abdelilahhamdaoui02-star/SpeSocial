@@ -18,8 +18,7 @@ export function acSearch(query) {
   return studentDb().filter(s => {
     const full = acNormalize(s.fullName).toLowerCase();
     const fn = acNormalize(s.firstName).toLowerCase();
-    const ln = acNormalize(s.lastName).toLowerCase();
-    const ms = (s.massar||'').toLowerCase();
+   const AC_CFG = { nameId: 'i_studentName', massarId: 'i_studentMassar', schoolId: 'i_school', levelId: 'i_level', genderName: 'i_gender', phoneId: 'i_parentPhone' };    const ms = (s.massar||'').toLowerCase();
     return full.includes(q) || fn.includes(q) || ln.includes(q) || ms.startsWith(q);
   }).slice(0, 15);
 }
@@ -35,14 +34,19 @@ export function fillDob(el, dob) {
   el.value = next;
   ['input', 'change'].forEach((type) => el.dispatchEvent(new Event(type, { bubbles: true })));
 }
-
+// كتابة قيمة في حقل بطريقة يلتقطها React أيضاً (الحقول المتحكَّم بها تتجاهل el.value المباشر)
+function setInputValue(el, v) {
+  if (!el) return;
+  const proto = el.tagName === 'TEXTAREA' ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype;
+  Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, v);
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+}
 export function acFillField(cfg, student) {
   const nameEl = document.getElementById(cfg.nameId);
   if (nameEl) nameEl.value = student.fullName;
   if (cfg.massarId) { const el = document.getElementById(cfg.massarId); if (el) el.value = student.massar || ''; }
   if (cfg.dobId) fillDob(document.getElementById(cfg.dobId), student.dob);
-  if (cfg.phoneId) { const el = document.getElementById(cfg.phoneId); if (el) el.value = student.phone || ''; }
-  if (cfg.schoolId) {
+  if (cfg.phoneId) setInputValue(document.getElementById(cfg.phoneId), student.phone || '');  if (cfg.schoolId) {
     const el = document.getElementById(cfg.schoolId);
     const profile = userProfile();
     const inst = (profile && profile.institution) ? profile.institution : (student.school || '');
