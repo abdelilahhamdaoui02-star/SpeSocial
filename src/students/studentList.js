@@ -92,21 +92,24 @@ export function groupByClass(students) {
 }
 
 const CSS = `@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
-  @page { size: A4 portrait; margin: 12mm; }
+   @page { size: A4 portrait; margin: 0; }
   * { box-sizing: border-box; }
-  body { font-family: 'Cairo', Arial, sans-serif; margin: 0; color: #111; background: #fff; direction: rtl; }
-  .sheet { page-break-after: always; break-after: page; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Cairo', Arial, sans-serif; color: #111; background: #fff; direction: rtl; }
+  .sheet { height: 296mm; padding: 8mm 12mm; overflow: hidden; page-break-after: always; break-after: page; }
   .sheet:last-child { page-break-after: auto; break-after: auto; }
-  .hd { text-align: center; border-bottom: 2px solid #1a3a5c; padding-bottom: 6px; margin-bottom: 8px; }
-  .hd img { max-height: 70px; max-width: 100%; }
-  .hd .dir { font-size: 11px; color: #475569; margin: 2px 0; }
-  .hd .inst { font-size: 13px; font-weight: 800; margin: 2px 0; }
-  .hd h1 { font-size: 15px; font-weight: 800; color: #1a3a5c; margin: 4px 0 0; }
-  .meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; margin: 6px 0 8px; }
-  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .hd { text-align: center; border-bottom: 2px solid #1a3a5c; padding-bottom: 4px; margin-bottom: 5px; line-height: 1.3; }
+  .hd img { max-height: 42px; max-width: 100%; }
+  .hd .dir { font-size: 10px; color: #475569; margin: 1px 0; }
+  .hd .inst { font-size: 12px; font-weight: 800; margin: 1px 0; }
+  .hd h1 { font-size: 14px; font-weight: 800; color: #1a3a5c; margin: 2px 0 0; }
+  .meta { display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; margin: 3px 0 5px; }
+  table { width: 100%; border-collapse: collapse; font-size: 10.5px; line-height: 1.25; }
   thead { display: table-header-group; }
   tr { page-break-inside: avoid; }
-  th, td { border: 1px solid #334155; padding: 3px 6px; }
+  th, td { border: 1px solid #334155; padding: 2px 6px; }
+  .dense table { font-size: 9px; }
+  .dense th, .dense td { padding: 1px 5px; }
   th { background: #e5ecf5; font-weight: 800; text-align: center; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   td.c { text-align: center; } td.r { text-align: right; }
   .f { color: #be185d; font-weight: 700; } .m { color: #1d4ed8; font-weight: 700; }
@@ -122,8 +125,7 @@ export function buildStudentListHtml(students, { institution = '', directorate =
       return `<tr><td class="c">${i + 1}</td><td class="c">${esc(s.massar)}</td><td class="r">${esc(family)}</td><td class="r">${esc(given)}</td>`
         + `<td class="c ${g}">${esc(s.gender)}</td><td class="c">${esc(formatDob(s.dob))}</td></tr>`;
     }).join('');
-    return `<section class="sheet"><div class="hd">${logoHtml}`
-      + (directorate ? `<div class="dir">${esc(directorate)}</div>` : '')
+    return `<section class="sheet${list.length > 40 ? ' dense' : ''}"><div class="hd">${logoHtml}`      + (directorate ? `<div class="dir">${esc(directorate)}</div>` : '')
       + (institution ? `<div class="inst">${esc(institution)}</div>` : '')
       + `<h1>لائحة تلاميذ القسم: ${esc(cls)}</h1></div>`
       + `<div class="meta"><span>عدد التلاميذ: ${list.length}</span><span>تاريخ الطباعة: ${esc(date)}</span></div>`
