@@ -1,0 +1,67 @@
+/* ============ واجهة الهاتف المنظَّمة (≤ 620px) — تُستورد آخر ملف لتتغلب على القواعد السابقة ============ */
+@media screen and (max-width:620px){
+  /* ---- الترويسة: مضغوطة ---- */
+  html body.on-home .site-header{ grid-template-columns:minmax(0,1fr) !important; grid-template-areas:"user" "search" "hero" "bar" !important; }
+  html body.on-home #userBar{ margin:8px 12px 0 !important; }
+  html body.on-home #searchNotifBar{ padding:8px 12px 0 !important; max-width:none !important; }
+  html body.on-home .home-hero{
+    grid-template-columns:1fr auto !important; grid-template-areas:"center center" "min date" !important;
+    gap:10px 10px !important; padding:6px 12px 14px !important; align-items:center;
+  }
+  html body.on-home .hp-center{ flex-direction:column !important; gap:6px !important; }
+  html body.on-home .hp-center-txt{ gap:4px !important; }
+  html body.on-home .hp-school{ font-size:21px !important; line-height:1.3; }
+  html body.on-home .hp-sub{ font-size:13px !important; }
+  html body.on-home .hp-count{ font-size:14px !important; padding:5px 16px !important; margin-top:2px !important; gap:8px !important; }
+  html body.on-home .hp-count svg{ width:20px !important; height:20px !important; }
+  /* الوزارة: صف أفقي صغير بدل عمود طويل */
+  html body.on-home .hp-min{ flex-direction:row !important; align-items:center !important; gap:8px !important; justify-self:start !important; text-align:right; max-width:none !important; min-width:0; }
+  html body.on-home .hp-min img{ width:44px !important; height:44px !important; border-radius:10px !important; flex-shrink:0; }
+  html body.on-home .hp-min b{ display:none; }
+  html body.on-home .hp-min span{ font-size:10px !important; line-height:1.45 !important; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+  html body.on-home .hp-date{ padding:6px 10px !important; gap:8px !important; border-radius:12px !important; justify-self:end !important; min-width:0 !important; }
+  html body.on-home .hp-date svg{ width:28px !important; height:28px !important; }
+  html body.on-home .hp-date strong{ font-size:14px !important; }
+  html body.on-home .hp-date span{ font-size:11.5px !important; }
+
+  /* ---- المحتوى: الإحصائيات أولاً ثم البوابات ثم بوابات أخرى ---- */
+  .hp-main{ display:flex !important; flex-direction:column; gap:14px !important; padding:12px 10px 0 !important; }
+  .hp-stats{ order:1 !important; }
+  .hp-portals{ order:2; }
+  .hp-others{ order:3; }
+  .hp-panel{ padding:12px 10px 14px !important; border-radius:18px !important; }
+  .hp-panel-title{ font-size:16px !important; margin:0 4px 10px !important; }
+  .hp-panel-title svg{ width:22px !important; height:22px !important; }
+  .hp-stats-head{ flex-wrap:wrap; margin-bottom:10px !important; }
+  .hp-season{ padding:6px 14px !important; font-size:12.5px !important; }
+  .hp-inner{ padding:10px !important; border-radius:14px !important; }
+  .hp-kpis{ grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:8px !important; }
+
+  /* ---- بطاقات البوابات: شبكة من عمودين (أيقونة فوق، عنوان تحتها) ---- */
+  .hp-list{ display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px !important; }
+  .hp-main > .hp-panel > .hp-list{ flex:0 0 auto; justify-content:stretch !important; }
+  html body.on-home .hp-tile{
+    position:relative; flex-direction:column !important; justify-content:center; align-items:center !important;
+    gap:8px !important; min-height:112px !important; padding:12px 6px 10px !important; text-align:center !important; border-radius:16px !important;
+  }
+  .hp-ico{ width:46px !important; height:46px !important; border-radius:14px !important; }
+  .hp-ico svg{ width:24px !important; height:24px !important; }
+  .hp-lbl{ flex:0 0 auto !important; font-size:13px !important; line-height:1.4 !important; text-align:center; }
+  .hp-chev{ display:none !important; }
+  .hp-tile .fu-badge{ position:absolute; top:6px; inset-inline-start:6px; margin:0 !important; }
+
+  /* ---- التقرير الأسبوعي ---- */
+  .hp-report{ margin:14px 10px 0 !important; padding:5px 6px !important; border-radius:20px !important; }
+  .hp-report-in{ padding:12px !important; gap:12px !important; border-radius:16px !important; }
+  .hp-report-ico{ width:46px !important; height:46px !important; }
+  .hp-report-t{ font-size:16px !important; }
+  .hp-report-s{ font-size:12px !important; }
+  .hp-report-btns{ width:100%; display:grid !important; grid-template-columns:1fr 1fr; gap:8px !important; }
+  .hp-btn{ padding:10px 8px !important; font-size:13px !important; justify-content:center; gap:6px !important; }
+  .hp-btn svg{ width:18px !important; height:18px !important; }
+}
+/* هواتف ضيقة جداً */
+@media screen and (max-width:360px){
+  .hp-list{ grid-template-columns:1fr !important; }
+  html body.on-home .hp-tile{ flex-direction:row !important; min-height:64px !important; text-align:right !important; }
+}
