@@ -1,8 +1,7 @@
 // منطق بوابة «رصد السلوك» — دوال نقية (لا DOM ولا window ولا مخزن ولا alert).
-// منقول حرفياً من script-18.js (النسخة القديمة المجمَّدة في tests/fixtures/behavior.step18.js،
-// ويقارن بها tests/behavior.parity.test.js). كل دالة كانت تقرأ الوقت الحالي صارت تأخذ now،
-// وكل دالة كانت تقرأ ملفاً أو سياقاً من الصفحة صارت تأخذه معاملاً.
-// شكل البيانات المحفوظة في appData.behaviorFiles لم يتغير.
+// البنية الحالية للبوابة: معطيات التلميذ ← الجدول الأسبوعي ← التقييم النفسي ← جدول التدخل (إجراءات مقترحة).
+// حُذف: مستوى الدعم، سبب الإدراج، نقاط القوة، وخطة التدخل السلوكي (الهدف/السلوكات المنتظرة/المراجعة...).
+// الملفات القديمة المحفوظة قد تحتوي حقول tier/reason/strengths/plan: تبقى في البيانات دون أن تُعرض أو تُحذف.
 
 export const BM_KEY = 'behaviorFiles';
 const vigEsc = (v) => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -10,6 +9,8 @@ const vigEsc = (v) => String(v == null ? '' : v).replace(/&/g, '&amp;').replace(
 export const BM_CON = [['عراك أو دفع زميل','violence'],['ألفاظ مسيئة أو شتم','violence'],['سخرية أو تنمر على زميل','violence'],['رفع الصوت أو مشادة كلامية','interview'],['عزلة عن الأقران أثناء الاستراحة','vigilance'],['تأخر عن الدخول بعد الرنين','absence'],['التواجد خارج القسم أثناء الحصة','absence'],['محاولة الخروج من المؤسسة أو تسلق السور','vigilance'],['إتلاف ممتلكات أو تخريب','violence'],['عدم الامتثال لتوجيهات الحراسة','interview'],['اللعب العنيف أو الخطير','violence'],['حيازة أو استعمال مواد ممنوعة','vigilance'],['أخرى','interview']];
 export const BM_POS = ['اللعب الجماعي والتعاون مع الأقران','مساعدة زميل','حل خلاف بالحوار','الامتثال لتوجيهات الحراسة','الاعتذار أو المبادرة بالصلح','الدخول في الوقت بعد الرنين','المشاركة في أنشطة الساحة','أخرى'];
 export const BM_PORTALS = { interview:'المقابلة الفردية', violence:'العنف', absence:'الغياب', vigilance:'خلية اليقظة' };
+
+// الإجراءات المقترحة لكل سلوك مقلق (مصدر اقتراحات جدول التدخل)
 export const BM_STRAT = {
   'عراك أو دفع زميل': ['فصل مؤقت بين الطرفين ثم جلسة وساطة','إخبار الأسرة وتوثيق الواقعة في بوابة العنف','التنسيق مع الحراسة العامة لتكثيف المراقبة وقت الاستراحة'],
   'ألفاظ مسيئة أو شتم': ['تقدير فوري للغة المحترمة','حصة توضيحية لقواعد الاحترام','اتفاق مكتوب مع التلميذ(ة) على سلوك بديل'],
@@ -25,6 +26,11 @@ export const BM_STRAT = {
   'حيازة أو استعمال مواد ممنوعة': ['إخبار الإدارة والأسرة وفق المسطرة','إحالة الملف إلى خلية اليقظة']
 };
 export const BM_STRAT_DEF = ['تعزيز إيجابي فوري عند السلوك المطلوب','لقاء أسبوعي قصير لمراجعة الجدول الأسبوعي','الاعتماد على نقاط القوة في المهام'];
+
+// جدول التدخل: المسؤولون وحالات التنفيذ
+export const BM_IV_RESP = ['المختص الاجتماعي','الأستاذ(ة)','الحارس العام','الإدارة','الأسرة','خلية اليقظة'];
+export const BM_IV_STATUS = ['مقترح','قيد التنفيذ','أُنجز'];
+
 export const BM_DAYS = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 export const BM_EV_DIMS = [
   { k:'psy',  l:'🧠 النفسية',   items:['يبدو هادئًا ومرتاحًا','يبدو حزينًا أو منعزلًا','يبدو قلقًا أو متوترًا','سريع الانفعال','بكاء ظاهر'] },
@@ -35,25 +41,6 @@ export const BM_EV_DIMS = [
   { k:'edu',  l:'📚 التربوية',  items:['منتظم في الحضور','يتأخر عن الدخول','يشكو صعوبة في الدراسة','يفتقد الأدوات المدرسية','متحمس للدراسة'] }
 ];
 export const BM_EV_LV = [['0','عادي','🟢'],['1','يحتاج متابعة','🟡'],['2','مقلق','🔴']];
-export const BM_TIER_ACTIONS = {
-  '2': ['لقاء أسبوعي قصير مع التلميذ(ة) لمراجعة الجدول الأسبوعي','اتفاق مع الأستاذ(ة) على سلوك بديل واضح وتعزيزه فورًا','تواصل دوري مع الأسرة وإخبارها بالتطور'],
-  '3': ['وضع خطة تدخل فردية مكتوبة بهدف قابل للقياس وتاريخ مراجعة','لقاءات أسبوعية متعددة مع إشراك الأسرة والإدارة','النظر في الإحالة إلى خلية اليقظة أو بوابة المقابلات/العنف']
-};
-export const BM_GOALS_SUG = {
-  'عراك أو دفع زميل': 'انعدام أي عراك أو دفع في الساحة لمدة أسبوعين متتاليين',
-  'ألفاظ مسيئة أو شتم': 'استعمال لغة محترمة مع الأقران 4 أيام من 5 خلال 3 أسابيع',
-  'سخرية أو تنمر على زميل': 'انعدام حالات السخرية أو التنمر لمدة 3 أسابيع متتالية',
-  'رفع الصوت أو مشادة كلامية': 'حل الخلافات بعبارة بديلة مهذبة في 4 مواقف من 5 خلال أسبوعين',
-  'عزلة عن الأقران أثناء الاستراحة': 'المشاركة في لعبة جماعية واحدة على الأقل في 4 استراحات من 5 خلال أسبوعين',
-  'تأخر عن الدخول بعد الرنين': 'الدخول إلى الصف مباشرة بعد الرنين 4 أيام من 5 خلال 3 أسابيع',
-  'التواجد خارج القسم أثناء الحصة': 'انعدام التواجد خارج القسم أثناء الحصص لمدة 3 أسابيع',
-  'محاولة الخروج من المؤسسة أو تسلق السور': 'انعدام محاولات الخروج من المؤسسة لمدة شهر',
-  'إتلاف ممتلكات أو تخريب': 'انعدام حالات الإتلاف لمدة 3 أسابيع متتالية',
-  'عدم الامتثال لتوجيهات الحراسة': 'الامتثال لتوجيهات الحراسة من أول مرة في 4 مواقف من 5 خلال أسبوعين',
-  'اللعب العنيف أو الخطير': 'اللعب بأسلوب آمن في 4 استراحات من 5 خلال أسبوعين',
-  'حيازة أو استعمال مواد ممنوعة': 'انعدام أي حيازة أو استعمال لمواد ممنوعة لمدة شهر'
-};
-export const BM_GOALS_DEF = ['خفض السلوكات المقلقة الملاحظة في الساحة إلى أقل من 3 أسبوعيًا خلال 3 أسابيع','تسجيل 3 سلوكات إيجابية على الأقل أسبوعيًا خلال 3 أسابيع','تحقيق السلوكات المنتظرة في الاستراحات 4 أيام من 5 خلال أسبوعين'];
 
 // ── التواريخ (bmIso بتوقيت UTC كما في القديم، وbmLIso بالتوقيت المحلي) ──
 export function bmIso(d) { return d.toISOString().slice(0,10); }
@@ -84,12 +71,11 @@ export function bmWeekCount(f, w, kind) {
   return f.obs.filter(o => ds.includes(o.date) && (!kind || o.kind === kind)).length;
 }
 export function bmMarks(n) { return n <= 5 ? Array(n).fill('X').join(' ') : 'X×' + n; }
-export function bmTierLbl(t) { return String(t).includes('+') ? 'المستويان 2 و3' : 'المستوى ' + t; }
-export function bmGoals(f) {
-  const d = ['احترام قواعد الساحة','التعاون مع الأقران','الامتثال لتوجيهات الحراسة'];
-  return [0,1,2].map(i => (f && f.plan && f.plan.goals && f.plan.goals[i]) || d[i]);
-}
 export function bmWordKey(v) { return String(v || '').trim().replace(/\s+/g, ' ').replace(/[أإآا]/g,'ا').replace(/[ةه]/g,'ه').replace(/[يى]/g,'ي').toLowerCase().split(' ').filter(Boolean).sort().join(' '); }
+// تاريخ بداية الرصد: الحقل الجديد، وإلا تاريخ الإدراج للملفات القديمة
+export function bmStartOf(f) { return (f && (f.startDate || f.addedAt)) || ''; }
+
+// ── التقييم النفسي (التقييم السريع سابقًا) ──
 export function bmEvFind(f, date) { return f && Array.isArray(f.evals) ? f.evals.find(e => e.date === date) : null; }
 export function bmEvLatest(f) { return f && Array.isArray(f.evals) && f.evals.length ? f.evals.slice().sort((a, b) => a.date < b.date ? 1 : -1)[0] : null; }
 export function bmEvLvName(v) { const l = BM_EV_LV.find(x => x[0] === v); return l ? l[2] + ' ' + l[1] : '—'; }
@@ -97,7 +83,7 @@ export function bmEvListHtml(f) {
   const e = bmEvLatest(f); if (!e) return '';
   const flag = lv => BM_EV_DIMS.filter(d => e.dims[d.k] && e.dims[d.k].lv === lv).map(d => d.l.replace(/^\S+\s/, ''));
   const red = flag('2'), amb = flag('1');
-  return '<div style="font-size:0.78rem;margin-top:6px;color:#334155;"><strong>⚡ آخر تقييم سريع (' + vigEsc(e.date) + '):</strong> ' +
+  return '<div style="font-size:0.78rem;margin-top:6px;color:#334155;"><strong>🧠 آخر تقييم نفسي (' + vigEsc(e.date) + '):</strong> ' +
     (red.length ? '<span style="color:#dc2626;">مقلق: ' + red.map(vigEsc).join('، ') + '</span> ' : '') +
     (amb.length ? '<span style="color:#d97706;">يحتاج متابعة: ' + amb.map(vigEsc).join('، ') + '</span>' : '') +
     (!red.length && !amb.length ? '<span style="color:#16a34a;">لا مؤشرات مقلقة</span>' : '') + '</div>';
@@ -105,9 +91,8 @@ export function bmEvListHtml(f) {
 export function bmEvReportHtml(f) {
   const e = bmEvLatest(f); if (!e) return '';
   const rows = BM_EV_DIMS.filter(d => e.dims[d.k]).map(d => { const v = e.dims[d.k]; return '<tr><td>' + d.l.replace(/^\S+\s/, '') + '</td><td>' + bmEvLvName(v.lv) + '</td><td>' + vigEsc([].concat(v.items || [], v.note ? [v.note] : []).join(' — ') || '—') + '</td></tr>'; }).join('');
-  return '<div class="report-section-title" style="font-size:10pt;">التقييم السريع (' + vigEsc(e.date) + ')</div><table class="wk-table-report"><thead><tr><th style="width:16%">البُعد</th><th style="width:18%">التقدير</th><th>الملاحظات</th></tr></thead><tbody>' + rows + '</tbody></table>' + (e.note ? '<div style="font-size:9pt;margin-bottom:8px;">ملاحظة عامة: ' + vigEsc(e.note) + '</div>' : '');
+  return '<div class="report-section-title" style="font-size:10pt;">التقييم النفسي (' + vigEsc(e.date) + ')</div><table class="wk-table-report"><thead><tr><th style="width:16%">البُعد</th><th style="width:18%">التقدير</th><th>الملاحظات</th></tr></thead><tbody>' + rows + '</tbody></table>' + (e.note ? '<div style="font-size:9pt;margin-bottom:8px;">ملاحظة عامة: ' + vigEsc(e.note) + '</div>' : '');
 }
-
 
 // ── الإحصاء الأسبوعي والتنبيهات ──
 export function bmStats(f, now = new Date()) {
@@ -121,48 +106,15 @@ export function bmStats(f, now = new Date()) {
   if (cc.length >= 3) alerts.push('تكرار السلوكيات المقلقة (' + cc.length + ' خلال 7 أيام)');
   if (cc.some(o => o.sev === 3)) { alerts.push('ملاحظة بشدة 3 خلال الأسبوع'); portals.add('vigilance'); }
   if (cc.length >= 2 && cc.length > pc.length) alerts.push('ارتفاع مقارنة بالأسبوع الماضي (' + pc.length + ' ← ' + cc.length + ')');
-  if (f.tier === '2' && cc.length >= 4 && pc.length >= 4) alerts.push('استمرار السلوكات المقلقة أسبوعين متتاليين (' + pc.length + ' ثم ' + cc.length + ') — فكّر في الانتقال إلى المستوى 3');
-  if (f.plan && f.plan.review && f.plan.review <= t) alerts.push('حان موعد مراجعة الخطة (' + f.plan.review + ')');
+  if (cc.length >= 4 && pc.length >= 4) alerts.push('استمرار السلوكات المقلقة أسبوعين متتاليين (' + pc.length + ' ثم ' + cc.length + ') — راجع الإجراءات في جدول التدخل');
   { const ev = (f.evals || []).filter(e => e.date >= d7 && e.date <= t).sort((a, b) => a.date < b.date ? 1 : -1)[0];
     if (ev) { const red = BM_EV_DIMS.filter(d => ev.dims[d.k] && ev.dims[d.k].lv === '2').map(d => d.l.replace(/^\S+\s/, ''));
-      if (red.length >= 2) { alerts.push('تقييم سريع بتاريخ ' + ev.date + ': ' + red.length + ' أبعاد مقلقة (' + red.join('، ') + ')'); portals.add('vigilance'); } } }
+      if (red.length >= 2) { alerts.push('تقييم نفسي بتاريخ ' + ev.date + ': ' + red.length + ' أبعاد مقلقة (' + red.join('، ') + ')'); portals.add('vigilance'); } } }
   if (alerts.length) cc.forEach(o => { if (o.portal && (o.sev >= 2 || cc.length >= 3)) portals.add(o.portal); });
   return { cur, cc, pc, pos: cur.filter(o => o.kind === 'pos'), top, alerts, portals: Array.from(portals) };
 }
 
-
-// ── اقتراح مستوى الدعم: (الملف، نص سبب الإدراج) ← { tier, why } ──
-export function bmTierAdvice(f, reasonTxt, now = new Date()) {
-  const why = []; let tier = '2';
-  const hasData = f && f.obs.length;
-  if (hasData) {
-    const s = bmStats(f, now), cc = s.cc.length, pc = s.pc.length;
-    const phys = s.cc.some(o => o.beh === 'عراك أو دفع زميل' || o.beh === 'اعتداء جسدي على زميل');
-    const up = [];
-    if (s.cc.some(o => o.sev === 3)) up.push('رُصدت واقعة بشدة 3 خلال 7 أيام');
-    if (phys) up.push('رُصد عراك أو اعتداء جسدي');
-    if (cc >= 8) up.push('عدد مرتفع من السلوكات المقلقة (' + cc + ' خلال 7 أيام)');
-    if (cc >= 5 && pc >= 5) up.push('استمرار السلوكات المقلقة أسبوعين متتاليين (' + pc + ' ثم ' + cc + ')');
-    if (f.tier === '2' && cc >= 4 && pc >= 4) up.push('لم يُحدث الدعم الموجَّه أثرًا بعد أسبوعين (' + pc + ' ثم ' + cc + ')');
-    if (up.length) { tier = '3'; why.push(...up); }
-    else if (f.tier === '3' && cc <= 1 && pc <= 1) { tier = '2'; why.push('تراجع واضح للسلوكات المقلقة (' + pc + ' ثم ' + cc + ') — يمكن التخفيف إلى دعم موجَّه'); }
-    else {
-      tier = '2';
-      if (cc >= 3) why.push('تكرار متوسط للسلوكات المقلقة (' + cc + ' خلال 7 أيام) — دعم موجَّه كافٍ حاليًا');
-      else if (cc === 0 && s.pos.length >= 3 && f.tier === '2') why.push('لا سلوك مقلق هذا الأسبوع و' + s.pos.length + ' سلوكات إيجابية — فكّر في إنهاء المتابعة قريبًا');
-      else why.push('عدد محدود من السلوكات المقلقة (' + cc + ' خلال 7 أيام)');
-    }
-  } else {
-    const t = reasonTxt || '';
-    const hit = ['اعتداء','عنف','ضرب','إيذاء','تهديد','سلاح','خطير','شديد','إتلاف'].filter(w => t.includes(w));
-    if (hit.length) { tier = '3'; why.push('ورد في سبب الإدراج ما يدل على خطورة: «' + hit.join('، ') + '»'); }
-    else if (t) why.push('الوصف المدخل لا يشير إلى خطورة فورية — يُبدأ بدعم موجَّه ثم يُراجَع بعد أسبوع من الرصد');
-    else why.push('لا معطيات كافية بعد — يُقترح البدء بالمستوى 2 ثم المراجعة بعد أسبوع من الرصد في الجدول');
-  }
-  return { tier, why };
-}
-
-// ── البحث عن التلميذ والملف (كانت bmFindStudent وbmFindCur تقرآن الحقول من الصفحة) ──
+// ── البحث عن التلميذ والملف ──
 export function bmFindStudentIn(db, massar, name) {
   if (!Array.isArray(db) || !db.length) return null;
   const ms = massar || '', k = bmWordKey(name);
@@ -175,13 +127,13 @@ export function bmFindCurFile(files, name, massar) {
   if (!name && !massar) return null;
   return files.find(f => f.status !== 'أُغلق' && ((massar && f.massar === massar) || (name && bmNz(f.studentName) === bmNz(name)))) || null;
 }
-// ملف متابعة جديد كما كانت تبنيه bmEnsureCur (المعرّف والتاريخ يأتيان من الخارج)
-export function bmNewFile({ name, massar, school, level, tier, reason, strengths }, now = new Date(), id = Date.now()) {
-  return { id, studentName: name, massar: massar || '—', school: school || '', level: level || '—', tier: tier || '2',
-    reason: reason || '', strengths: strengths || '', addedAt: bmIso(now), status: 'متابعة', obs: [], gridRows: [], plan: null };
+// ملف متابعة جديد (المعرّف والتاريخ يأتيان من الخارج)
+export function bmNewFile({ name, massar, school, level, startDate }, now = new Date(), id = Date.now()) {
+  return { id, studentName: name, massar: massar || '—', school: school || '', level: level || '—',
+    startDate: startDate || bmLIso(now), addedAt: bmIso(now), status: 'متابعة', obs: [], gridRows: [], interventions: [] };
 }
 
-// ── الجدول الأسبوعي: عمليات لا تغيّر الأصل (القديم كان يعدّل الملف في مكانه) ──
+// ── الجدول الأسبوعي: عمليات لا تغيّر الأصل ──
 export function bmPushRowTo(f, kind, beh, week) {
   if (bmGridRows(f, week).some(r => bmRowKey(r) === kind + '|' + beh)) return { dup: true, file: f };
   return { dup: false, file: { ...f, gridRows: (Array.isArray(f.gridRows) ? f.gridRows : []).concat([{ beh, kind }]) } };
@@ -194,7 +146,7 @@ export function bmAddMark(f, row, date, id) {
   const o = { id, date, kind: row.kind, beh: row.beh, portal: row.kind === 'con' ? (known ? known[1] : 'interview') : '', place: '', sev: 1, by: '', ctx: '', src: 'grid' };
   return { ...f, obs: f.obs.concat([o]) };
 }
-// تحذف آخر علامة أُضيفت من الجدول في هذه الخانة؛ تعيد null إن لم توجد (القديم ينبّه بـ alert)
+// تحذف آخر علامة أُضيفت من الجدول في هذه الخانة؛ تعيد null إن لم توجد
 export function bmRemoveMark(f, row, date) {
   let idx = -1;
   for (let i = f.obs.length - 1; i >= 0; i--) { const o = f.obs[i]; if (o.src === 'grid' && o.date === date && o.kind === row.kind && o.beh === row.beh) { idx = i; break; } }
@@ -211,49 +163,7 @@ export function bmGridSuggest(f, week) {
   return list.length ? { list, title } : null;
 }
 
-// ── مستوى الدعم ──
-export function bmTierNames() { return { '2': 'المستوى 2 — دعم موجَّه', '3': 'المستوى 3 — دعم مكثف' }; }
-// بطاقة الاقتراح: cur هو المستوى المعتمد حالياً ("2" أو "3" أو "2+3")
-export function bmTierSuggest(f, reasonTxt, cur, now = new Date()) {
-  const a = bmTierAdvice(f, reasonTxt, now), c = String(cur || '2');
-  return { tier: a.tier, why: a.why, actions: BM_TIER_ACTIONS[a.tier], name: bmTierNames()[a.tier], same: c.split('+').includes(a.tier), multi: c.includes('+') };
-}
-export function bmApplyTierTo(cur, t, add) {
-  const c = String(cur || '2');
-  return add ? Array.from(new Set(c.split('+').concat(t))).sort().join('+') : t;
-}
-
-// ── الأهداف القابلة للقياس والاستراتيجيات ──
-export function bmGoalSuggest(f, now = new Date()) {
-  const list = [];
-  const add = g => { if (g && !list.includes(g)) list.push(g); };
-  if (f) {
-    const s = bmStats(f, now), freq = {};
-    f.obs.filter(o => o.kind === 'con').forEach(o => freq[o.beh] = (freq[o.beh] || 0) + 1);
-    Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 3).forEach(([beh]) => {
-      const n = s.cc.filter(o => o.beh === beh).length;
-      if (n >= 2) add('خفض عدد مرات «' + beh + '» من ' + n + ' إلى ' + Math.max(1, Math.floor(n / 2)) + ' أسبوعيًا خلال 3 أسابيع');
-      add(BM_GOALS_SUG[beh]);
-    });
-  }
-  BM_GOALS_DEF.forEach(add);
-  return list.slice(0, 6);
-}
-export function bmStratSuggest(f) {
-  const freq = {}; (f ? f.obs : []).filter(o => o.kind === 'con').forEach(o => freq[o.beh] = (freq[o.beh] || 0) + 1);
-  const tops = Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0, 3).map(x => x[0]);
-  let list = []; tops.forEach(b => (BM_STRAT[b] || []).forEach(s => { if (!list.includes(s)) list.push(s); }));
-  if (!list.length) list = BM_STRAT_DEF;
-  return { list, tops };
-}
-// إضافة استراتيجية إلى نص الخطة (سطر جديد، بلا تكرار) — تعيد النص كما هو إن كانت موجودة
-export function bmAppendStrategy(text, s) {
-  if (!s) return text;
-  if (String(text).split('\n').map(x => x.trim()).includes(s)) return text;
-  return (String(text).trim() ? String(text).trim() + '\n' : '') + s;
-}
-
-// ── التقييم السريع ──
+// ── التقييم النفسي: الحفظ ──
 export function bmEvCounts(levels) { // levels: { psy:'0'|'1'|'2'|'' , ... }
   const c = { '0': 0, '1': 0, '2': 0 };
   BM_EV_DIMS.forEach(d => { const v = levels[d.k]; if (v === '0' || v === '1' || v === '2') c[v]++; });
@@ -263,7 +173,7 @@ export function bmEvSummaryText(counts, saved) {
   const n = counts['0'] + counts['1'] + counts['2'];
   return n ? ('🟢 ' + counts['0'] + ' · 🟡 ' + counts['1'] + ' · 🔴 ' + counts['2']) + (saved ? ' — محفوظ' : '') : (saved ? 'محفوظ' : 'اضغط للتقييم');
 }
-// dims: { psy:{lv,items,note}, ... } ← يُحتفظ بالبعد إن كان له تقدير أو بنود أو ملاحظة (كـ bmEvCollect)
+// dims: { psy:{lv,items,note}, ... } ← يُحتفظ بالبعد إن كان له تقدير أو بنود أو ملاحظة
 export function bmEvCollectFrom(input) {
   const dims = {}; let n = 0;
   BM_EV_DIMS.forEach(d => {
@@ -278,12 +188,37 @@ export function bmEvUpsert(f, date, dims, note, id) {
   evals.push({ id, date, dims, note });
   return { ...f, evals };
 }
+
+// ── جدول التدخل (إجراءات مقترحة) ──
+// اقتراحات الإجراءات حسب أكثر السلوكات المقلقة تسجيلًا
+export function bmStratSuggest(f) {
+  const freq = {}; (f ? f.obs : []).filter(o => o.kind === 'con').forEach(o => freq[o.beh] = (freq[o.beh] || 0) + 1);
+  const tops = Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0, 3).map(x => x[0]);
+  let list = []; tops.forEach(b => (BM_STRAT[b] || []).forEach(s => { if (!list.includes(s)) list.push(s); }));
+  if (!list.length) list = BM_STRAT_DEF;
+  return { list, tops };
+}
+export const bmIvOf = (f) => (f && Array.isArray(f.interventions) ? f.interventions : []);
+// إضافة إجراء؛ dup إن كان نفس النص موجودًا
+export function bmIvAdd(f, action, id, resp = BM_IV_RESP[0]) {
+  const a = String(action || '').trim();
+  if (bmIvOf(f).some(x => String(x.action).trim() === a)) return { dup: true, file: f };
+  return { dup: false, file: { ...f, interventions: bmIvOf(f).concat([{ id, action: a, resp, date: '', status: BM_IV_STATUS[0] }]) } };
+}
+export const bmIvUpdate = (f, id, patch) => ({ ...f, interventions: bmIvOf(f).map(x => (String(x.id) === String(id) ? { ...x, ...patch } : x)) });
+export const bmIvDel = (f, id) => ({ ...f, interventions: bmIvOf(f).filter(x => String(x.id) !== String(id)) });
+export function bmIvReportHtml(f) {
+  const iv = bmIvOf(f); if (!iv.length) return '';
+  const rows = iv.map((x, i) => '<tr><td>' + (i + 1) + '</td><td>' + vigEsc(x.action) + '</td><td>' + vigEsc(x.resp || '—') + '</td><td>' + vigEsc(x.date || '—') + '</td><td>' + vigEsc(x.status || '—') + '</td></tr>').join('');
+  return '<div class="report-section-title" style="font-size:10pt;">جدول التدخل — إجراءات مقترحة</div><table class="wk-table-report"><thead><tr><th style="width:5%">#</th><th>الإجراء</th><th style="width:18%">المسؤول</th><th style="width:14%">تاريخ التنفيذ</th><th style="width:12%">الحالة</th></tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
 export const bmDelObsOf = (f, oid) => ({ ...f, obs: f.obs.filter(o => String(o.id) !== String(oid)) });
 export const bmCloseFile = (f) => ({ ...f, status: 'أُغلق' });
 export const bmReopenFile = (f) => ({ ...f, status: 'متابعة' });
-export const bmPlanOf = ({ goal, goals, review, strategies, resp, result }) => ({ goal, goals, review, strategies, resp, result });
+export const bmSetStart = (f, iso) => ({ ...f, startDate: iso });
 
-// ── بطاقة كل تلميذ في قائمة المتابعة (كانت bmRender تبني HTML نصياً) ──
+// ── بطاقة كل تلميذ في قائمة المتابعة ──
 export function bmListRows(all, q, now = new Date(), week = bmMonday(null, now)) {
   const act = all.filter(f => f.status !== 'أُغلق');
   const list = act.concat(all.filter(f => f.status === 'أُغلق')).filter(f => !q || f.studentName.includes(q));
@@ -301,6 +236,21 @@ export function bmListRows(all, q, now = new Date(), week = bmMonday(null, now))
 }
 
 // ── التقرير الأسبوعي (طباعة / Word) ──
+// ترتيب كل تلميذ: معطيات التلميذ ← الجدول الأسبوعي ← التقييم النفسي ← جدول التدخل
+export function bmStudentReportHtml(f) {
+  const th = (t, w) => '<th' + (w ? ' style="width:' + w + '"' : '') + '>' + t + '</th>';
+  return '<table class="wk-table-report"><tbody>' +
+    '<tr>' + th('الاسم الكامل', '14%') + '<td>' + vigEsc(f.studentName) + '</td>' + th('القسم', '10%') + '<td>' + vigEsc(f.level || '—') + '</td>' + th('رقم مسار', '10%') + '<td>' + vigEsc(f.massar || '—') + '</td></tr>' +
+    '<tr>' + th('المؤسسة') + '<td colspan="3">' + vigEsc(f.school || '—') + '</td>' + th('تاريخ بداية الرصد') + '<td>' + vigEsc(bmStartOf(f) || '—') + '</td></tr>' +
+    '</tbody></table>';
+}
+
+export function bmGridReportHtml(f, w) {
+  const rows = bmGridRows(f, w); if (!rows.length) return '';
+  const ds = bmWeekDates(w);
+  const body = rows.map(r => '<tr><td>' + vigEsc(r.beh) + (r.kind === 'pos' ? ' (إيجابي)' : '') + '</td>' + ds.map(d => { const n = bmCellCount(f, d, r); return '<td style="text-align:center;font-weight:800;">' + (n ? bmMarks(n) : '') + '</td>'; }).join('') + '<td style="text-align:center;font-weight:800;">' + ds.reduce((a, d) => a + bmCellCount(f, d, r), 0) + '</td></tr>').join('');
+  return '<div class="report-section-title" style="font-size:10pt;">الجدول الأسبوعي (' + bmFmt(ds[0]) + ' ← ' + bmFmt(ds[5]) + ')</div><table class="wk-table-report"><thead><tr><th style="width:28%">السلوك الملاحَظ</th>' + ds.map((d, i) => '<th style="text-align:center;">' + BM_DAYS[i] + '<br>' + bmFmt(d) + '</th>').join('') + '<th style="text-align:center;">المجموع</th></tr></thead><tbody>' + body + '</tbody></table>';
+}
 
 export function bmBuildReport(allFiles, onlyId, ctx = {}) {
   const now = ctx.now || new Date(), week = ctx.week || bmMonday(null, now);
@@ -310,28 +260,11 @@ export function bmBuildReport(allFiles, onlyId, ctx = {}) {
   const spec = ctx.spec || '';
   const logo = ctx.logo || '';
   const d7 = bmAgo(6, now), t = bmIso(now);
-  const blocks = files.map(f => {
-    const s = bmStats(f, now);
-    const obs = f.obs.filter(o => o.date >= d7 && o.date <= t).sort((a,b) => a.date < b.date ? -1 : 1);
-    const rows = obs.length ? obs.map((o,i) => '<tr><td>' + (i+1) + '</td><td>' + vigEsc(o.date) + '</td><td>' + (o.kind === 'pos' ? 'إيجابي' : 'مقلق') + '</td><td>' + vigEsc(o.beh) + '</td><td>' + vigEsc(o.place || '—') + '</td><td>' + (o.kind === 'con' ? o.sev : '—') + '</td><td>' + vigEsc(o.by || '—') + '</td><td>' + vigEsc(o.ctx || '—') + '</td></tr>').join('') : '<tr><td colspan="8">لا ملاحظات خلال الأسبوع</td></tr>';
-    const g = bmGoals(f);
-    const p = f.plan || {};
-    return '<div class="report-section-title">' + vigEsc(f.studentName) + ' — ' + vigEsc(f.level) + ' — ' + bmTierLbl(f.tier) + '</div>' +
-      '<table class="wk-table-report"><thead><tr><th>ملاحظات مقلقة</th><th>ملاحظات إيجابية</th><th>الأسبوع الماضي (مقلقة)</th><th>علامات الجدول الأسبوعي (×)</th></tr></thead><tbody><tr><td>' + s.cc.length + '</td><td>' + s.pos.length + '</td><td>' + s.pc.length + '</td><td>' + bmWeekCount(f, week) + '</td></tr></tbody></table>' +
-      '<table class="wk-table-report"><thead><tr><th>#</th><th>التاريخ</th><th>النوع</th><th>السلوك الملاحَظ</th><th>المكان</th><th>الشدة</th><th>الراصد</th><th>السياق</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      bmGridReportHtml(f, week) + bmEvReportHtml(f) +
-      (p.goal || p.strategies ? '<table class="wk-table-report"><tbody><tr><th style="width:18%">الهدف</th><td>' + vigEsc(p.goal || '—') + '</td></tr><tr><th>الاستراتيجيات</th><td>' + vigEsc(p.strategies || '—').replace(/\n/g, ' • ') + '</td></tr><tr><th>المسؤولون</th><td>' + vigEsc(p.resp || '—').replace(/\n/g, ' • ') + '</td></tr><tr><th>المراجعة</th><td>' + vigEsc(p.review || '—') + (p.result ? ' — ' + vigEsc(p.result) : '') + '</td></tr></tbody></table>' : '');
-  }).join('');
+  const blocks = files.map(f =>
+    '<div class="report-section-title">' + vigEsc(f.studentName) + '</div>' +
+    bmStudentReportHtml(f) + bmGridReportHtml(f, week) + bmEvReportHtml(f) + bmIvReportHtml(f)
+  ).join('');
   return '<div class="new-report-header"><div class="nrh-logo">' + (logo ? '<img src="' + logo + '" alt="شعار الوزارة">' : '') + '</div><div class="nrh-dir">مديرية الحي الحسني</div><div class="nrh-school">' + vigEsc(school) + '</div><div class="nrh-title">التقرير الأسبوعي لرصد السلوك (' + d7 + ' → ' + t + ')</div></div>' +
     (spec ? '<div class="report-summary-block" style="text-align:center;">المختص(ة) الاجتماعي(ة): ' + vigEsc(spec) + '</div>' : '') + blocks +
     '<div class="sig-wrap"><div class="sig-block"><div class="sig-line"></div>المختص الاجتماعي</div><div class="sig-block"><div class="sig-line"></div>الحارس العام</div><div class="sig-block"><div class="sig-line"></div>مدير المؤسسة</div></div>';
 }
-
-
-export function bmGridReportHtml(f, w) {
-  const rows = bmGridRows(f, w); if (!rows.length) return '';
-  const ds = bmWeekDates(w);
-  const body = rows.map(r => '<tr><td>' + vigEsc(r.beh) + (r.kind === 'pos' ? ' (إيجابي)' : '') + '</td>' + ds.map(d => { const n = bmCellCount(f, d, r); return '<td style="text-align:center;font-weight:800;">' + (n ? bmMarks(n) : '') + '</td>'; }).join('') + '<td style="text-align:center;font-weight:800;">' + ds.reduce((a, d) => a + bmCellCount(f, d, r), 0) + '</td></tr>').join('');
-  return '<div class="report-section-title" style="font-size:10pt;">الجدول الأسبوعي (' + bmFmt(ds[0]) + ' ← ' + bmFmt(ds[5]) + ')</div><table class="wk-table-report"><thead><tr><th style="width:28%">السلوك الملاحَظ</th>' + ds.map((d, i) => '<th style="text-align:center;">' + BM_DAYS[i] + '<br>' + bmFmt(d) + '</th>').join('') + '<th style="text-align:center;">المجموع</th></tr></thead><tbody>' + body + '</tbody></table>';
-}
-
