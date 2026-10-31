@@ -15,8 +15,7 @@ import { openStudentHistory, registerHistoryActions } from '../history/history.j
 import { acSetup } from '../autocomplete/studentAutocomplete.js';
 import { cleanClassValue } from '../students/cleanClass.js';
 import { getLogo } from '../settings/logoStore.js';
-import { getInstitution } from '../institution/institutionStore.js';
-
+import { referToFollowUp } from '../gates/followLink.js';
 // الإكمال التلقائي ما زال من الكود القديم (acSetup)؛ يكتب في حقول البوابة مباشرة، ومنها الجنس (genderName)
 const AC_CFG = { nameId: 'i_studentName', massarId: 'i_studentMassar', schoolId: 'i_school', levelId: 'i_level', genderName: 'i_gender', phoneId: 'i_parentPhone' };// حقول لا يملكها React (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere وupdateAllLevelSelects مباشرة) → معرّفاتها القديمة
 const REF_IDS = { studentName: 'i_studentName', massar: 'i_studentMassar', school: 'i_school', level: 'i_level' };
