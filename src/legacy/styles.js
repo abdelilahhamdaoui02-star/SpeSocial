@@ -17,3 +17,4 @@ import './css/style-32.css';
 import './css/style-34.css';
 import './css/style-35.css';
 import './css/style-38.css';
+import './css/style-mobile.css';
