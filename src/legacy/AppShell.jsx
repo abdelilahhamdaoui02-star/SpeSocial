@@ -105,7 +105,7 @@ function AppShell() {
             <div className="hp-center">
               <div className="hp-center-txt">
                 <h2 className="hp-school dynamic-directorate">مديرية الحي الحسني</h2>
-                <p className="hp-sub">منصة التوثيق المهني</p>
+                <p className="hp-sub">SpeSocial</p>
                 <div className="hp-count">
                   <svg className="" viewBox="0 0 24 24" aria-hidden="true">
                     <circle cx="9" cy="8" r="3.5"></circle>
