@@ -153,7 +153,7 @@ export default function LoginScreen() {
     <div id="authOverlay" className={hidden ? 'hidden' : ''}>
       <div className="auth-box">
         <div className="auth-emblem">🎓</div>
-        <div className="auth-title">منصة التوثيق المهني</div>
+        <div className="auth-title">SpeSocial</div>
         <div className="auth-sub" style={{ display: 'none' }}>المختص الاجتماعي — وزارة التربية الوطنية</div>
 
         {/* key يفرّغ الحقول بعد كل تسجيل خروج */}
