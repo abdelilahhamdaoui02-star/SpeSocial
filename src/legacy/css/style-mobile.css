@@ -60,6 +60,63 @@
   .hp-btn{ padding:10px 8px !important; font-size:13px !important; justify-content:center; gap:6px !important; }
   .hp-btn svg{ width:18px !important; height:18px !important; }
 }
+
+/* ============ الإضافة 2: ترتيب الرئيسية + شريط الأخبار + داخل البوابات ============ */
+@media screen and (max-width:620px){
+  /* الإحصائيات تتفكك إلى عناصرها ليتحكم ترتيب الصفحة بكل جزء على حدة */
+  .hp-stats{ display:contents !important; }
+  .hp-news-card{ order:-1 !important; }
+  .hp-portals{ order:1 !important; }
+  .hp-others{ order:2 !important; }
+  .hp-stats-head{ order:3 !important; margin:4px 4px 0 !important; }
+  #mountStatsKpis{ order:4 !important; }
+  #mountStatsChart{ order:5 !important; margin-top:0 !important; }
+
+  /* ---- الأخبار: سطر صغير جداً في الأعلى ---- */
+  html body.on-home .hp-news-card{ padding:4px 10px !important; border-radius:10px !important; margin:0 !important; }
+  .hp-news-card .hp-news-head,
+  .hp-news-card .hp-news-prog{ display:none !important; }
+  .hp-news-card .hp-news-scroll{ min-height:0 !important; flex:none !important; }
+  .hp-news-card .hp-news-scroll > .hp-news-list{ position:static !important; display:block !important; overflow:hidden; max-height:none; }
+  .hp-news-card .hp-news-slide{ display:flex !important; align-items:center; gap:8px; padding:0 !important; border:0 !important; background:none !important; min-height:0 !important; }
+  .hp-news-card .hp-news-badge{ font-size:9px !important; padding:1px 7px !important; flex-shrink:0; }
+  .hp-news-card .hp-news-body{ min-width:0; flex:1; display:block; }
+  .hp-news-card .hp-news-body b{ display:block; font-size:11px !important; line-height:1.5 !important; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .hp-news-card .hp-news-body p,
+  .hp-news-card .hp-news-body small{ display:none !important; }
+  .hp-news-card .hp-news-empty{ font-size:11px !important; padding:0 !important; }
+
+  /* ---- داخل البوابات: ترويسة مضغوطة ---- */
+  html body:not(.on-home) .header-top{ display:none !important; }
+  html body:not(.on-home) .site-header{ position:relative; }
+  html body:not(.on-home) #userBar{ margin:6px 10px 0 !important; transform-origin:right center; }
+  html body:not(.on-home) #userBar > *{ font-size:12px; }
+  html body:not(.on-home) #searchNotifBar{ padding:6px 10px 8px !important; }
+  html body:not(.on-home) #searchNotifBar input{ font-size:13px; padding-top:7px; padding-bottom:7px; }
+
+  /* شريط البوابة: زر الرجوع + الحساب في سطر، والعنوان تحته */
+  .tool-page .back-bar{ display:grid !important; grid-template-columns:auto minmax(0,1fr); grid-template-areas:"back user" "title title"; gap:8px 8px !important; padding:10px 12px !important; margin:10px 10px 8px !important; border-radius:16px !important; align-items:center; }
+  .tool-page .back-bar-right{ display:contents !important; }
+  .tool-page .back-btn{ grid-area:back; padding:7px 14px !important; font-size:.8rem !important; border-radius:999px !important; white-space:nowrap; }
+  .tool-page .back-bar-title{ grid-area:title; font-size:.98rem !important; line-height:1.5; text-align:right; }
+  .tool-page .back-bar-user{ grid-area:user; justify-self:end; padding:4px 12px 4px 6px !important; font-size:.78rem !important; max-width:100%; }
+  .tool-page .back-bar-user .bb-avatar{ width:26px !important; height:26px !important; }
+  .tool-page .back-bar-user .bb-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:130px; }
+
+  /* محتوى البوابات: هوامش أصغر وحقول بعمود واحد */
+  .tool-page .main-container{ padding:0 8px !important; }
+  .tool-page .section-card, .tool-page .archive-panel{ margin-bottom:10px !important; border-radius:16px !important; }
+  .tool-page .section-header{ padding:11px 14px !important; font-size:.95rem !important; }
+  .tool-page .section-body{ padding:12px 12px 14px !important; }
+  .tool-page .form-grid{ grid-template-columns:1fr !important; gap:10px !important; }
+  .tool-page .form-grid .col-span-2{ grid-column:auto !important; }
+  .tool-page .form-group label{ font-size:.82rem !important; }
+  .tool-page input[type=text], .tool-page input[type=date], .tool-page input[type=tel], .tool-page select, .tool-page textarea{ font-size:16px !important; } /* يمنع تكبير iOS عند التركيز */
+  .tool-page .btn-row{ display:grid !important; grid-template-columns:1fr 1fr; gap:8px !important; }
+  .tool-page .btn-row .btn{ width:100%; justify-content:center; padding:10px 8px !important; font-size:.84rem !important; }
+  .tool-page .info-box{ font-size:.82rem !important; line-height:1.7 !important; padding:10px 12px !important; }
+}
+
 /* هواتف ضيقة جداً */
 @media screen and (max-width:360px){
   .hp-list{ grid-template-columns:1fr !important; }
