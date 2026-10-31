@@ -50,7 +50,7 @@ export function installPwa() {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferred = e;
-    showBar('ثبّت <strong>منصة التوثيق المهني</strong> على جهازك للوصول السريع وبدون متصفح.', async () => {
+    showBar('ثبّت <strong>SpeSocial</strong> على جهازك للوصول السريع وبدون متصفح.', async () => {
       if (!deferred) return;
       deferred.prompt();
       try { await deferred.userChoice; } catch (err) { /* ignore */ }
