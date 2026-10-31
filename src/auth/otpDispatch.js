@@ -8,7 +8,7 @@ export const CALLMEBOT_APIKEY = 'YOUR_CALLMEBOT_APIKEY';
 export const normalizePhone = (phone) => String(phone).replace(/^0/, '212').replace(/[\s\-+]/g, '');
 
 export const whatsappMessage = (code) =>
-  `🔐 منصة التوثيق المهني\nرمز التحقق الخاص بك:\n*${code}*\nصالح لمدة دقيقتين. لا تشاركه مع أحد.`;
+  `🔐 SpeSocial\nرمز التحقق الخاص بك:\n*${code}*\nصالح لمدة دقيقتين. لا تشاركه مع أحد.`;
 
 export const whatsappUrl = (phone, code, apikey = CALLMEBOT_APIKEY) =>
   `https://api.callmebot.com/whatsapp.php?phone=${normalizePhone(phone)}&text=${encodeURIComponent(whatsappMessage(code))}&apikey=${apikey}`;
