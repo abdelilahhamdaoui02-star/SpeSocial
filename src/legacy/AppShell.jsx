@@ -198,7 +198,7 @@ function AppShell() {
       <div className="dev-footer" style={{ background: "linear-gradient(135deg,#0f2744,#1a3a5c)", color: "rgba(255,255,255,0.6)", textAlign: "center", padding: "12px 20px", fontSize: "0.74rem", direction: "rtl", borderTop: "2px solid rgba(200,169,74,0.3)" }}>
         <span style={{ color: "rgba(200,169,74,0.9)" }}>{" تم البرمجة والتطوير بواسطة:"}</span>
         {" "}
-        <strong style={{ color: "#f0d97a", fontSize: "0.82rem", margin: "0 6px" }}>عبدالإله حمداوي</strong>
+        <strong style={{ color: "#f0d97a", fontSize: "0.82rem", margin: "0 6px" }}>SpeSocial</strong>
         {" "}
         <span style={{ color: "rgba(255,255,255,0.4)" }}>|</span>
         {" "}
