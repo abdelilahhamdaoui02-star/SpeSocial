@@ -397,6 +397,8 @@ function InterviewBody({ mount }) {
                               <button type="button" className="btn-sm" title="تحميل للتعديل" onClick={() => loadEntry(e.id)}
                                 style={{ background: 'linear-gradient(135deg,#2563a8,#1d4ed8)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'Cairo',sans-serif", fontWeight: 700 }}>✏️ تعديل</button>
                               <button type="button" className="btn-sm btn-sm-danger" title="حذف" onClick={() => del(e.id)}>🗑</button>
+                              <button type="button" className="btn-sm" title="إحالة إلى بوابة المتابعة" onClick={() => referToFollowUp(e, 'interview')}
+                            style={{ background: 'linear-gradient(135deg,#d97706,#b45309)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'Cairo',sans-serif", fontWeight: 700 }}>🔔 للمتابعة</button>
                             </div>
                           </td>
                         </tr>
