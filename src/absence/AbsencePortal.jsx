@@ -15,7 +15,7 @@ import { openPreview } from '../preview/previewStore.js';
 import { acFillField, acSetup } from '../autocomplete/studentAutocomplete.js';
 import { cleanClassValue } from '../students/cleanClass.js';
 import { getLogo } from '../settings/logoStore.js';
-import { getInstitution } from '../institution/institutionStore.js';
+   import { referToFollowUp } from '../gates/followLink.js';
 
 // الإكمال التلقائي ما زال من الكود القديم (acSetup/acFillField)؛ يكتب في حقول البوابة مباشرة بمعرّفاتها القديمة
 const AC_CFG = { nameId: 'ab_studentName', massarId: 'ab_studentMassar', schoolId: 'ab_school', levelId: 'ab_level', genderName: 'ab_gender', phoneId: 'ab_parentPhone' };// حقول لا يملكها React (يكتب فيها الإكمال التلقائي وapplyInstitutionEverywhere وتعبئة الاستيراد الشهري مباشرة) → معرّفاتها القديمة
@@ -503,6 +503,8 @@ function AbsenceBody({ mount }) {
                             <button type="button" className="btn-sm" title="تحميل للتعديل" onClick={() => loadEntry(e.id)}
                               style={{ background: 'linear-gradient(135deg,#2563a8,#1d4ed8)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'Cairo',sans-serif", fontWeight: 700 }}>✏️ تعديل</button>
                             <button type="button" className="btn-sm btn-sm-danger" title="حذف هذا الملف" onClick={() => del(e.id)}>🗑</button>
+                               <button type="button" className="btn-sm" title="إحالة إلى بوابة المتابعة" onClick={() => referToFollowUp(e, 'absence')}
+                               style={{ background: 'linear-gradient(135deg,#d97706,#b45309)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', fontSize: '0.72rem', fontFamily: "'Cairo',sans-serif", fontWeight: 700 }}>🔔 للمتابعة</button>
                           </div>
                         </td>
                       </tr>
