@@ -10,12 +10,12 @@ import { openPortal } from '../navigation.js';
 import { getLogo } from '../settings/logoStore.js';
 import { getInstitution } from '../institution/institutionStore.js';
 
-// الإكمال التلقائي للتلاميذ ما زال من الكود القديم (acSetup/acFillField)؛ نمرّر له حقول البوابة نفسها كما كانت AUTOCOMPLETE_FIELDS تفعل
+// الإكمال التلقائي للتلاميذ ما زال من الكود القديم (acSetup/acFillField)؛ نمرّر له حقول البوابة نفسها
 const AC_CFG = { nameId: 'bm_name', massarId: 'bm_massar', schoolId: 'bm_school', levelId: 'bm_level' };
 const EMPTY = [];
-const EMPTY_PLAN = { goal: '', g1: '', g2: '', g3: '', review: '', strat: '', resp: '', result: '' };
 const EMPTY_EV = () => ({ dims: {}, note: '' });
 const SEL = { border: '1.5px solid var(--border)', borderRadius: 'var(--radius-sm)', padding: '7px 11px', fontFamily: "'Cairo',sans-serif", fontSize: '0.875rem', color: 'var(--text)', background: '#fafbfc', direction: 'rtl', width: '100%' };
+const IV_STATUS_COLOR = { 'مقترح': '#64748b', 'قيد التنفيذ': '#d97706', 'أُنجز': '#16a34a' };
 
 // دائماً من المخزن لحظة الحدث لا من آخر رسم
 const getFiles = () => getState().collections.behaviorFiles ?? EMPTY;
@@ -31,7 +31,7 @@ const Chip = ({ onClick, children }) => <button type="button" onClick={onClick} 
 const sugBox = { marginTop: 6, background: '#f0f9ff', border: '1.5px solid #bae6fd', borderRadius: 10, padding: '8px 12px' };
 const cardBtn = (bg, color, border) => ({ background: bg, color, border: '1px solid ' + border, borderRadius: 8, padding: '5px 12px', fontFamily: "'Cairo',sans-serif", fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer' });
 
-// ── التقييم السريع ──
+// ── التقييم النفسي (التقييم السريع سابقًا) ──
 function EvalDim({ d, v, onChange }) {
   const set = (patch) => onChange({ lv: '', items: [], note: '', ...v, ...patch });
   const items = v.items || [];
@@ -54,6 +54,35 @@ function EvalDim({ d, v, onChange }) {
   );
 }
 
+// ── سطر في جدول التدخل: نص الإجراء يُحفظ عند مغادرة الحقل، والبقية عند التغيير ──
+function IvRow({ it, i, onPatch, onDel }) {
+  const [txt, setTxt] = useState(it.action);
+  useEffect(() => { setTxt(it.action); }, [it.action]);
+  const respOpts = B.BM_IV_RESP.includes(it.resp) || !it.resp ? B.BM_IV_RESP : B.BM_IV_RESP.concat([it.resp]);
+  return (
+    <tr>
+      <td style={{ textAlign: 'center' }}>{i + 1}</td>
+      <td>
+        <textarea value={txt} style={{ ...SEL, minHeight: 44, resize: 'vertical' }}
+          onChange={(e) => setTxt(e.target.value)}
+          onBlur={() => { const v = txt.trim(); if (!v) setTxt(it.action); else if (v !== it.action) onPatch(it.id, { action: v }); }} />
+      </td>
+      <td>
+        <select style={SEL} value={it.resp || respOpts[0]} onChange={(e) => onPatch(it.id, { resp: e.target.value })}>
+          {respOpts.map((v) => <option key={v} value={v}>{v}</option>)}
+        </select>
+      </td>
+      <td><input type="date" style={SEL} value={it.date || ''} onChange={(e) => onPatch(it.id, { date: e.target.value })} /></td>
+      <td>
+        <select style={{ ...SEL, color: IV_STATUS_COLOR[it.status] || 'var(--text)', fontWeight: 700 }} value={it.status || B.BM_IV_STATUS[0]} onChange={(e) => onPatch(it.id, { status: e.target.value })}>
+          {B.BM_IV_STATUS.map((v) => <option key={v} value={v}>{v}</option>)}
+        </select>
+      </td>
+      <td style={{ textAlign: 'center' }}><button type="button" onClick={() => onDel(it)} title="حذف الإجراء" style={{ border: 'none', background: 'none', color: '#dc2626', cursor: 'pointer', fontSize: '1rem' }}>✕</button></td>
+    </tr>
+  );
+}
+
 function BehaviorBody() {
   const active = useCurrentPortal() === 'behavior';
   const [files, setFiles] = useCollection('behaviorFiles');
@@ -68,20 +97,19 @@ function BehaviorBody() {
   const pickerRef = useRef(null);
   const timer = useRef(null);
   const seq = useRef(0);
+  const hadFile = useRef(false);
 
-  // الاسم والمسار والمؤسسة حقول غير متحكَّم بها: الإكمال التلقائي القديم يكتب فيها مباشرة بلا أحداث، فنقرؤها كما كانت bmV القديمة
+  // الاسم والمسار والمؤسسة حقول غير متحكَّم بها: الإكمال التلقائي القديم يكتب فيها مباشرة بلا أحداث، فنقرؤها عند الحاجة
   const [ident, setIdent] = useState({ name: '', massar: '', level: '' });
+  const [startDate, setStartDate] = useState(() => B.bmLIso(new Date()));
   const [week, setWeek] = useState(() => B.bmMonday());
-  const [tier, setTier] = useState('2');
-  const [reason, setReason] = useState('');
-  const [strengths, setStrengths] = useState('');
-  const [plan, setPlan] = useState(EMPTY_PLAN);
-  const [evOpen, setEvOpen] = useState(false);
+  const [evOpen, setEvOpen] = useState(true);
   const [evDate, setEvDate] = useState(() => B.bmLIso(new Date()));
   const [evForm, setEvForm] = useState(EMPTY_EV);
   const [gk, setGk] = useState('con');
   const [gsel, setGsel] = useState('');
   const [gother, setGother] = useState('');
+  const [ivText, setIvText] = useState('');
   const [q, setQ] = useState('');
 
   const readIdent = () => {
@@ -117,13 +145,12 @@ function BehaviorBody() {
 
   const fillFrom = (s) => {
     acFillField(AC_CFG, s);
-    // acFillField يضع القسم في عنصر select القديم؛ نقرؤه من الحالة بعد ملء الاسم والمسار
     const lv = cleanClass(s.class);
     setIdent({ name: String(s.fullName || '').trim(), massar: String(s.massar || '').trim(), level: lv || ident.level });
   };
   const pickStudent = (i) => { if (i === '') return; const s = students[+i]; if (s) fillFrom(s); };
 
-  // ── فتح البوابة = initBehavior القديمة: أسبوع اليوم، المؤسسة من الملف الشخصي، تفعيل الإكمال التلقائي ──
+  // ── فتح البوابة: أسبوع اليوم، المؤسسة من الملف الشخصي، تفعيل الإكمال التلقائي ──
   useEffect(() => {
     if (!active) return;
     setWeek(B.bmMonday());
@@ -134,15 +161,18 @@ function BehaviorBody() {
     try { acSetup(AC_CFG); } catch (e) { console.error(e); }
   }, [active, students.length]);
 
-  // ── تحميل الخطة والمستوى عند تغيّر الملف الحالي (bmLoadCurrent القديمة) ──
+  // ── تاريخ بداية الرصد: يُحمَّل من الملف عند تغيّره، ويعود لليوم عند الانتقال إلى تلميذ بلا ملف ──
   const loadKey = curFile ? 'f' + curFile.id : 'n:' + B.bmNz(ident.name);
   useEffect(() => {
-    const p = (curFile && curFile.plan) || {}, g = p.goals || [];
-    setPlan({ goal: p.goal || '', g1: g[0] || '', g2: g[1] || '', g3: g[2] || '', review: p.review || '', strat: p.strategies || '', resp: p.resp || '', result: p.result || '' });
-    if (curFile) setTier(String(curFile.tier || '2'));
+    if (curFile) { setStartDate(B.bmStartOf(curFile) || B.bmLIso(new Date())); hadFile.current = true; }
+    else if (hadFile.current) { setStartDate(B.bmLIso(new Date())); hadFile.current = false; }
   }, [loadKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const onStartDate = (e) => {
+    const v = e.target.value; setStartDate(v);
+    if (curFile && v) commit(getFiles().map((x) => (x.id === curFile.id ? B.bmSetStart(x, v) : x)));
+  };
 
-  // ── التقييم السريع: يُحمَّل المحفوظ عند تغيّر التلميذ أو التاريخ (bmEvRender غير القسرية) ──
+  // ── التقييم النفسي: يُحمَّل المحفوظ عند تغيّر التلميذ أو التاريخ ──
   const evKey = B.bmNz(ident.name) + '|' + evDate;
   useEffect(() => {
     const ev = B.bmEvFind(curFile, evDate);
@@ -154,7 +184,7 @@ function BehaviorBody() {
   const evLevels = {};
   B.BM_EV_DIMS.forEach((d) => { evLevels[d.k] = (evForm.dims[d.k] || {}).lv || ''; });
 
-  // ── إيجاد الملف الحالي أو إنشاؤه (bmEnsureCur القديمة) — تعيد { files, file, created } أو null بعد تنبيه ──
+  // ── إيجاد الملف الحالي أو إنشاؤه — تعيد { files, file, created } أو null بعد تنبيه ──
   const ensureFile = () => {
     const v = readIdent();
     const files0 = getFiles();
@@ -172,7 +202,7 @@ function BehaviorBody() {
     const nf = B.bmNewFile({
       name: v.name, massar: ((massarRef.current && massarRef.current.value) || '').trim(),
       school: ((schoolRef.current && schoolRef.current.value) || '').trim(), level,
-      tier: tier || '2', reason: reason.trim(), strengths: strengths.trim(),
+      startDate: startDate || B.bmLIso(new Date()),
     }, new Date(), Date.now());
     return { files: [nf].concat(files0), file: nf, created: true };
   };
@@ -217,7 +247,7 @@ function BehaviorBody() {
     withFile(r, nf);
   };
 
-  // ── التقييم السريع: الحفظ ──
+  // ── التقييم النفسي: الحفظ ──
   const onEvSave = () => {
     if (!evDate) { say('⚠️ حدّد التاريخ.'); return; }
     const { dims, n } = B.bmEvCollectFrom(evForm.dims);
@@ -226,28 +256,24 @@ function BehaviorBody() {
     withFile(r, B.bmEvUpsert(r.file, evDate, dims, evForm.note.trim(), Date.now()));
   };
 
-  // ── مستوى الدعم والأهداف والاستراتيجيات ──
-  const toggleTier = (v) => {
-    const set = new Set(tier.split('+')); if (set.has(v)) set.delete(v); else set.add(v);
-    setTier(Array.from(set).sort().join('+') || '2');
+  // ── جدول التدخل: إجراءات مقترحة ──
+  const ivs = (curFile && curFile.interventions) || EMPTY;
+  const ivSug = useMemo(() => {
+    const s = B.bmStratSuggest(curFile);
+    const have = ((curFile && curFile.interventions) || []).map((x) => String(x.action).trim());
+    return { tops: s.tops, list: s.list.filter((a) => !have.includes(a)) };
+  }, [curFile]);
+  const addIv = (action) => {
+    const a = String(action || '').trim(); if (!a) { say('⚠️ اكتب الإجراء.'); return false; }
+    const r = ensureFile(); if (!r) return false;
+    const res = B.bmIvAdd(r.file, a, Date.now() * 100 + (++seq.current % 100));
+    if (res.dup) { say('ℹ️ هذا الإجراء موجود فعلًا في الجدول.'); return false; }
+    withFile(r, res.file);
+    return true;
   };
-  const tierSug = useMemo(() => B.bmTierSuggest(curFile, reason.trim(), curFile ? curFile.tier : tier, new Date()), [curFile, reason, tier]);
-  const applyTier = (t, add) => {
-    const nt = B.bmApplyTierTo(curFile ? curFile.tier : tier, t, add);
-    setTier(nt);
-    if (curFile) commit(getFiles().map((x) => (x.id === curFile.id ? { ...x, tier: nt } : x)));
-  };
-  const goalSug = useMemo(() => B.bmGoalSuggest(curFile, new Date()), [curFile]);
-  const stratSug = useMemo(() => B.bmStratSuggest(curFile), [curFile]);
-  const setP = (k) => (e) => { const v = e.target.value; setPlan((p) => ({ ...p, [k]: v })); };
-  const onSavePlan = () => {
-    const r = ensureFile(); if (!r) return;
-    const t = (s) => s.trim();
-    const saved = B.bmPlanOf({ goal: t(plan.goal), goals: [plan.g1, plan.g2, plan.g3].map(t), review: t(plan.review), strategies: t(plan.strat), resp: t(plan.resp), result: t(plan.result) });
-    withFile(r, { ...r.file, tier: tier || r.file.tier, plan: saved });
-    setPlan({ goal: saved.goal, g1: saved.goals[0], g2: saved.goals[1], g3: saved.goals[2], review: saved.review, strat: saved.strategies, resp: saved.resp, result: saved.result });
-    say('✅ حُفظت الخطة.');
-  };
+  const onAddIvCustom = () => { if (addIv(ivText)) setIvText(''); };
+  const patchIv = (id, patch) => { if (!curFile) return; commit(getFiles().map((x) => (x.id === curFile.id ? B.bmIvUpdate(x, id, patch) : x))); };
+  const delIv = (it) => { if (!curFile || !ask('حذف هذا الإجراء من الجدول؟')) return; commit(getFiles().map((x) => (x.id === curFile.id ? B.bmIvDel(x, it.id) : x))); };
 
   // ── قائمة المتابعة ──
   const list = useMemo(() => B.bmListRows(files, q.trim(), new Date()), [files, q]);
@@ -259,7 +285,7 @@ function BehaviorBody() {
   };
   const onClose = (f) => { if (!ask('إنهاء متابعة «' + f.studentName + '»؟ يبقى الملف محفوظًا ويخرج من القوائم النشطة.')) return; commit(getFiles().map((x) => (x.id === f.id ? B.bmCloseFile(x) : x))); };
   const onReopen = (f) => commit(getFiles().map((x) => (x.id === f.id ? B.bmReopenFile(x) : x)));
-  const onDelete = (f) => { if (!ask('حذف ملف «' + f.studentName + '» نهائيًا بكل ملاحظاته وخطته؟')) return; commit(getFiles().filter((x) => String(x.id) !== String(f.id))); };
+  const onDelete = (f) => { if (!ask('حذف ملف «' + f.studentName + '» نهائيًا بكل ملاحظاته وإجراءاته؟')) return; commit(getFiles().filter((x) => String(x.id) !== String(f.id))); };
   const onDelObs = (f, oid) => { if (!ask('حذف هذه الملاحظة؟')) return; commit(getFiles().map((x) => (x.id === f.id ? B.bmDelObsOf(x, oid) : x))); };
 
   // ── الطباعة وWord ──
@@ -284,11 +310,10 @@ function BehaviorBody() {
   });
   const hasPos = rows.some((r) => r.kind === 'pos'), hasCon = rows.some((r) => r.kind === 'con');
   const sum = (a) => a.reduce((x, y) => x + y, 0);
-  const tierName = (t) => t.split(' — ')[0];
 
   return (
     <>
-      {/* 1) التلميذ (مرتبط بلائحة التلاميذ) */}
+      {/* 1) معطيات التلميذ (مرتبطة بلائحة التلاميذ) */}
       <div className="section-card" style={{ overflow: 'visible', position: 'relative', zIndex: 5 }}>
         <div className="section-header" style={{ borderRadius: 'inherit', borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}><span className="step-badge"></span>التلميذ(ة) — من لائحة التلاميذ</div>
         <div className="section-body">
@@ -302,7 +327,8 @@ function BehaviorBody() {
                 {levelOptions.map((v) => <option key={v} value={v}>{v}</option>)}
               </select>
             </div>
-            <div className="form-group col-span-2"><label> أو اختر من تلاميذ القسم</label>
+            <div className="form-group"><label> تاريخ بداية الرصد</label><input type="date" id="bm_start" value={startDate} onChange={onStartDate} /></div>
+            <div className="form-group"><label> أو اختر من تلاميذ القسم</label>
               <select id="bm_stu" className="level-select abm-select" value={stuValue} onChange={(e) => pickStudent(e.target.value)}>
                 {!ident.level
                   ? <option value="">— اختر القسم أولاً —</option>
@@ -318,15 +344,6 @@ function BehaviorBody() {
                 <div style={{ fontSize: '0.78rem', color: '#991b1b', background: '#fef2f2', border: '1.5px solid #fca5a5', borderRadius: 8, padding: '6px 12px' }}>❌ الاسم غير موجود في لائحة التلاميذ — اختر من القائمة المنسدلة.</div>
               )}
             </div>
-            <div className="form-group col-span-2">
-              <label> مستوى الدعم (عند الإدراج)</label>
-              <div className="radio-group">
-                <label><input type="checkbox" name="bm_tier" value="2" checked={tier.split('+').includes('2')} onChange={() => toggleTier('2')} /> المستوى 2 — دعم موجَّه (متابعة بالجدول الأسبوعي)</label>
-                <label><input type="checkbox" name="bm_tier" value="3" checked={tier.split('+').includes('3')} onChange={() => toggleTier('3')} /> المستوى 3 — دعم مكثف (خطة فردية)</label>
-              </div>
-            </div>
-            <div className="form-group col-span-2"><label> سبب الإدراج (وصف سلوكي)</label><textarea id="bm_reason" value={reason} onChange={(e) => setReason(e.target.value)} placeholder="مثال: لوحظ في الساحة عراك متكرر مع زملائه أثناء الاستراحة..." style={{ minHeight: 55 }} /></div>
-            <div className="form-group col-span-2"><label> نقاط القوة والاهتمامات</label><textarea id="bm_strengths" value={strengths} onChange={(e) => setStrengths(e.target.value)} placeholder="ما يُحسنه التلميذ(ة) وما يحفّزه — تُبنى عليه الخطة" style={{ minHeight: 50 }} /></div>
           </div>
           <div className="btn-row" style={{ marginTop: 12 }}>
             <button className="btn btn-primary" onClick={onEnroll}> إدراج في قائمة المتابعة</button>
@@ -334,33 +351,7 @@ function BehaviorBody() {
         </div>
       </div>
 
-      {/* 2) التقييم السريع */}
-      <div className="section-card">
-        <div className="section-body">
-          <div className="form-grid">
-            <div className="form-group"><label> التاريخ *</label><input type="date" id="bm_ev_date" value={evDate} onChange={(e) => setEvDate(e.target.value)} /></div>
-          </div>
-          <button type="button" className={'bm-ev-toggle' + (evOpen ? ' open' : '')} id="bmEvToggle" onClick={() => setEvOpen((o) => !o)}>
-            <span>⚡ التقييم السريع للتلميذ(ة)</span>
-            <span id="bmEvSum" className="bm-ev-sum">{B.bmEvSummaryText(B.bmEvCounts(evLevels), evSaved)}</span>
-            <span id="bmEvChev" className="bm-ev-chev">▾</span>
-          </button>
-          {evOpen && (
-            <div id="bmEvBody" style={{ display: 'block', marginTop: 12 }}>
-              {B.BM_EV_DIMS.map((d) => (
-                <EvalDim key={d.k} d={d} v={evForm.dims[d.k] || {}}
-                  onChange={(nv) => setEvForm((f) => ({ ...f, dims: { ...f.dims, [d.k]: nv } }))} />
-              ))}
-              <div className="form-group" style={{ marginBottom: 10 }}><label> ملاحظة عامة</label>
-                <textarea id="bm_ev_note" style={{ minHeight: 50 }} placeholder="انطباع عام موجز" value={evForm.note} onChange={(e) => setEvForm((f) => ({ ...f, note: e.target.value }))} />
-              </div>
-              <div className="btn-row"><button className="btn btn-primary" onClick={onEvSave}> حفظ التقييم</button></div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 3) الجدول الأسبوعي للسلوكات */}
+      {/* 2) الجدول الأسبوعي للسلوكات */}
       <div className="section-card">
         <div className="section-header"><span className="step-badge"></span>الجدول الأسبوعي للسلوكات (الاثنين ← السبت)</div>
         <div className="section-body">
@@ -434,57 +425,63 @@ function BehaviorBody() {
         </div>
       </div>
 
-      {/* 4) خطة التدخل */}
+      {/* 3) التقييم النفسي (مباشرة بعد أسبوع الرصد) */}
       <div className="section-card">
-        <div className="section-header"><span className="step-badge"></span>خطة التدخل السلوكي</div>
+        <div className="section-header"><span className="step-badge"></span>التقييم النفسي</div>
         <div className="section-body">
           <div className="form-grid">
-            <div className="form-group"><label> مستوى الدعم</label>
-              <div className="radio-group">
-                <label><input type="checkbox" name="bm_pl_tier" value="2" checked={tier.split('+').includes('2')} onChange={() => toggleTier('2')} /> المستوى 2 — دعم موجَّه</label>
-                <label><input type="checkbox" name="bm_pl_tier" value="3" checked={tier.split('+').includes('3')} onChange={() => toggleTier('3')} /> المستوى 3 — دعم مكثف</label>
-              </div>
-              <div id="bm_pl_tier_sug">
-                <div className="bm-tier-box">
-                  <strong>💡 المستوى المقترح: {tierSug.name}</strong>
-                  <ul>{tierSug.why.map((w, i) => <li key={i}>{w}</li>)}</ul>
-                  <div><strong>إجراءات مناسبة:</strong></div>
-                  <ul>{tierSug.actions.map((x, i) => <li key={i}>{x}</li>)}</ul>
-                  {tierSug.same
-                    ? <span style={{ color: '#166534', fontWeight: 700 }}>✔ {tierSug.multi ? 'هذا المستوى ضمن المستويين المعتمدين' : 'هذا هو المستوى المعتمد حاليًا'}</span>
-                    : (<>
-                      <Chip onClick={() => applyTier(tierSug.tier)}>{'اعتمد ' + tierName(tierSug.name) + ' فقط'}</Chip>
-                      <Chip onClick={() => applyTier(tierSug.tier, true)}>{'أضِف ' + tierName(tierSug.name) + ' إلى المعتمد'}</Chip>
-                    </>)}
-                </div>
-              </div>
-            </div>
-            <div className="form-group"><label> تاريخ المراجعة</label><input type="date" id="bm_pl_review" value={plan.review} onChange={setP('review')} /></div>
-            <div className="form-group col-span-2"><label> الهدف القابل للقياس</label>
-              <input type="text" id="bm_pl_goal" value={plan.goal} onChange={setP('goal')} placeholder="مثال: اللعب مع الأقران دون عراك في 4 استراحات من 5 خلال أسبوعين" />
-              <div id="bm_pl_goal_sug">
-                <div style={sugBox}>
-                  <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#0369a1', marginBottom: 4 }}>💡 أهداف قابلة للقياس مقترحة (اضغط للاعتماد):</div>
-                  {goalSug.map((g) => <Chip key={g} onClick={() => setPlan((p) => ({ ...p, goal: g }))}>{g}</Chip>)}
-                </div>
-              </div>
-            </div>
-            <div className="form-group"><label> السلوك المنتظر 1</label><input type="text" id="bm_pl_g1" value={plan.g1} onChange={setP('g1')} placeholder="احترام قواعد الساحة" /></div>
-            <div className="form-group"><label> السلوك المنتظر 2</label><input type="text" id="bm_pl_g2" value={plan.g2} onChange={setP('g2')} placeholder="التعاون مع الأقران" /></div>
-            <div className="form-group"><label> السلوك المنتظر 3</label><input type="text" id="bm_pl_g3" value={plan.g3} onChange={setP('g3')} placeholder="الامتثال لتوجيهات الحراسة" /></div>
-            <div className="form-group col-span-2"><label> الاستراتيجيات (أسطر)</label>
-              <textarea id="bm_pl_strat" value={plan.strat} onChange={setP('strat')} placeholder="سلوك بديل مطلوب، تعزيز إيجابي، تعديل في البيئة..." style={{ minHeight: 70 }} />
-              <div id="bm_pl_sug">
-                <div style={sugBox}>
-                  <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#0369a1', marginBottom: 4 }}>💡 استراتيجيات مقترحة{stratSug.tops.length ? ' حسب أكثر السلوكيات تسجيلًا' : ''} (اضغط للإضافة):</div>
-                  {stratSug.list.map((s) => <Chip key={s} onClick={() => setPlan((p) => ({ ...p, strat: B.bmAppendStrategy(p.strat, s) }))}>{s}</Chip>)}
-                </div>
-              </div>
-            </div>
-            <div className="form-group col-span-2"><label> المسؤول عن كل خطوة</label><textarea id="bm_pl_resp" value={plan.resp} onChange={setP('resp')} placeholder="المختص: ... · الأستاذ(ة): ... · الحارس العام: ... · الأسرة: ..." style={{ minHeight: 60 }} /></div>
-            <div className="form-group col-span-2"><label> نتيجة المراجعة</label><textarea id="bm_pl_result" value={plan.result} onChange={setP('result')} placeholder="ما تحقق بعد المراجعة وما يُعدَّل في الخطة" style={{ minHeight: 55 }} /></div>
+            <div className="form-group"><label> التاريخ *</label><input type="date" id="bm_ev_date" value={evDate} onChange={(e) => setEvDate(e.target.value)} /></div>
           </div>
-          <div className="btn-row" style={{ marginTop: 12 }}><button className="btn btn-primary" onClick={onSavePlan}> حفظ الخطة</button></div>
+          <button type="button" className={'bm-ev-toggle' + (evOpen ? ' open' : '')} id="bmEvToggle" onClick={() => setEvOpen((o) => !o)}>
+            <span>🧠 التقييم النفسي للتلميذ(ة)</span>
+            <span id="bmEvSum" className="bm-ev-sum">{B.bmEvSummaryText(B.bmEvCounts(evLevels), evSaved)}</span>
+            <span id="bmEvChev" className="bm-ev-chev">▾</span>
+          </button>
+          {evOpen && (
+            <div id="bmEvBody" style={{ display: 'block', marginTop: 12 }}>
+              {B.BM_EV_DIMS.map((d) => (
+                <EvalDim key={d.k} d={d} v={evForm.dims[d.k] || {}}
+                  onChange={(nv) => setEvForm((f) => ({ ...f, dims: { ...f.dims, [d.k]: nv } }))} />
+              ))}
+              <div className="form-group" style={{ marginBottom: 10 }}><label> ملاحظة عامة</label>
+                <textarea id="bm_ev_note" style={{ minHeight: 50 }} placeholder="انطباع عام موجز" value={evForm.note} onChange={(e) => setEvForm((f) => ({ ...f, note: e.target.value }))} />
+              </div>
+              <div className="btn-row"><button className="btn btn-primary" onClick={onEvSave}> حفظ التقييم</button></div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 4) جدول التدخل عبر إجراءات مقترحة */}
+      <div className="section-card">
+        <div className="section-header"><span className="step-badge"></span>جدول التدخل — إجراءات مقترحة</div>
+        <div className="section-body">
+          <div className="bm-grid-wrap" id="bmIvBox">
+            {!ivs.length ? (
+              <div style={{ textAlign: 'center', color: '#94a3b8', padding: 22, fontSize: '0.84rem' }}>
+                {ident.name ? 'لا توجد إجراءات في الجدول بعد — اختر من الإجراءات المقترحة أو أضف إجراءً.' : 'اختر التلميذ(ة) أولاً ثم أضف إجراءات التدخل.'}
+              </div>
+            ) : (
+              <table className="bm-grid">
+                <thead><tr><th style={{ width: '5%' }}>#</th><th>الإجراء</th><th style={{ width: '18%' }}>المسؤول</th><th style={{ width: '16%' }}>تاريخ التنفيذ</th><th style={{ width: '14%' }}>الحالة</th><th style={{ width: '5%' }}></th></tr></thead>
+                <tbody>
+                  {ivs.map((it, i) => <IvRow key={it.id} it={it} i={i} onPatch={patchIv} onDel={delIv} />)}
+                </tbody>
+              </table>
+            )}
+          </div>
+          {ivSug.list.length > 0 && (
+            <div id="bmIvSug" style={sugBox}>
+              <div style={{ fontSize: '0.74rem', fontWeight: 700, color: '#0369a1', marginBottom: 4 }}>💡 إجراءات مقترحة{ivSug.tops.length ? ' حسب أكثر السلوكات تسجيلًا' : ''} (اضغط للإضافة إلى الجدول):</div>
+              {ivSug.list.map((s) => <Chip key={s} onClick={() => addIv(s)}>{s}</Chip>)}
+            </div>
+          )}
+          <div className="form-grid" style={{ marginTop: 10 }}>
+            <div className="form-group col-span-2"><label> إضافة إجراء آخر</label>
+              <input type="text" id="bm_iv_text" value={ivText} onChange={(e) => setIvText(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onAddIvCustom(); } }} placeholder="مثال: لقاء مع الأسرة لتحديد اتفاق سلوكي" />
+            </div>
+          </div>
+          <div className="btn-row" style={{ marginTop: 10 }}><button className="btn btn-primary" onClick={onAddIvCustom}> إضافة الإجراء إلى الجدول</button></div>
         </div>
       </div>
 
@@ -507,18 +504,17 @@ function BehaviorBody() {
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                   <strong style={{ fontSize: '0.95rem' }}>{f.studentName}</strong>
                   <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{f.level}</span>
-                  <span style={{ background: String(f.tier).includes('3') ? '#fef3c7' : '#cffafe', color: String(f.tier).includes('3') ? '#92400e' : '#155e75', borderRadius: 20, padding: '1px 10px', fontSize: '0.72rem', fontWeight: 800 }}>{B.bmTierLbl(f.tier)}</span>
+                  {B.bmStartOf(f) && <span style={{ fontSize: '0.72rem', color: '#64748b' }}>· بداية الرصد: {B.bmStartOf(f)}</span>}
                   {closed && <span style={{ fontSize: '0.72rem', color: '#64748b' }}>· أُغلقت المتابعة</span>}
                 </div>
-                {f.reason && <div style={{ fontSize: '0.78rem', color: '#475569', marginTop: 4 }}>{f.reason}</div>}
                 <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', fontSize: '0.8rem', marginTop: 8 }}>
                   <span>مقلقة (7 أيام): <strong>{s.cc.length}</strong> {trend > 0 ? <span style={{ color: '#dc2626' }}>↑ {trend}</span> : trend < 0 ? <span style={{ color: '#16a34a' }}>↓ {Math.abs(trend)}</span> : <span style={{ color: '#64748b' }}>= ثابت</span>}</span>
                   <span>إيجابية: <strong style={{ color: '#16a34a' }}>{s.pos.length}</strong></span>
                   <span>علامات الجدول (هذا الأسبوع): <strong>{weekMarks}</strong></span>
+                  <span>الإجراءات: <strong>{B.bmIvOf(f).length}</strong></span>
                   {s.top.length > 0 && <span>الأكثر تكرارًا: {s.top.map((t) => t[0] + ' (' + t[1] + ')').join('، ')}</span>}
                 </div>
                 <div dangerouslySetInnerHTML={{ __html: B.bmEvListHtml(f) }} />
-                {f.plan && f.plan.goal && <div style={{ fontSize: '0.78rem', marginTop: 6, color: '#1e3a8a' }}><strong>الهدف:</strong> {f.plan.goal}{f.plan.review ? ' — المراجعة: ' + f.plan.review : ''}</div>}
                 {s.alerts.length > 0 && (
                   <div style={{ background: '#fff7ed', border: '1.5px solid #fed7aa', borderRadius: 8, padding: '8px 12px', marginTop: 8, fontSize: '0.78rem', color: '#9a3412', lineHeight: 1.8 }}>
                     <strong>🔔 تنبيه:</strong> {s.alerts.join(' · ')}
