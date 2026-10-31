@@ -117,6 +117,76 @@
   .tool-page .info-box{ font-size:.82rem !important; line-height:1.7 !important; padding:10px 12px !important; }
 }
 
+
+/* ============ الإضافة 3: الرئيسية في شاشة واحدة (بدون تمرير) ============ */
+@media screen and (max-width:620px){
+  /* ترويسة الهوية في صف واحد */
+  html body.on-home #userBar{ margin:6px 10px 0 !important; }
+  html body.on-home #searchNotifBar{ padding:6px 10px 0 !important; }
+  html body.on-home .home-hero{
+    grid-template-columns:auto minmax(0,1fr) auto !important; grid-template-areas:"min center date" !important;
+    gap:8px !important; padding:6px 10px 10px !important;
+  }
+  html body.on-home .hp-min{ justify-self:start !important; }
+  html body.on-home .hp-min span, html body.on-home .hp-min b{ display:none !important; }
+  html body.on-home .hp-min img{ width:38px !important; height:38px !important; border-radius:9px !important; }
+  html body.on-home .hp-school{ font-size:16px !important; line-height:1.25; }
+  html body.on-home .hp-sub{ font-size:11px !important; }
+  html body.on-home .hp-count{ font-size:12px !important; padding:2px 12px !important; margin-top:0 !important; gap:6px !important; }
+  html body.on-home .hp-count svg{ width:16px !important; height:16px !important; }
+  html body.on-home .hp-date{ padding:4px 8px !important; border-radius:10px !important; }
+  html body.on-home .hp-date svg{ display:none !important; }
+  html body.on-home .hp-date strong{ font-size:12px !important; }
+  html body.on-home .hp-date span{ font-size:10px !important; margin-top:0 !important; }
+
+  /* المحتوى: تقليل الفراغات */
+  .hp-main{ gap:6px !important; padding:8px 8px 0 !important; }
+  .hp-portals, .hp-others{ background:transparent !important; border:0 !important; box-shadow:none !important; padding:0 !important; }
+  html body.on-home .hp-panel{ border:0 !important; }
+  .hp-panel-title{ font-size:12.5px !important; margin:2px 4px 4px !important; gap:6px !important; }
+  .hp-panel-title svg{ width:16px !important; height:16px !important; }
+
+  /* البوابات: 3 أعمدة مضغوطة */
+  .hp-list{ grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:6px !important; }
+  html body.on-home .hp-tile{ min-height:74px !important; padding:7px 3px 6px !important; gap:5px !important; border-radius:13px !important; }
+  .hp-ico{ width:36px !important; height:36px !important; border-radius:11px !important; }
+  .hp-ico svg{ width:20px !important; height:20px !important; }
+  .hp-lbl{ font-size:10.5px !important; line-height:1.3 !important; }
+  .hp-tile .fu-badge{ top:3px !important; inset-inline-start:3px !important; min-width:16px; height:16px; font-size:.62rem; padding:0 4px; }
+
+  /* الإحصائيات: 4 مؤشرات في كل صف وبحجم صغير، والمخطط مخفي */
+  .hp-stats-head{ margin:2px 4px 0 !important; }
+  .hp-stats-head .hp-panel-title{ font-size:12.5px !important; }
+  .hp-season{ padding:3px 10px !important; font-size:11px !important; }
+  #mountStatsKpis.hp-inner{ padding:6px !important; border-radius:12px !important; }
+  .hp-kpis{ grid-template-columns:repeat(4,minmax(0,1fr)) !important; gap:5px !important; }
+  .hp-kpi{ padding:5px 2px 4px !important; border-radius:10px !important; }
+  .hp-kpi svg{ display:none !important; }
+  .hp-kpi .dash-stat-num{ font-size:16px !important; }
+  .hp-kpi .dash-stat-lbl{ font-size:9.5px !important; white-space:normal !important; line-height:1.2 !important; }
+  .hp-week-nav{ margin:0 0 5px !important; }
+  #mountStatsChart.hp-inner{ padding:8px !important; }
+
+  /* التقرير الأسبوعي: شريط مضغوط */
+  .hp-report{ margin:6px 8px 0 !important; padding:3px !important; border-radius:14px !important; }
+  .hp-report-in{ padding:6px 8px !important; gap:6px !important; border-radius:11px !important; }
+  .hp-report-ico, .hp-report-s{ display:none !important; }
+  .hp-report-t{ font-size:13px !important; }
+  #mainWeekRangeBadge{ margin-top:3px !important; padding:2px 8px !important; font-size:10.5px !important; }
+  .hp-btn{ padding:7px 6px !important; font-size:12px !important; }
+  #portalLanding{ padding-bottom:10px !important; }
+}
+
+
+/* ============ الإضافة 4: البوابات أولاً ثم المؤشرات والمخطط أسفلها ============ */
+@media screen and (max-width:620px){
+  .hp-others{ order:1 !important; }
+  .hp-portals{ order:2 !important; }
+  .hp-main{ gap:8px !important; }
+  html body.on-home .hp-tile{ min-height:84px !important; }
+  .hp-lbl{ font-size:11.5px !important; }
+}
+
 /* هواتف ضيقة جداً */
 @media screen and (max-width:360px){
   .hp-list{ grid-template-columns:1fr !important; }
