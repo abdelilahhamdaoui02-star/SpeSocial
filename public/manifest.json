@@ -1,20 +1,21 @@
 {
-  "name": "أدوات التوثيق",
+  "id": "./",
+  "name": "منصة التوثيق المهني",
   "short_name": "التوثيق",
   "description": "منصة التوثيق المهني للمختص الاجتماعي",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "./",
+  "start_url": "./?source=pwa",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#1a3a5c",
   "theme_color": "#1a3a5c",
-  "orientation": "portrait",
+  "orientation": "any",
+  "categories": ["education", "productivity"],
   "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
