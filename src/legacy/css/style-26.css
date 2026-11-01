@@ -1,4 +1,3 @@
-
 @media print{
   /* شريط عنوان البوابة والتبويبان: يُخفى بالمعرّف لأن React يكتب الأنماط المضمَّنة بمسافة («background: linear-gradient»)
      فلا يطابقها محدِّد style-02 القديم div[style*="background:linear-gradient"]، فكان الشريط يُطبع وحده في صفحة أولى فارغة */
@@ -18,4 +17,24 @@
   box-sizing: border-box !important;
   border-radius: 20px 20px 0 0;
   overflow: hidden;
+}
+
+/* ── شعار ترويسة التقارير في الطباعة: بعرض الورقة كاملاً بهامش صغير أعلى وعلى الجانبين ──
+   (يشمل نوافذ المعاينة الثماني: المقابلات والإدماج والغياب والعنف والورشات والإعاقة والإحالة والسجلات)
+   السبب: نافذة الطباعة تضع حشواً 16mm أعلى و18mm جانبين (style-06)، وقاعدة style-02 تحدّ ارتفاع الشعار بـ160px مع object-fit:contain
+   فيُصغَّر الشعار ويبقى حوله فراغ. الحل: هوامش سالبة بقدر الحشو (فيبقى الهامش الصغير فقط) وإزالة سقف الارتفاع الضيّق.
+   للتعديل: غيّر --rp-logo-top و--rp-logo-side (الهامش الصغير)؛ ولا تغيّر 16mm/18mm إلا مع حشو style-06. */
+@media print {
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open .modal-body .new-report-header .nrh-logo {
+    width: auto !important;
+    max-width: none !important;
+    margin: calc(var(--rp-logo-top, 6px) - 16mm) calc(var(--rp-logo-side, 8px) - 18mm) 8px !important;
+  }
+  html.i-print-mode :is(#interviewPrintModal, #snPrintModal, #reintegrationPrintModal, #absencePrintModal, #vioPrintModal, #wsPrintModal, #pdPrintModal, #pgPrintModal).open .modal-body .new-report-header .nrh-logo img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 85mm !important; /* سقف أمان لشعار مربّع؛ الشعار العريض (ترويسة) يأخذ ارتفاعه الطبيعي */
+    object-fit: contain !important;
+  }
 }
