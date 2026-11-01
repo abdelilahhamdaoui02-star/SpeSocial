@@ -206,6 +206,8 @@ function AbsenceBody({ mount }) {
   const [priority, setPriority] = useState('');
   const [procRows, setProcRows] = useState(blankProcRows);
   const [editId, setEditId] = useState(null);
+  // معرّف السجل المحفوظ من النموذج الحالي: الحفظ/المعاينة/التقرير تحدّث نفس السجل بدل إضافة سجل جديد في كل ضغطة
+  const savedId = useRef(null);
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -237,6 +239,7 @@ function AbsenceBody({ mount }) {
 
   // مسح كل الحقول والخيارات وجدول الإجراءات (abCancelEdit القديمة): القائمة تعود إلى أول خيار
   const wipe = () => {
+    savedId.current = null; // نموذج جديد = سجل جديد عند الحفظ التالي
     Object.keys(TEXT_IDS).forEach((k) => { const el = f.current[k]; if (!el) return; if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; });
     setGender('');
     setCauses([]); setPatterns([]); setFamily(''); setSemester(''); setPriority('');
@@ -250,8 +253,22 @@ function AbsenceBody({ mount }) {
   };
 
   const doSave = (silent) => {
-    const r = saveEntry(currentArchive(), readForm());
+    const form = readForm();
+    const cur = currentArchive();
+    // نفس النموذج (نفس الاسم) يحدّث سجله بدل إضافة سجل جديد في كل ضغطة (حفظ / معاينة / تقرير)
+    const same = savedId.current && cur.find((x) => x.id === savedId.current && String(x.studentName || '').trim() === String(form.studentName || '').trim());
+    const existingId = editId || (same ? same.id : null);
+    if (existingId && cur.some((x) => x.id === existingId)) {
+      const u = updateEntry(cur, existingId, form);
+      if (!u) { if (!silent) alert(MSG.NAME_FIRST); return; }
+      persist(u.archive);
+      refreshStats();
+      setArchiveOpen(true);
+      return;
+    }
+    const r = saveEntry(cur, form);
     if (!r) { if (!silent) alert(MSG.NAME_FIRST); return; }
+    savedId.current = r.entry.id;
     persist(r.archive);
     refreshStats();
     setArchiveOpen(true);
