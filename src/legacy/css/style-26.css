@@ -1,5 +1,8 @@
 
 @media print{
+  /* شريط عنوان البوابة والتبويبان: يُخفى بالمعرّف لأن React يكتب الأنماط المضمَّنة بمسافة («background: linear-gradient»)
+     فلا يطابقها محدِّد style-02 القديم div[style*="background:linear-gradient"]، فكان الشريط يُطبع وحده في صفحة أولى فارغة */
+  #toolPrintdocs.active > #mountPrintdocsHero{ display:none !important; }
   html.i-print-mode #toolPrintdocs.active > .main-container,
   html.i-print-mode #toolPrintdocs.active > .pd-no-print{ display:none !important; }
   html.i-print-mode #toolPrintdocs.active #pdPrintModal.open, #pgPrintModal.open{ display:block !important; }
