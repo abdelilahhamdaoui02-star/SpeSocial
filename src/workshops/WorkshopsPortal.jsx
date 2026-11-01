@@ -92,6 +92,8 @@ function WorkshopsBody({ mount }) {
   const [classSel, setClassSel] = useState('');
   const [photos, setPhotos] = useState([]);
   const [editId, setEditId] = useState(null);
+  // معرّف الورشة المحفوظة من النموذج الحالي: الحفظ والمعاينة يحدّثان نفس السجل بدل إضافة سجل جديد
+  const savedId = useRef(null);
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -139,8 +141,24 @@ function WorkshopsBody({ mount }) {
 
   const doSave = () => {
     const form = readForm();
-    const r = saveEntry(currentArchive(), form);
+    const cur = currentArchive();
+    // نفس الورشة (نفس العنوان والتاريخ) تحدّث سجلها بدل إضافة سجل جديد في كل ضغطة
+    const t = String(form.title || '').trim();
+    const dt = form.date || '—';
+    const same = savedId.current && cur.find((x) => x.id === savedId.current && x.title === t && x.date === dt);
+    const existingId = editId || (same ? same.id : null);
+    if (existingId && cur.some((x) => x.id === existingId)) {
+      if (!t) { alert(MSG.TITLE_FIRST); return; }
+      const u = updateEntry(cur, existingId, form);
+      if (!u) return;
+      persist(u.archive);
+      setArchiveOpen(true);
+      alert(MSG.SAVED(u.entry.title));
+      return;
+    }
+    const r = saveEntry(cur, form);
     if (!r) { alert(MSG.TITLE_FIRST); return; }
+    savedId.current = r.entry.id;
     persist(r.archive);
     setArchiveOpen(true);
     alert(MSG.SAVED(r.entry.title));
@@ -154,6 +172,7 @@ function WorkshopsBody({ mount }) {
     try {
       const before = currentArchive();
       const r = autoSaveOnReport(before, form);
+      if (r.entry) savedId.current = r.entry.id;
       if (r.archive !== before) {
         persist(r.archive);
         if (r.archive.length > before.length) setArchiveOpen(true);
@@ -172,6 +191,7 @@ function WorkshopsBody({ mount }) {
   // wsCancelEdit القديمة: تفرَّغ الحقول (حتى المؤسسة) والصور ويعود تاريخ اليوم؛ أقسام chips تبقى كما هي
   const cancelEdit = () => {
     setEditId(null);
+    savedId.current = null; // نموذج جديد = سجل جديد عند الحفظ التالي
     applyForm(formAfterCancel(readForm()));
     if (f.current.date) f.current.date.value = todayIso();
   };
