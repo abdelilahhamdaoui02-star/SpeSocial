@@ -5,6 +5,7 @@ import { DEFAULT_MINISTRY_LOGO_B64 } from './defaultLogo.js';
 import { printLogoImg } from './logoLogic.js';
 import { showToast } from '../ui/toast.js';
 
+// المفتاح القديم في localStorage؛ صار اسماً داخلياً لمهيِّئ التخزين، ويُرحَّل منه الشعار القديم مرة واحدة (userData.loadLogo)
 export const LOGO_KEY = 'app:institutionLogo';
 export const LOGO_MSG_SESSION_ONLY = '⚠️ تم تطبيق الشعار لهذه الجلسة فقط (تعذّر حفظه في المتصفح لأن حجمه كبير).';
 export const LOGO_MSG_SAVED = '✅ تم حفظ شعار المؤسسة';
@@ -59,11 +60,36 @@ const host = {
   dispatchEvent: (e) => window.dispatchEvent(e),
 };
 
+// ── التخزين: Firebase لكل مستخدم (<المستخدم>:institutionLogo) وليس localStorage المتصفح ──
+// createLogoStore تتعامل مع «تخزين» بواجهة getItem/setItem/removeItem؛ نمرّر لها مهيِّئاً يحتفظ بنسخة في الذاكرة
+// ويرسل كل كتابة إلى الجلسة (setLogoRemote) لتحفظها في Firebase. فيتبع الشعار الحساب على كل جهاز.
+let remote = null; // { save(dataUrl | null) → Promise } تركّبه الجلسة عند الإقلاع
+let cached = null; // شعار المستخدم الحالي المخصَّص (data URL)؛ null = الافتراضي
+
+export const setLogoRemote = (r) => { remote = r || null; };
+
+const warnSave = (e) => console.warn('تعذّر حفظ الشعار في Firebase:', e);
+
+const cloudStorage = {
+  getItem: (k) => (k === LOGO_KEY ? cached : null),
+  setItem: (k, v) => {
+    if (k !== LOGO_KEY) return;
+    if (!remote) throw new Error('no-session'); // لا مستخدم → يُطبَّق للجلسة فقط (رسالة LOGO_MSG_SESSION_ONLY)
+    cached = v;
+    Promise.resolve(remote.save(v)).catch(warnSave);
+  },
+  removeItem: (k) => {
+    if (k !== LOGO_KEY) return;
+    cached = null;
+    if (remote) Promise.resolve(remote.save(null)).catch(warnSave);
+  },
+};
+
 function browserEnv() {
   return {
     win: host,
     doc: document,
-    storage: () => window.localStorage,
+    storage: () => cloudStorage,
     alert: (m) => window.alert(m),
   };
 }
@@ -74,6 +100,12 @@ const get = () => (store || (store = createLogoStore(browserEnv())));
 export const saveLogo = (dataUrl) => get().saveLogo(dataUrl);
 export const removeLogo = () => get().removeLogo();
 export const initLogoFromStorage = () => get().initLogoFromStorage();
+
+// يُستدعى بعد دخول المستخدم بالشعار المحفوظ له في Firebase (فارغ/null → الشعار الافتراضي)، وعند الخروج بـ null
+export function setLogoFromCloud(dataUrl) {
+  cached = dataUrl || null;
+  get().initLogoFromStorage();
+}
 
 // الشعار الفعّال (data URL): الافتراضي حتى يُطبَّق المحفوظ. يقرؤه كل من يبني تقريراً أو يطبع مستنداً
 export const getLogo = () => host.MINISTRY_LOGO_B64 || '';
