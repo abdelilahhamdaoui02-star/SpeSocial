@@ -243,7 +243,7 @@ export function reportHtml(f, ctx = {}) {
   return `
  <div class="new-report-header">
  <div class="nrh-logo">
- <img id="ministry-logo-img" src="${ctx.logo || ''}" alt="شعار الوزارة" style="width:120px;height:120px;object-fit:contain;display:block;background:white;">
+ <img id="ministry-logo-img" src="${ctx.logo || ''}" alt="شعار الوزارة" style="   width:100%;height:auto;max-height:230px;;object-fit:contain;display:block;background:white;">
  </div>
  
  <div class="nrh-dir">مديرية الحي الحسني</div>
