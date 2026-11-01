@@ -197,7 +197,6 @@ function PrintdocsBody({ hero, mount }) {
     applyForm(n, formFromEntry(n, e));
     setEdit((s) => upd(s, n, id));
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    toast(MSG.LOADED, 'info');
   };
   const previewEntry = (n, id) => {
     const e = currentArchive(n).find((x) => x.id === id);
@@ -329,10 +328,6 @@ function PrintdocsBody({ hero, mount }) {
           <Section n="5" tab={3} title="التواريخ والتوقيعات">
             <div className="form-grid" style={{ marginBottom: 16 }}>
               <div className="form-group"><label>📅 تاريخ استلام الجمعية للإحالة</label><input type="date" {...bind(3, 'pd3-ref-date')} /></div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <div style={{ ...SIG_BOX, minHeight: 80 }}><div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#5b21b6', marginBottom: 6 }}>✒️ المختص الاجتماعي المُحيل</div></div>
-              <div style={{ ...SIG_BOX, minHeight: 80 }}><div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#5b21b6', marginBottom: 6 }}>✒️ مدير المؤسسة</div></div>
             </div>
           </Section>
 
