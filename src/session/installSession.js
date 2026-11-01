@@ -17,7 +17,7 @@ import { getSessionStore } from './sessionStore.js';
 import { setBridge } from './sessionBridge.js';
 import { getCloudStorage, getFbAuth, getCloudReady, getCloudStatus } from '../services/cloud.js';
 import { getLogo } from '../settings/logoStore.js';
-import { initLogoFromStorage } from '../settings/logoStore.js';
+import { initLogoFromStorage, setLogoFromCloud, setLogoRemote } from '../settings/logoStore.js';
 import { showToast } from '../ui/toast.js';
 import { getInstitution } from '../institution/institutionStore.js';
 import { closeProfile } from '../profile/profileWindow.js';
@@ -49,6 +49,7 @@ function build() {
     state, appData, collectionKeys: COLLECTION_KEYS, storage, local, StudentDb, emit, toast,
     warn: (...a) => console.warn(...a), error: (...a) => console.error(...a), log: (...a) => console.log(...a),
     isCloud: state.isCloud, updateAllLevelSelects: institution.updateAllLevelSelects, schedule,
+    setLogo: setLogoFromCloud, // الشعار المحفوظ للمستخدم في Firebase يُطبَّق على التقارير والإعدادات
   });
   const panels = createPanels({ doc: document, initLogo: initLogoFromStorage, status: getCloudStatus, emit });
   const flow = createSessionFlow({
@@ -99,6 +100,11 @@ function makeBridge(s) {
 export function installSession() {
   const s = getSession();
   setBridge(makeBridge(s));
+  // شعار المؤسسة محفوظ في Firebase لكل مستخدم: يُحمَّل بعد كل دخول (يدوي أو تلقائي)، ويعود الافتراضي عند الخروج، وحفظه/حذفه من الإعدادات يمرّ من هنا
+  setLogoRemote({ save: (dataUrl) => s.userData.saveLogo(dataUrl) });
+  const sessionStore = getSessionStore();
+  sessionStore.on('entered', () => { s.userData.loadLogo(); });
+  sessionStore.on('loggedout', () => { setLogoFromCloud(null); });
   // الخطوة 52: لم يبقَ من الجلسة والتخزين والأرشيفات والتقرير الأسبوعي شيء على window — كلها على getSession() وتستدعيها الوحدات باستيراد مباشر:
   //   s.flow (الدخول والخروج وإحصائيات اللوحة)، s.panels (الإعدادات وإعداد Firebase)، s.archives (autoLogTask وأرشيفات الأقسام)،
   //   s.weekly (wkReportHtml وwprBridge وشارة الأسبوع)، s.userData (saveUserKey وloadUserData…)، s.pgExportXlsx، s.dispatchOTP.
