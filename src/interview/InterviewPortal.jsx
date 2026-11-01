@@ -77,6 +77,8 @@ function InterviewBody({ mount }) {
   const students = useStudents();
   const f = useRef({});
   const api = useRef({});
+  // معرّف السجل المحفوظ من النموذج الحالي: الحفظ/المعاينة/التقرير تحدّث نفس السجل
+  const savedId = useRef(null);
   const [txt, setTxt] = useState(BLANK_TEXT);
   const [family, setFamily] = useState('');
   const [semester, setSemester] = useState('');
@@ -113,6 +115,7 @@ function InterviewBody({ mount }) {
 
   // مسح كل الحقول والخيارات وجدول الإجراءات (iCancelEdit القديمة). iClearAll تمسح هاتف الولي أيضاً، أما iCancelEdit فلا تمسحه (حقل tel خارج محدِّدها)
   const wipe = ({ phone }) => {
+    savedId.current = null; // نموذج جديد = سجل جديد عند الحفظ التالي
     Object.keys(REF_IDS).forEach((k) => { const el = f.current[k]; if (!el) return; if (el.tagName === 'SELECT') el.selectedIndex = 0; else el.value = ''; });
     if (f.current.school) f.current.school.value = instName();
     setGender('');
@@ -125,9 +128,22 @@ function InterviewBody({ mount }) {
     wipe({ phone: true });
   };
 
-  const doSave = (silent) => {
-    const r = saveEntry(currentArchive(), readForm());
+    const doSave = (silent) => {
+    const form = readForm();
+    const cur = currentArchive();
+    const existingId = editId || savedId.current;
+    // السجل موجود في الأرشيف: حدّثه فقط (بلا سجل جديد وبلا تسجيل مهمة مكرّر)
+    if (existingId && cur.some((x) => x.id === existingId)) {
+      const u = updateEntry(cur, existingId, form);
+      if (!u) { if (!silent) alert(MSG.NAME_FIRST); return; }
+      persist(u.archive);
+      refreshStats();
+      setArchiveOpen(true);
+      return;
+    }
+    const r = saveEntry(cur, form);
     if (!r) { if (!silent) alert(MSG.NAME_FIRST); return; }
+    savedId.current = r.entry.id;
     persist(r.archive);
     refreshStats();
     setArchiveOpen(true);
