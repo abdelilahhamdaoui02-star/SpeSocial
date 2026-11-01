@@ -10,3 +10,12 @@
 #pdPrintModal .report-summary-block{ white-space:pre-wrap; }
 #pdPrintModal .pd-proc-list{ margin:0; padding:0 18px 0 0; }
 #pdPrintModal .pd-proc-list li{ margin-bottom:3px; }
+#mountPrintdocsHero {
+  max-width: 1400px;      /* نفس max-width الخاص بـ .main-container */
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 20px 20px 0 0;
+  overflow: hidden;
+}
