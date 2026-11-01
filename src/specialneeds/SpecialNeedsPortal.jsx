@@ -188,6 +188,8 @@ function SpecialNeedsBody() {
   const [adaptations, setAdaptations] = useState([]);
   const [procRows, setProcRows] = useState(blankProcRows);
   const [editId, setEditId] = useState(null);
+  // معرّف السجل المحفوظ من النموذج الحالي: الحفظ/المعاينة/التقرير تحدّث نفس السجل بدل إضافة سجل جديد في كل ضغطة
+  const savedId = useRef(null);
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [trackId, setTrackId] = useState(null);
@@ -235,6 +237,7 @@ function SpecialNeedsBody() {
   // snClearAll القديمة: تمسح الحقول والخيارات والجدول وتعيد المؤسسة والتاريخ.
   // (انحراف صغير: القديمة كانت تترك القسم المختار؛ هنا يُفرَّغ مع بقية النموذج)
   const wipe = () => {
+    savedId.current = null; // نموذج جديد = سجل جديد عند الحفظ التالي
     writeText({});
     if (f.current.level) f.current.level.selectedIndex = 0;
     setGender('');
@@ -250,8 +253,23 @@ function SpecialNeedsBody() {
   };
 
   const doSave = (silent) => {
-    const r = saveEntry(currentArchive(), readForm());
+    const form = readForm();
+    const cur = currentArchive();
+    // نفس النموذج (نفس الاسم) يحدّث سجله بدل إضافة سجل جديد في كل ضغطة (حفظ / معاينة / تقرير)
+    const same = savedId.current && cur.find((x) => x.id === savedId.current && String(x.studentName || '').trim() === String(form.studentName || '').trim());
+    const existingId = editId || (same ? same.id : null);
+    if (existingId && cur.some((x) => x.id === existingId)) {
+      if (!String(form.studentName || '').trim()) { if (!silent) alert(MSG.NAME_FIRST); return; }
+      if (!form.category) { if (!silent) alert(MSG.CATEGORY_FIRST); return; }
+      const u = updateEntry(cur, existingId, form);
+      if (!u || u.error) return;
+      persist(u.archive);
+      setArchiveOpen(true);
+      return;
+    }
+    const r = saveEntry(cur, form);
     if (r.error) { if (!silent) alert(r.error === 'name' ? MSG.NAME_FIRST : MSG.CATEGORY_FIRST); return; }
+    savedId.current = r.entry.id;
     persist(r.archive);
     setArchiveOpen(true);
     try { getSession().archives.autoLogTask(...taskLogArgs(r.entry)); } catch (e) { if (!silent) console.error(e); }
