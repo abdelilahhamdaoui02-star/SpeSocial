@@ -67,5 +67,6 @@ export function logoView(logo) {
 // printLogoImg القديمة: شعار المؤسسة لأي وثيقة طباعة (logo = الشعار الفعّال، فارغ → لا شيء)
 export function printLogoImg(logo, maxH) {
   if (!logo) return '';
-  return '<div style="text-align:center;line-height:0;margin:0 0 8px;"><img src="' + logo + '" alt="شعار المؤسسة" style="max-width:100%;width:100%;max-height:' + (maxH || 110) + 'px;object-fit:contain;display:block;margin:0 auto;"></div>';
+  // الشعار ترويسة بعرض الصفحة كاملاً بهامش صغير (6px أعلى و8px جانبين)؛ الارتفاع يتبع نسبة الصورة
+  return '<div style="margin:6px 8px 8px;line-height:0;"><img src="' + logo + '" alt="شعار المؤسسة" style="width:100%;height:auto;max-height:230px;object-fit:contain;display:block;"></div>';
 }
