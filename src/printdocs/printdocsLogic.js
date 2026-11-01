@@ -242,11 +242,9 @@ function head(school, title, ctx) {
     + '<div class="nrh-school">' + (school ? E(school) : 'المؤسسة التعليمية') + '</div>'
     + '<div class="nrh-title">' + title + '</div></div>';
 }
+// إطار التوقيعات والختم أُخفي من الوثائق بطلب المستخدم (كان جدولاً من خليتين: المختص الاجتماعي ومدير المؤسسة)
 function sigBlock() {
-  const box = (a) => '<td data-w="50" data-bold="1" style="width:50%;border:1px solid #cbd5e1;vertical-align:top;padding:10px 12px;height:95px;"><div style="font-weight:700;color:#1a3a5c;margin-bottom:4px;">' + a + '</div></td>';
-  return '<div class="report-section-title">التوقيعات والختم</div>'
-    + '<table class="pd-table-report" style="width:100%;border-collapse:separate;border-spacing:10px 0;margin-top:6px;page-break-inside:avoid;font-family:\'Cairo\',sans-serif;font-size:0.82rem;"><tbody><tr data-h="75">'
-    + box('المختص الاجتماعي') + box('مدير المؤسسة') + '</tr></tbody></table>';
+  return '';
 }
 
 function buildAssoc(form, ctx) {
