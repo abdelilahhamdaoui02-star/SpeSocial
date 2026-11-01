@@ -1,6 +1,11 @@
 // تحميل بيانات المستخدم وحفظ مجموعاتها وقائمة تلاميذه — منقولة من loadUserData/saveUserKey/saveCustomStudents/getCustomStudents في script-10.js (الخطوة 47).
 //   deps: { state: { getUser, setProfile }, appData, collectionKeys, storage: { get, set }, local, StudentDb,
 //           emit(name, detail?), toast(msg, type), warn, error, log, updateAllLevelSelects() (قوائم الأقسام من src/institution), schedule(fn, ms) }
+import { LOGO_CLOUD_MAX } from '../settings/logoLogic.js';
+
+const LOGO_SUFFIX = ':institutionLogo';
+const LEGACY_LOGO_KEY = 'app:institutionLogo'; // مفتاح localStorage القديم (للمتصفح كله لا لمستخدم بعينه)
+
 export function createUserData(d) {
   const customKey = () => { const u = d.state.getUser(); return u ? 'app:customStudents:' + u : 'app:customStudents'; };
 
@@ -53,6 +58,36 @@ export function createUserData(d) {
     }
   }
 
+  // شعار المؤسسة: يُحفظ في Firebase باسم <المستخدم>:institutionLogo (data URL). القيمة الفارغة = حُذف الشعار → الافتراضي.
+  // يُستدعى بعد دخول المستخدم؛ d.setLogo(dataUrl | null) يطبّقه على التقارير والإعدادات.
+  async function loadLogo() {
+    const user = d.state.getUser();
+    if (!user || !d.setLogo) return;
+    const key = user + LOGO_SUFFIX;
+    try {
+      let logo = await d.storage.get(key, true);
+      if (!logo) {
+        // ترحيل مرة واحدة: الشعار كان محفوظاً في المتصفح فقط (app:institutionLogo)؛ ننقله إلى حساب هذا المستخدم في Firebase ثم نحذف نسخة المتصفح
+        const old = d.local.get(LEGACY_LOGO_KEY);
+        if (old && old.length <= LOGO_CLOUD_MAX) {
+          await d.storage.set(key, old, true);
+          d.local.remove(LEGACY_LOGO_KEY);
+          logo = old;
+        }
+      }
+      d.setLogo(logo || null);
+    } catch { d.setLogo(null); }
+  }
+
+  // dataUrl = null يحذف الشعار (نكتب قيمة فارغة لأن طبقة التخزين لا تحذف)
+  async function saveLogo(dataUrl) {
+    const user = d.state.getUser();
+    if (!user) return false;
+    await d.storage.set(user + LOGO_SUFFIX, dataUrl || '', true);
+    d.local.remove(LEGACY_LOGO_KEY); // لا يبقى للشعار نسخة محلية قديمة تعيده بعد الحذف
+    return true;
+  }
+
   function getCustomStudents() {
     try { const v = d.local.get(customKey()); return v ? JSON.parse(v) : []; } catch { return []; }
   }
@@ -70,5 +105,5 @@ export function createUserData(d) {
     d.emit('legacy:students-changed');
   }
 
-  return { loadUserData, saveUserKey, getCustomStudents, saveCustomStudents };
+  return { loadUserData, saveUserKey, getCustomStudents, saveCustomStudents, loadLogo, saveLogo };
 }
