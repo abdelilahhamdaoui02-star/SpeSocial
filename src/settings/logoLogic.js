@@ -4,8 +4,11 @@
 export const LOGO_TYPES = /^image\/(png|jpe?g|svg\+xml|webp)$/;
 export const LOGO_MAX_BYTES = 8 * 1024 * 1024;
 export const LOGO_MAX_W = 1400;
+// الشعار يُحفظ الآن في Firebase، وحدّ الوثيقة الواحدة فيه نحو 1MB: لا نقبل نصاً (data URL) أطول من هذا
+export const LOGO_CLOUD_MAX = 900000;
 
 export const LOGO_MSG = {
+  tooBigCloud: '⚠️ الشعار كبير جداً للحفظ في السحابة. اختر صورة أصغر أو بجودة أقل.',
   badType: '⚠️ صيغة غير مدعومة. استعمل JPG أو PNG أو SVG أو WEBP.',
   tooBig: '⚠️ حجم الصورة كبير جداً. الحد الأقصى 8MB.',
   readFail: '⚠️ تعذّرت قراءة الملف.',
@@ -40,17 +43,31 @@ export function processLogoFile(file, env) {
     reader.onerror = () => { env.alert(LOGO_MSG.readFail); resolve(null); };
     reader.onload = (ev) => {
       const dataUrl = ev.target.result;
-      if (file.type === 'image/svg+xml') { resolve(dataUrl); return; }
+      if (file.type === 'image/svg+xml') {
+        if (dataUrl.length > LOGO_CLOUD_MAX) { env.alert(LOGO_MSG.tooBigCloud); resolve(null); return; }
+        resolve(dataUrl);
+        return;
+      }
       const img = new env.Image();
       img.onerror = () => { env.alert(LOGO_MSG.openFail); resolve(null); };
       img.onload = () => {
-        const { w, h } = logoSize(img.naturalWidth, img.naturalHeight);
-        const c = env.createCanvas(w, h);
-        const ctx = c.getContext('2d');
         const keep = keepsAlpha(file.type);
-        if (!keep) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(keep ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', 0.92));
+        const render = (w, h, quality) => {
+          const c = env.createCanvas(w, h);
+          const ctx = c.getContext('2d');
+          if (!keep) { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
+          ctx.drawImage(img, 0, 0, w, h);
+          return keep ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', quality);
+        };
+        let { w, h } = logoSize(img.naturalWidth, img.naturalHeight);
+        let out = render(w, h, 0.92);
+        // تصغير تدريجي (20% في كل مرة) حتى يلائم حدّ التخزين السحابي؛ لا يعمل إلا للصور الكبيرة جداً
+        for (let i = 0; i < 6 && out.length > LOGO_CLOUD_MAX; i++) {
+          w = Math.max(1, Math.round(w * 0.8)); h = Math.max(1, Math.round(h * 0.8));
+          out = render(w, h, 0.85);
+        }
+        if (out.length > LOGO_CLOUD_MAX) { env.alert(LOGO_MSG.tooBigCloud); resolve(null); return; }
+        resolve(out);
       };
       img.src = dataUrl;
     };
