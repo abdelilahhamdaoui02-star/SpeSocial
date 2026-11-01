@@ -11,10 +11,10 @@
 #pdPrintModal .pd-proc-list{ margin:0; padding:0 18px 0 0; }
 #pdPrintModal .pd-proc-list li{ margin-bottom:3px; }
 #mountPrintdocsHero {
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  max-width: 100% !important;
-  width: auto !important;
+  max-width: 1400px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   box-sizing: border-box !important;
   border-radius: 20px 20px 0 0;
   overflow: hidden;
