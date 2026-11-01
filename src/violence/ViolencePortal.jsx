@@ -55,6 +55,8 @@ function ViolenceBody() {
   const [priority, setPriority] = useState('');
   const [procRows, setProcRows] = useState(blankProcRows);
   const [editId, setEditId] = useState(null);
+  // معرّف السجل المحفوظ من النموذج الحالي: الحفظ/المعاينة/التقرير تحدّث نفس السجل بدل إضافة سجل جديد في كل ضغطة
+  const savedId = useRef(null);
   const [archiveOpen, setArchiveOpen] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -78,6 +80,7 @@ function ViolenceBody() {
 
   // مسح كل الحقول والخيارات وجدول الإجراءات (vioCancelEdit القديمة) — بلا استعادة المؤسسة والتاريخ
   const wipe = () => {
+    savedId.current = null; // نموذج جديد = سجل جديد عند الحفظ التالي
     writeText({});
     setTypes([]); setSources([]); setLocation(''); setPriority('');
     setProcRows(blankProcRows());
@@ -92,8 +95,21 @@ function ViolenceBody() {
 
   const doSave = (silent) => {
     const form = readForm();
-    const r = saveEntry(currentArchive(), form);
+    const cur = currentArchive();
+    // نفس النموذج (نفس الاسم) يحدّث سجله بدل إضافة سجل جديد في كل ضغطة (حفظ / معاينة / تقرير)
+    const same = savedId.current && cur.find((x) => x.id === savedId.current && String(x.studentName || '').trim() === String(form.studentName || '').trim());
+    const existingId = editId || (same ? same.id : null);
+    if (existingId && cur.some((x) => x.id === existingId)) {
+      const u = updateEntry(cur, existingId, form);
+      if (!u) { if (!silent) alert(MSG.NAME_FIRST); return; }
+      persist(u.archive);
+      refreshStats();
+      setArchiveOpen(true);
+      return;
+    }
+    const r = saveEntry(cur, form);
     if (!r) { if (!silent) alert(MSG.NAME_FIRST); return; }
+    savedId.current = r.entry.id;
     persist(r.archive);
     refreshStats();
     setArchiveOpen(true);
