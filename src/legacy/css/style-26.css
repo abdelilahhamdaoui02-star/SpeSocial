@@ -38,3 +38,24 @@
     object-fit: contain !important;
   }
 }
+
+/* ── التقرير الإحصائي (بوابة الإحصاء): الشعار في أعلى الورقة بهامش صغير، دون الفراغ العلوي ──
+   نافذة الإحصاء تضع حشواً علوياً 22mm وعرض كتابة 164mm (style-02)، فكان الشعار ينزل عن حافة الورقة بنحو 22mm ويُصغَّر بسقف 160px.
+   نستعمل المتغيّرات نفسها لبقية البوابات: --rp-logo-top و--rp-logo-side و--rp-logo-max-h.
+   ولا نشترط html.i-print-mode لأن نافذة الإحصاء لا تدخل في قائمة نوافذ ذلك الوضع. */
+@media print {
+  #stPrintModal.open .modal-body .new-report-header .nrh-logo {
+    width: auto !important;
+    max-width: none !important;
+    margin: calc(var(--rp-logo-top, 6px) - 22mm) calc(var(--rp-logo-side, 8px) - 23mm) 8px !important;
+  }
+  #stPrintModal.open .modal-body .new-report-header .nrh-logo img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: var(--rp-logo-max-h, 40mm) !important;
+    object-fit: contain !important;
+  }
+  /* عنوان المبيان لا يبقى وحده في أسفل الصفحة والمبيان في التي بعدها */
+  #stPrintModal.open .modal-body .report-section-title { break-after: avoid; page-break-after: avoid; }
+}
