@@ -102,7 +102,8 @@ function SettingsUI() {
             — يُنصح بتفعيل رقم الهاتف لحماية إضافية
           </div>
         </div>
-
+        
+  {false && (
         <div className="settings-section">
           <div className="settings-section-title">🔥 التخزين السحابي (Firebase)</div>
           <div id="settingsFbStatus" style={{ padding: '10px 14px', borderRadius: 10, fontSize: '0.82rem', fontWeight: 700, marginBottom: 10, border: '2px solid', ...fb.style }}>{fb.text}</div>
