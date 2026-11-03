@@ -103,16 +103,19 @@ function SettingsUI() {
           </div>
         </div>
         
-  {false && (
-        <div className="settings-section">
-          <div className="settings-section-title">🔥 التخزين السحابي (Firebase)</div>
-          <div id="settingsFbStatus" style={{ padding: '10px 14px', borderRadius: 10, fontSize: '0.82rem', fontWeight: 700, marginBottom: 10, border: '2px solid', ...fb.style }}>{fb.text}</div>
-          <button onClick={() => getSession().panels.openFirebaseSetupFromSettings()} style={{ width: '100%', padding: 11, background: 'linear-gradient(135deg,#f97316,#ea580c)', color: 'white', border: 'none', borderRadius: 10, fontFamily: 'Cairo,sans-serif', fontSize: '0.88rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 14px rgba(249,115,22,0.3)' }}>
-            🔥 فتح إعدادات Firebase
-          </button>
-        </div>
+{false && (
+  <div className="settings-section">
+    <div className="settings-section-title">🔥 التخزين السحابي (Firebase)</div>
+    <div id="settingsFbStatus" style={{ ... }}>
+      ...
+    </div>
+    <button onClick={() => getSession().panels.openFirebaseSetupFromSettings()} style={{ ... }}>
+      🔥 فتح إعدادات Firebase
+    </button>
+  </div>
+)}
 
-        <StudentsSection />
+<StudentsSection />
       </div>
     </div>
   );
