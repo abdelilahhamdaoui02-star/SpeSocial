@@ -98,7 +98,7 @@ function CasefileBody() {
     <Fragment>
       <style>{CF_CSS}</style>
       <div className="info-box" style={{ background: '#f0fdfa', borderColor: '#5eead4', color: '#0f766e' }}>
-        📁 <span>ابحث عن تلميذ لعرض ملفه الشامل: جميع المقابلات، ملفات الغياب، وحالات الإدماج المرتبطة به في مكان واحد.</span>
+        📁 <span>ابحث عن تلميذ لعرض ملفه الشامل: المقابلات، الغياب، الاتصال بالأولياء، الإدماج، العنف، الإعاقة، والإحالة والإخبار المرتبطة به في مكان واحد.</span>
       </div>
 
       <div className="section-card">
