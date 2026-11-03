@@ -71,24 +71,32 @@ const pdRow = (kind) => (e) => {
 };
 
 // المصادر السبعة + الثامن (السلوك) + الإحالة والإخبار. get تأخذ (collections, ctx) وتعيد مصفوفة.
+// أول قيمة غير فارغة، مقتطعة (للجدول المختصر في الطباعة)
+const first = (...vs) => { for (const v of vs) { const t = clean(v); if (t) return t; } return ''; };
+const cut = (t, n) => (t.length > n ? t.slice(0, n - 1).trimEnd() + '…' : t);
+
 export const SOURCES = [
   { key: 'interview', label: 'المقابلات الفردية', icon: '🗂', color: '#1a3a5c',
     get: (c) => c.interviewArchive, date: (e) => e.interviewDate,
+    brief: (e) => ({ action: first(e.subject) || 'مقابلة فردية', notes: first(e.specialistNotes, e.summary, e.recommendation) }),
     fields: (e) => [['الموضوع', e.subject], ['الأولوية', e.priority], ['الوضعية الحالية', e.currentStatus],
       ['الملخص', e.summary], ['ملاحظات الأخصائي', e.specialistNotes], ['الإجراءات', e.procedures],
       ['التوصية', e.recommendation], ['المتابعة المقبلة', e.nextFollowup]] },
   { key: 'reint', label: 'الإدماج المدرسي', icon: '📋', color: '#16a34a',
     get: (c) => c.reintegrationArchive, date: (e) => e.reintegrationDate,
+    brief: (e) => ({ action: first(e.procedures) || 'إدماج مدرسي', notes: first(e.recommendation, e.currentStatus, e.causes) }),
     fields: (e) => [['مدة الغياب', e.absenceDuration], ['الأسباب', e.causes], ['الإجراءات', e.procedures],
       ['الأولوية', e.priority], ['الوضعية الحالية', e.currentStatus], ['التوصية', e.recommendation],
       ['المتابعة المقبلة', e.nextFollowup]] },
   { key: 'absence', label: 'ملفات الغياب', icon: '🚨', color: '#d97706',
     get: (c) => c.absenceArchive, date: (e) => e.recordDate,
+    brief: (e) => ({ action: first(e.procedures) || (clean(e.totalHours) ? 'غياب: ' + clean(e.totalHours) + ' ساعة' : 'ملف غياب'), notes: first(e.causes, e.recommendation, e.currentStatus) }),
     fields: (e) => [['مجموع الساعات', e.totalHours], ['ساعات غير مبررة', e.unjustifiedHours],
       ['عدد الأيام', e.totalDays], ['الأسباب', e.causes], ['الإجراءات', e.procedures], ['الأولوية', e.priority],
       ['الوضعية الحالية', e.currentStatus], ['التوصية', e.recommendation], ['المتابعة المقبلة', e.nextFollowup]] },
   { key: 'violence', label: 'حالات العنف', icon: '🛡️', color: '#dc2626',
     get: (c) => c.violenceArchive, date: (e) => e.reportDate,
+    brief: (e) => ({ action: first(e.types) || 'حالة عنف', notes: first(e.description, e.recommendation) }),
     fields: (e) => [['الشخص المعنِّف', e.aggName], ['القسم (المعنِّف)', e.aggLevel], ['نوع العنف', e.types], ['المكان', e.location],
       ['الوصف', e.description], ['الأولوية', e.priority],
       ['التوصية', e.recommendation]] },
@@ -96,17 +104,20 @@ export const SOURCES = [
     // contactsArchive: مجموعة قديمة؛ وبوابة «الاتصال بالأولياء» تكتب الآن في parentCalls (هاتف) وparentMeetings (مقابلات)
     get: (c) => [...arr(c.contactsArchive), ...arr(c.parentCalls).map(callRow), ...arr(c.parentMeetings).map(meetRow)],
     date: (e) => e.date,
+    brief: (e) => ({ action: first(e.type, e.reason) || 'اتصال', notes: first(e.summary, e.result, e.actions, e.reason) }),
     fields: (e) => [['نوع الاتصال', e.type], ['ولي الأمر', e.parentName], ['المهنة', e.job], ['الهاتف', e.parentPhone],
       ['وقت الاتصال', e.time], ['السبب', e.reason], ['الملخص', e.summary], ['النتيجة', e.result], ['الإجراءات', e.actions],
       ['الأولوية', e.priority]] },
   { key: 'special', label: 'وضعية الإعاقة', icon: '♿', color: '#2563eb',
     get: (c) => c.specialNeedsArchive, date: (e) => e.recordDate,
+    brief: (e) => ({ action: first(e.actions, e.category) || 'وضعية إعاقة', notes: first(e.summary, e.recommendation, e.diagnosis) }),
     fields: (e) => [['الفئة', e.category], ['التشخيص', e.diagnosis], ['تقرير طبي', e.hasReport],
       ['الإحالة', e.referral], ['الإجراءات', e.actions], ['التفاصيل', e.actionsDetails], ['التكييفات', e.adaptations],
       ['الملخص', e.summary], ['التوصية', e.recommendation], ['المتابعة المقبلة', e.nextFollowup]] },
   { key: 'referral', label: 'الإحالة والإخبار', icon: '🏥', color: '#b91c1c',
     get: (c) => [...arr(c.pdAssocArchive).map(pdRow('assoc')), ...arr(c.pdHealthArchive).map(pdRow('health'))],
     date: (e) => e.date,
+    brief: (e) => { const f = e.fields || {}; return e.docKind === 'assoc' ? { action: 'إحالة إلى جمعية' + (first(f['pd3-assoc'], e.extra) ? ' — ' + first(f['pd3-assoc'], e.extra) : ''), notes: first(f['pd3-reason']) } : { action: 'إخبار بحالة صحية' + (first(e.type, e.extra) ? ' — ' + first(e.type, e.extra) : ''), notes: first(f['pd4-health-desc']) }; },
     fields: (e) => {
       const f = e.fields || {};
       return e.docKind === 'assoc'
@@ -117,12 +128,14 @@ export const SOURCES = [
     } },
   { key: 'vigilance', label: 'خلية اليقظة', icon: '🚨', color: '#7c3aed',
     get: (c, ctx) => vigilanceRows(c, ctx), date: (e) => e.date,
+    brief: (e) => ({ action: first(e.actions, e.category) || 'خلية اليقظة', notes: first(e.notes, e.status) }),
     fields: (e) => [['الصنف', e.category], ['الإجراءات', e.actions], ['الأولوية', e.priority],
       ['الحالة', e.status], ['ملاحظات', e.notes], ['المتابعة المقبلة', e.nextFollowup],
       ['عدد سجلات التتبع', (e.trackingLogs && e.trackingLogs.length) ? String(e.trackingLogs.length) : '']] },
   { key: 'behavior', label: 'رصد السلوك', icon: '🧭', color: '#0e8f98',
     get: (c, ctx) => behaviorRows(Array.isArray(c.behaviorFiles) ? c.behaviorFiles : [], ctx.today),
     date: (e) => e.date,
+    brief: (e) => ({ action: first(e.reason) || 'رصد السلوك', notes: first(e.goal) }),
     fields: (e) => [['سبب الإدراج', e.reason], ['مستوى الدعم', bmTierLbl(e.tier)], ['ملاحظات مقلقة (7 أيام)', String(e.cc)],
       ['ملاحظات إيجابية (7 أيام)', String(e.pos)], ['هدف الخطة', e.goal], ['تاريخ المراجعة', e.review]] },
 ];
@@ -193,6 +206,7 @@ export function fileModel(g) {
       records: list.map((e) => ({
         date: clean(s.date(e)) || clean(e.savedAt) || 'بدون تاريخ',
         rows: s.fields(e).map((f) => [f[0], clean(f[1])]).filter((r) => r[1]),
+        brief: (() => { const b = s.brief ? s.brief(e) : {}; return { action: cut(clean(b.action), 70), notes: cut(clean(b.notes), 140) }; })(),
       })),
     });
   });
@@ -241,18 +255,52 @@ export const CF_CSS =
   '.cf-pick{display:flex;align-items:center;gap:10px;padding:10px 14px;margin:6px 0;background:#fff;border:1.5px solid #cbd5e1;' +
   'border-radius:10px;cursor:pointer;font-weight:700;color:#1a3a5c;}.cf-pick:hover{background:#eff6ff;border-color:#60a5fa;}';
 
+// جدول الطباعة: أعلاه إحصاءات (عدد الإجراءات في كل بوابة)، وأسفله الإجراءات مختصرة: البوابة | الإجراء | التاريخ | ملاحظات
+export const PRINT_CSS =
+  '@page{size:A4;margin:0;}' + // هامش الصفحة صفر فتختفي ترويسة المتصفح وتذييله (التاريخ واسم الصفحة وfile://)؛ الهامش الفعلي في padding الجسم
+  'body{font-family:"Cairo",Arial,sans-serif;margin:0;padding:12mm 14mm;color:#1e293b;-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
+  '.ph{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0f766e;padding-bottom:8px;margin-bottom:8px;}' +
+  '.ph h1{margin:0;font-size:1.15rem;color:#0f766e;}.ph small{color:#64748b;}' +
+  '.pt-id{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin:6px 0 10px;font-size:.85rem;color:#334155;}' +
+  '.pt-id .n{font-size:1.2rem;font-weight:800;color:#0f766e;}' +
+  'table.pt{width:100%;border-collapse:collapse;font-size:.78rem;margin-bottom:10px;}' +
+  'table.pt th,table.pt td{border:1px solid #cbd5e1;padding:4px 6px;vertical-align:top;text-align:right;}' +
+  'table.pt th{background:#0f766e;color:#fff;font-weight:700;}' +
+  'table.pt tr{page-break-inside:avoid;}' +
+  'table.pt-stats th,table.pt-stats td{text-align:center;}' +
+  'table.pt-stats td{font-size:1rem;font-weight:800;}' +
+  'table.pt-stats td.z{color:#94a3b8;font-weight:400;}' +
+  '.pt-title{font-weight:800;color:#0f766e;margin:8px 0 4px;font-size:.9rem;}' +
+  'td.pt-g{white-space:nowrap;font-weight:700;width:14%;}td.pt-d{white-space:nowrap;width:13%;}td.pt-a{width:30%;}' +
+  '.cf-urgent{margin:0 0 8px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;border-radius:6px;padding:4px 8px;font-size:.78rem;font-weight:700;}' +
+  '.cf-empty{padding:20px;text-align:center;color:#64748b;background:#f8fafc;border-radius:8px;}';
+
+export function printBody(model) {
+  const meta = model.meta.map((m) => '<span>' + m.label + ': <b>' + esc(m.value) + '</b></span>').join('');
+  const total = model.chips.reduce((a, c) => a + c.n, 0);
+  const stats = '<table class="pt pt-stats"><thead><tr>' +
+    model.chips.map((c) => '<th>' + c.icon + ' ' + esc(c.label) + '</th>').join('') + '<th>المجموع</th></tr></thead><tbody><tr>' +
+    model.chips.map((c) => '<td' + (c.n ? '' : ' class="z"') + '>' + c.n + '</td>').join('') + '<td>' + total + '</td></tr></tbody></table>';
+  const rows = [];
+  model.sections.forEach((s) => s.records.forEach((r) => {
+    rows.push('<tr><td class="pt-g" style="color:' + s.color + ';">' + s.icon + ' ' + esc(s.label) + '</td><td class="pt-a">' + esc(r.brief.action) +
+      '</td><td class="pt-d">' + esc(r.date) + '</td><td>' + esc(r.brief.notes) + '</td></tr>');
+  }));
+  const detail = rows.length
+    ? '<div class="pt-title">الإجراءات المنجزة</div><table class="pt"><thead><tr><th>البوابة</th><th>الإجراء</th><th>التاريخ</th><th>ملاحظات</th></tr></thead><tbody>' + rows.join('') + '</tbody></table>'
+    : '<div class="cf-empty">' + EMPTY_FILE_TEXT + '</div>';
+  return '<div class="pt-id"><span class="n">' + esc(model.name) + '</span>' + meta + '</div>' +
+    (model.urgent ? '<div class="cf-urgent">⚠️ ' + model.urgent + ' سجل(ات) ذات أولوية عاجلة / عالية</div>' : '') +
+    '<div class="pt-title">إحصاءات الإجراءات</div>' + stats + detail;
+}
+
 // صفحة الطباعة الكاملة (تُكتب في نافذة جديدة). logo: data URL أو ''، today: نص التاريخ المعروض.
 export function buildPrintHtml(model, { logo = '', today = '' } = {}) {
   const logoTag = logo ? '<img src="' + logo + '" style="height:60px;">' : '';
   return '<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>ملف الحالة — ' + esc(model.name) + '</title>' +
-    '<style>@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap");' +
-    'body{font-family:"Cairo",Arial,sans-serif;margin:0;padding:18px 26px;color:#1e293b;}' +
-    '.ph{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0f766e;padding-bottom:10px;margin-bottom:6px;}' +
-    '.ph h1{margin:0;font-size:1.15rem;color:#0f766e;}.ph small{color:#64748b;}' +
-    '.cf-sec,.cf-rec{page-break-inside:avoid;}' +
-    '@media print{body{padding:0;}-webkit-print-color-adjust:exact;print-color-adjust:exact;}' + CF_CSS + '</style></head><body>' +
+    '<style>@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap");' + PRINT_CSS + '</style></head><body>' +
     '<div class="ph"><div>' + logoTag + '</div><div style="text-align:center;"><h1>ملف الحالة الشامل</h1>' +
     '<small>وثيقة سرية – للاستعمال الرسمي فقط</small></div><div><small>تاريخ الطباعة: ' + esc(today) + '</small></div></div>' +
-    fileHtml(model) +
+    printBody(model) +
     '</body></html>';
 }
