@@ -35,6 +35,8 @@ function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
+  // البقاء متصلًا على هذا الجهاز: غير مفعّل افتراضيًا، فتنتهي الجلسة بإغلاق التطبيق
+  const [remember, setRemember] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState({ text: '', color: '' });
   const [loading, setLoading] = useState('');
@@ -86,7 +88,8 @@ function LoginForm() {
       setLoading('⏳ جارٍ التحقق...');
       let verifiedName;
       try {
-        verifiedName = await fbAuth.login(rawInput, password);
+        // الوسيط الثالث: هل يبقى المستخدم متصلًا على هذا الجهاز؟ (يعالجه fbAuth.login في services/firebase.js)
+        verifiedName = await fbAuth.login(rawInput, password, remember);
       } catch (err) {
         const code = (err && err.code) || '';
         if (code === 'auth/network-request-failed') return fail('📡 تعذّر الاتصال. تحقق من الإنترنت وأعد المحاولة.');
@@ -114,11 +117,12 @@ function LoginForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate>
+    <form onSubmit={onSubmit} noValidate autoComplete="off">
       <div className="auth-field">
         <label>👤 اسم الحساب</label>
         <input
-          type="text" id="authUsername" placeholder="مثال: abde05" autoComplete="username" dir="ltr"
+          type="text" id="authUsername" placeholder="مثال: abde05" autoComplete="off" dir="ltr"
+          autoCapitalize="none" autoCorrect="off" spellCheck={false}
           style={usernameStyle} value={username} onChange={(e) => setUsername(e.target.value)}
         />
         <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 3 }}>
@@ -130,13 +134,23 @@ function LoginForm() {
         <div className="auth-pwd-wrap">
           <input
             type={showPwd ? 'text' : 'password'} id="authPassword" placeholder="أدخل كلمة المرور"
-            autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
+            autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
           />
           <button className="auth-eye" type="button" title="إظهار/إخفاء" onClick={() => setShowPwd((v) => !v)}>
             {showPwd ? '🙈' : '👁'}
           </button>
         </div>
       </div>
+      <label
+        htmlFor="authRemember"
+        style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0 12px', fontSize: '0.8rem', color: 'var(--text-muted)', cursor: 'pointer', userSelect: 'none' }}
+      >
+        <input
+          type="checkbox" id="authRemember" checked={remember} onChange={(e) => setRemember(e.target.checked)}
+          style={{ width: 16, height: 16, cursor: 'pointer' }}
+        />
+        <span>البقاء متصلًا على هذا الجهاز</span>
+      </label>
       <button className="auth-btn" id="authLoginBtn" type="submit" disabled={busy}>🔐 تسجيل الدخول</button>
       <div className="auth-error" id="authError" style={error.color ? { color: error.color } : undefined}>{error.text}</div>
       <div className="auth-loading" id="authLoading">{loading}</div>
