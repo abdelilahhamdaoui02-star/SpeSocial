@@ -56,7 +56,21 @@ function vigilanceRows(collections, ctx) {
   return Array.isArray(raw) ? raw : [];
 }
 
-// المصادر السبعة + الثامن (السلوك). get تأخذ (collections, ctx) وتعيد مصفوفة.
+// ── ربط بوابتي «الاتصال بالأولياء» و«الإحالة والإخبار الصحي» بملف الحالة ──
+// البوابتان تحفظان بحقول مختلفة (name/student بدل studentName، وfields داخلية): نحوّل كل سجل إلى الشكل الذي تفهمه buildGroups دون تعديل سجل الأصل.
+const arr = (x) => (Array.isArray(x) ? x : []);
+// parentCalls: { name, massar, cls, school, phone, time, result, date, notes }
+const callRow = (e) => ({ ...e, studentName: e.name, level: e.cls, type: 'اتصال هاتفي', parentPhone: e.phone, summary: e.notes });
+// parentMeetings: { student, cls, parent, cin, job, date, subject } — رقم البطاقة الوطنية لولي الأمر لا يدخل ملف الحالة عمداً
+const meetRow = (e) => ({ ...e, studentName: e.student, level: e.cls, type: 'مقابلة مع ولي الأمر', parentName: e.parent, summary: e.subject });
+// pdAssocArchive (3) وpdHealthArchive (4): { studentName, date, ref, urgency, extra, type, procs, fields: { 'pd3-…' | 'pd4-…' } }
+const pdRow = (kind) => (e) => {
+  const f = e.fields || {}, p = kind === 'assoc' ? 'pd3-' : 'pd4-';
+  // priority = درجة الاستعجال، ليُحتسب «عاجلة / عاجلة جداً» ضمن تنبيه السجلات العاجلة كبقية البوابات
+  return { ...e, docKind: kind, massar: f[p + 'massar'], school: f[p + 'school'], level: f[p + 'level'], priority: e.urgency };
+};
+
+// المصادر السبعة + الثامن (السلوك) + الإحالة والإخبار. get تأخذ (collections, ctx) وتعيد مصفوفة.
 export const SOURCES = [
   { key: 'interview', label: 'المقابلات الفردية', icon: '🗂', color: '#1a3a5c',
     get: (c) => c.interviewArchive, date: (e) => e.interviewDate,
@@ -79,15 +93,28 @@ export const SOURCES = [
       ['الوصف', e.description], ['الأولوية', e.priority],
       ['التوصية', e.recommendation]] },
   { key: 'contacts', label: 'الاتصالات والأولياء', icon: '📞', color: '#0d9488',
-    get: (c) => c.contactsArchive, date: (e) => e.date,
-    fields: (e) => [['نوع الاتصال', e.type], ['ولي الأمر', e.parentName], ['الهاتف', e.parentPhone],
-      ['السبب', e.reason], ['الملخص', e.summary], ['النتيجة', e.result], ['الإجراءات', e.actions],
+    // contactsArchive: مجموعة قديمة؛ وبوابة «الاتصال بالأولياء» تكتب الآن في parentCalls (هاتف) وparentMeetings (مقابلات)
+    get: (c) => [...arr(c.contactsArchive), ...arr(c.parentCalls).map(callRow), ...arr(c.parentMeetings).map(meetRow)],
+    date: (e) => e.date,
+    fields: (e) => [['نوع الاتصال', e.type], ['ولي الأمر', e.parentName], ['المهنة', e.job], ['الهاتف', e.parentPhone],
+      ['وقت الاتصال', e.time], ['السبب', e.reason], ['الملخص', e.summary], ['النتيجة', e.result], ['الإجراءات', e.actions],
       ['الأولوية', e.priority]] },
   { key: 'special', label: 'وضعية الإعاقة', icon: '♿', color: '#2563eb',
     get: (c) => c.specialNeedsArchive, date: (e) => e.recordDate,
     fields: (e) => [['الفئة', e.category], ['التشخيص', e.diagnosis], ['تقرير طبي', e.hasReport],
       ['الإحالة', e.referral], ['الإجراءات', e.actions], ['التفاصيل', e.actionsDetails], ['التكييفات', e.adaptations],
       ['الملخص', e.summary], ['التوصية', e.recommendation], ['المتابعة المقبلة', e.nextFollowup]] },
+  { key: 'referral', label: 'الإحالة والإخبار', icon: '🏥', color: '#b91c1c',
+    get: (c) => [...arr(c.pdAssocArchive).map(pdRow('assoc')), ...arr(c.pdHealthArchive).map(pdRow('health'))],
+    date: (e) => e.date,
+    fields: (e) => {
+      const f = e.fields || {};
+      return e.docKind === 'assoc'
+        ? [['نوع الوثيقة', 'نموذج الإحالة إلى جمعية'], ['الجمعية', f['pd3-assoc'] || e.extra], ['درجة الاستعجال', e.urgency], ['رقم الإحالة', e.ref],
+            ['سبب الإحالة', f['pd3-reason']], ['الإجراءات السابقة', f['pd3-prev-actions']], ['تاريخ استلام الجمعية', f['pd3-ref-date']]]
+        : [['نوع الوثيقة', 'إخبار بحالة صحية'], ['نوع الحالة', e.type || e.extra], ['درجة الاستعجال', e.urgency], ['رقم الوثيقة', e.ref],
+            ['وصف الحالة', f['pd4-health-desc']], ['الإجراءات', e.procs]];
+    } },
   { key: 'vigilance', label: 'خلية اليقظة', icon: '🚨', color: '#7c3aed',
     get: (c, ctx) => vigilanceRows(c, ctx), date: (e) => e.date,
     fields: (e) => [['الصنف', e.category], ['الإجراءات', e.actions], ['الأولوية', e.priority],
