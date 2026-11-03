@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { globalSearch } from './searchLogic.js';
 import { openPortal } from '../navigation.js';
@@ -7,6 +7,12 @@ import { getStudentsRaw } from '../store/legacyStore.js';
 import { CASEFILE_SEARCH_EVENT } from '../casefile/CasefilePortal.jsx';
 
 const FONT = "'Cairo',sans-serif";
+
+// إعدادات الأداء
+const MIN_QUERY = 2;          // أقل عدد أحرف لبدء البحث
+const DEBOUNCE_MS = 180;      // مهلة الانتظار بعد آخر ضغطة قبل تنفيذ البحث
+const MAX_STUDENTS_SHOWN = 15; // أقصى عدد تلاميذ في القائمة
+const MAX_ARCHIVE_SHOWN = 8;   // أقصى عدد نتائج من الأرشيف
 
 const S = {
   input: (focused) => ({
@@ -23,25 +29,38 @@ const S = {
   pill: { background: '#eff6ff', color: '#1a3a5c', borderRadius: 6, padding: '1px 7px', fontSize: '0.7rem', fontWeight: 700 },
 };
 
-function Row({ onPick, children }) {
+// تأخير قيمة حتى يتوقف المستخدم عن الكتابة (يعمل في كل إصدارات React)
+function useDebounced(value, ms) {
+  const [v, setV] = useState(value);
+  useEffect(() => {
+    const t = setTimeout(() => setV(value), ms);
+    return () => clearTimeout(t);
+  }, [value, ms]);
+  return v;
+}
+
+const Row = memo(function Row({ onPick, children }) {
   const [hover, setHover] = useState(false);
   return (
     <div onClick={onPick} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} style={S.row(hover)}>
       {children}
     </div>
   );
-}
+});
 
-function Results({ result, onPick }) {
+// memo: لا تُعاد رسم القائمة إلا إذا تغيّرت النتيجة نفسها (لا مع كل حرف)
+const Results = memo(function Results({ result, onPick }) {
   if (!result.students.length && !result.archive.length) {
     return <div style={{ padding: '12px 14px', color: '#64748b', fontSize: '0.82rem', textAlign: 'center' }}>🔍 لا توجد نتائج</div>;
   }
+  const students = result.students.slice(0, MAX_STUDENTS_SHOWN);
+  const archive = result.archive.slice(0, MAX_ARCHIVE_SHOWN);
   return (
     <>
-      {result.students.length > 0 && (
+      {students.length > 0 && (
         <>
           <div style={S.head}>👥 من قاعدة التلاميذ</div>
-          {result.students.map((s, i) => (
+          {students.map((s, i) => (
             <Row key={s.fullName + i} onPick={() => onPick(s.fullName)}>
               <span style={{ fontSize: '1rem' }}>{s.gender === 'أنثى' ? '👩' : '👦'}</span>
               <span style={{ flex: 1, fontWeight: 700, color: '#1a3a5c', fontSize: '0.84rem' }}>{s.fullName}</span>
@@ -51,10 +70,10 @@ function Results({ result, onPick }) {
           ))}
         </>
       )}
-      {result.archive.length > 0 && (
+      {archive.length > 0 && (
         <>
           <div style={{ ...S.head, borderTop: '1px solid #e2e8f0' }}>🗄 من الأرشيف</div>
-          {result.archive.map((e, i) => (
+          {archive.map((e, i) => (
             <Row key={e.name + i} onPick={() => onPick(e.name)}>
               <span>{e.icon}</span>
               <span style={{ flex: 1, fontWeight: 700, color: e.color, fontSize: '0.84rem' }}>{e.name}</span>
@@ -65,7 +84,7 @@ function Results({ result, onPick }) {
       )}
     </>
   );
-}
+});
 
 // البحث العام في الشريط العلوي. الحاوية #globalSearchBar تبقى من HTML القديم (يُظهر شريطَها الأب authEnterApp بعد الدخول).
 export default function GlobalSearch({ mount }) {
@@ -79,11 +98,23 @@ export default function GlobalSearch({ mount }) {
   const [focused, setFocused] = useState(false);
   const box = useRef(null);
 
+  // الحرف يظهر فورًا (query)، أما البحث الثقيل فيُنفَّذ بعد توقف الكتابة (debouncedQuery)
+  const debouncedQuery = useDebounced(query, DEBOUNCE_MS);
+  const effectiveQuery = query.trim() === '' ? '' : debouncedQuery;
+  const isStale = query !== debouncedQuery && query.trim() !== '';
+
   // المخصَّصون (STUDENTS المخزَّنة) تتغير مع قائمة التلاميذ نفسها، فنعيد قراءتها عندها فقط
   const customStudents = useMemo(() => getStudentsRaw(), [students]);
   const result = useMemo(
-    () => (open ? globalSearch({ students, customStudents, collections: { interviewArchive: interviews, reintegrationArchive: reintegrations, absenceArchive: absences, violenceArchive: violences }, query }) : null),
-    [open, students, customStudents, interviews, reintegrations, absences, violences, query],
+    () => (open && effectiveQuery.trim().length >= MIN_QUERY
+      ? globalSearch({
+          students,
+          customStudents,
+          collections: { interviewArchive: interviews, reintegrationArchive: reintegrations, absenceArchive: absences, violenceArchive: violences },
+          query: effectiveQuery,
+        })
+      : null),
+    [open, students, customStudents, interviews, reintegrations, absences, violences, effectiveQuery],
   );
 
   // النقر خارج الشريط يغلق القائمة
@@ -94,12 +125,16 @@ export default function GlobalSearch({ mount }) {
   }, []);
 
   // الاختيار: نفرّغ الحقل ونفتح ملف الحالة ثم نرسل له الاسم (بوابة ملف الحالة تستمع لهذا الحدث)
-  const pick = (name) => {
+  const pick = useCallback((name) => {
     setQuery('');
     setOpen(false);
     openPortal('casefile');
     window.dispatchEvent(new CustomEvent(CASEFILE_SEARCH_EVENT, { detail: { name } }));
-  };
+  }, []);
+
+  const onChange = useCallback((e) => { setQuery(e.target.value); setOpen(true); }, []);
+  const onFocus = useCallback(() => setFocused(true), []);
+  const onBlur = useCallback(() => setFocused(false), []);
 
   if (!mount) return null;
   return createPortal(
@@ -108,11 +143,15 @@ export default function GlobalSearch({ mount }) {
         type="text" id="globalSearchInput" dir="rtl" value={query}
         placeholder="🔍 ابحث عن تلميذ بالاسم أو رقم مسار..."
         style={S.input(focused)}
-        onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
+        onChange={onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
       />
-      {result && <div id="globalSearchDropdown" style={S.dropdown}><Results result={result} onPick={pick} /></div>}
+      {result && (
+        <div id="globalSearchDropdown" style={{ ...S.dropdown, opacity: isStale ? 0.6 : 1, transition: 'opacity 0.15s' }}>
+          <Results result={result} onPick={pick} />
+        </div>
+      )}
     </div>,
     mount,
   );
