@@ -8,6 +8,7 @@ import {
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
   updatePassword, reauthenticateWithCredential, EmailAuthProvider,
+  setPersistence, browserLocalPersistence, browserSessionPersistence,
 } from 'firebase/auth';
 import { FIREBASE_CONFIG, isFirebaseConfigured } from './firebaseConfig.js';
 import { registerCloud, setCloudReady, setCloudStatus, setCloudConfigured, STATUS } from './cloud.js';
@@ -41,8 +42,19 @@ async function approvedUsername(uid) {
 
 // ── الدخول: نفس واجهة window._fbAuth القديمة ──
 export const fbAuth = {
-  login: async (username, password) => {
+  // remember (اختياري):
+  //   true  → الجلسة تبقى على هذا الجهاز حتى بعد إغلاق التطبيق (دخول مباشر عند الفتح)
+  //   false → الجلسة تنتهي بإغلاق نافذة التطبيق، فتُطلب كلمة المرور عند الفتح التالي
+  //   غير محدد → لا يُغيَّر نوع الحفظ الحالي (سلوك قديم لأي استدعاء آخر)
+  login: async (username, password, remember) => {
     if (!auth) throw notReady();
+    if (typeof remember === 'boolean') {
+      try {
+        await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+      } catch (e) {
+        console.warn('تعذّر ضبط نوع حفظ الجلسة:', e);
+      }
+    }
     const cred = await signInWithEmailAndPassword(auth, username + EMAIL_DOMAIN, password);
     let name = null;
     try { name = await approvedUsername(cred.user.uid); } catch { name = null; }
