@@ -126,18 +126,28 @@ function StatsBody() {
 
       <div className="section-card">
         <div className="section-header">📊 توزيع المهام حسب النوع</div>
-        <div className="section-body" style={{ padding: 12 }}><canvas id="stChartType" height="320" ref={refs.stChartType} /></div>
+        <div className="section-body" style={{ padding: 12 }}>
+          <div style={{ position: 'relative', height: 320, width: '100%' }}>
+            <canvas id="stChartType" ref={refs.stChartType} />
+          </div>
+        </div>
       </div>
 
       <div className="section-card">
         <div className="section-header">📈 تطور النشاط حسب أسابيع الشهر</div>
-        <div className="section-body" style={{ padding: 12 }}><canvas id="stChartTrend" height="200" ref={refs.stChartTrend} /></div>
+        <div className="section-body" style={{ padding: 12 }}>
+          <div style={{ position: 'relative', height: 240, width: '100%' }}>
+            <canvas id="stChartTrend" ref={refs.stChartTrend} />
+          </div>
+        </div>
       </div>
 
       <div className="section-card">
         <div className="section-header">✅ نسب النتائج والإنجاز</div>
         <div className="section-body" style={{ padding: 12, display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
-          <canvas id="stChartResult" height="200" style={{ maxWidth: 280 }} ref={refs.stChartResult} />
+          <div style={{ position: 'relative', height: 220, width: 220, flexShrink: 0 }}>
+            <canvas id="stChartResult" ref={refs.stChartResult} />
+          </div>
           <div id="stResultLegend" style={{ flex: 1, minWidth: 180 }}><ResultLegend tasks={tasks} total={sum.total} /></div>
         </div>
       </div>
