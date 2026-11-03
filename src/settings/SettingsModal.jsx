@@ -103,18 +103,7 @@ function SettingsUI() {
           </div>
         </div>
         
-{false && (
-  <div className="settings-section">
-    <div className="settings-section-title">🔥 التخزين السحابي (Firebase)</div>
-    <div id="settingsFbStatus" style={{ ... }}>
-      ...
-    </div>
-    <button onClick={() => getSession().panels.openFirebaseSetupFromSettings()} style={{ ... }}>
-      🔥 فتح إعدادات Firebase
-    </button>
-  </div>
-)}
-
+<div id="settingsFbStatus" style={{ display: 'none' }} />
 <StudentsSection />
       </div>
     </div>
