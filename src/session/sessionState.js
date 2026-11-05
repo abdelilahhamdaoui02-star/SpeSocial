@@ -5,7 +5,7 @@
 export const COLLECTION_KEYS = [
   'parentCalls', 'parentMeetings', 'followUp', 'interviewArchive', 'reintegrationArchive', 'absenceArchive',
   'taskLog', 'violenceArchive', 'contactsArchive', 'workshopsArchive', 'specialNeedsArchive', 'vigilanceCases',
-  'behaviorFiles', 'pdAssocArchive', 'pdHealthArchive', 'socialCases',
+  'behaviorFiles', 'pdAssocArchive', 'pdHealthArchive', 'socialCases', 'healthCases',
 ];
 
 export const appData = {};
