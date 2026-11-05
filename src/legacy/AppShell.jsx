@@ -20,6 +20,7 @@ const TOOLS = [
   { id: "toolIip", title: "🧩 البرنامج التدخلي الفردي — المختص الاجتماعي", barStyle: { background: "linear-gradient(90deg,#0f5e63,#14909a)" }, mount: "mountIip", nested: true },
   { id: "toolAbsence", title: "🚨 نموذج تتبع التلاميذ الأكثر غياباً", barStyle: { background: "linear-gradient(90deg,#92400e,#d97706)" }, mount: "mountAbsence" },
   { id: "toolParents", title: "📞 التواصل مع أولياء الأمور", noUserTitle: true, mount: "mountParents", nested: true },
+  { id: "toolSocial", title: "🤝 سجل الحالات الاجتماعية والصحية", noUserTitle: true, mount: "mountSocial", nested: true },
   { id: "toolFollowup", title: "🔔 المتابعة وتتبع الحالات", noUserTitle: true, mount: "mountFollowup", nested: true },
   { id: "toolTasklog", title: "📝 سجل المهام اليومي للمختص الاجتماعي", avatarId: "bbAvatar", nameId: "bbName", mount: "mountTasklog", nested: true },
   { id: "toolStats", title: "📊 الإحصاء البياني لعمل المختص الاجتماعي", avatarId: "bbAvatar", nameId: "bbName", mount: "mountStatsPage" },
