@@ -11,7 +11,7 @@ export const GATES = [
   ['iip', 'البرنامج التدخلي الفردي'], ['tasklog', 'سجل المهام اليومي'], ['stats', 'الإحصاء البياني'],
   ['casefile', 'ملف الحالة الشامل'], ['violence', 'حالات العنف'], ['workshops', 'الورشات والأنشطة'],
   ['specialneeds', 'وضعية الإعاقة'], ['vigilance', 'خلية اليقظة'], ['printdocs', 'الإحالة والإخبار الصحي'],
-  ['behavior', 'رصد السلوك'], ['parents', 'التواصل مع الأولياء'], ['followup', 'المتابعة'],
+  ['behavior', 'رصد السلوك'], ['parents', 'التواصل مع الأولياء'], ['followup', 'المتابعة'], ['social', 'سجل الحالات الاجتماعية والصحية'],
 ];
 
 export const NW_TYPES = { news: '📰 خبر', law: '⚖️ قانون', circ: '📄 مذكرة', google: '🌐 Google' };
