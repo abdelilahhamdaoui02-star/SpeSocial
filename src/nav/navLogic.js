@@ -7,7 +7,7 @@ export const TOOL_DOM_IDS = Object.freeze({
   casefile: 'toolCasefile',
   violence: 'toolViolence', workshops: 'toolWorkshops',
   specialneeds: 'toolSpecialNeeds', vigilance: 'toolVigilance',
-  printdocs: 'toolPrintdocs', behavior: 'toolBehavior', parents: 'toolParents', followup: 'toolFollowup',
+  printdocs: 'toolPrintdocs', behavior: 'toolBehavior', parents: 'toolParents', followup: 'toolFollowup', social: 'toolSocial',
 });
 
 export const ALL_TOOL_DOM_IDS = Object.freeze(Object.values(TOOL_DOM_IDS));
@@ -31,6 +31,7 @@ export const TOOL_TITLES = Object.freeze({
   behavior:      '🧭 رصد السلوك — الدعم وخطة التدخل',
   parents:       '📞 التواصل مع أولياء الأمور',
   followup:      '🔔 المتابعة وتتبع الحالات',
+  social:        '🤝 سجل الحالات الاجتماعية والصحية',
 });
 
 // بطاقات الشريط المجمَّد (بالترتيب نفسه؛ سجل المهام غير موجود فيه كما كان)
@@ -48,6 +49,7 @@ export const FROZEN_NAV = Object.freeze([
   { key: 'printdocs',     icon: '🏥',  label: 'الإحالة والإخبار' },
   { key: 'behavior',      icon: '🧭',  label: 'رصد السلوك' },
   { key: 'parents',       icon: '📞',  label: 'الأولياء' },
+  { key: 'social',        icon: '🤝',  label: 'الحالات الاجتماعية' },
   { key: 'followup',      icon: '🔔',  label: 'المتابعة' },
 ]);
 
