@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useCurrentPortal } from '../store/hooks.js';
-import { GATES } from './gateLogic.js';
+import { GATES, SOCIAL_GATE } from './gateLogic.js';
 import GateTable from './GateTable.jsx';
 import { TrackingLinks } from '../tracking/TrackingModals.jsx';
 
@@ -30,6 +30,15 @@ function FollowupBody() {
       <GateTable gate={GATES.fu} active={active} />
     </>
   );
+}
+
+function SocialBody() {
+  const active = useCurrentPortal() === 'social';
+  return <GateTable gate={SOCIAL_GATE} active={active} />;
+}
+
+export function SocialPortal({ mount }) {
+  return mount ? createPortal(<SocialBody />, mount) : null;
 }
 
 export function ParentsPortal({ mount }) {
