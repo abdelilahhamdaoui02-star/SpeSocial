@@ -16,7 +16,7 @@ import WeeklyReportCard from '../home/WeeklyReportCard.jsx';
 import HeaderBits from '../header/HeaderBits.jsx';
 import NewsCard from '../news/NewsCard.jsx';
 import CasefilePortal from '../casefile/CasefilePortal.jsx';
-import { ParentsPortal, FollowupPortal } from '../gates/GatePortals.jsx';
+import { ParentsPortal, FollowupPortal, SocialPortal } from '../gates/GatePortals.jsx';
 import TasklogPortal from '../tasklog/TasklogPortal.jsx';
 import StatsPortal from '../stats/StatsPortal.jsx';
 import IipPortal from '../iip/IipPortal.jsx';
@@ -88,6 +88,7 @@ export default function LegacyApp() {
       casefile: document.getElementById('mountCasefile'),
       parents: document.getElementById('mountParents'),
       followup: document.getElementById('mountFollowup'),
+      social: document.getElementById('mountSocial'),
       tasklog: document.getElementById('mountTasklog'),
       statsPage: document.getElementById('mountStatsPage'),
       iip: document.getElementById('mountIip'),
@@ -148,6 +149,7 @@ export default function LegacyApp() {
       {/* المرحلة 11: بوابتا التواصل مع الأولياء والمتابعة */}
       {mounts && <ParentsPortal mount={mounts.parents} />}
       {mounts && <FollowupPortal mount={mounts.followup} />}
+      {mounts && <SocialPortal mount={mounts.social} />}
       {/* المرحلة 12: سجل المهام اليومي */}
       {mounts && <TasklogPortal mount={mounts.tasklog} />}
       {/* المرحلة 16: بوابة الإحصاء البياني */}
