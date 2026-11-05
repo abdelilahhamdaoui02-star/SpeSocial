@@ -4,7 +4,7 @@ export const EMAIL_DOMAIN = '@vigilance.app'; // يجب أن يطابق منصة
 export const USER_RE = /^[a-z0-9_\-.]{2,30}$/;
 export const RESERVED = ['auth', 'app', 'admin'];
 
-export const DATA_KEYS = ['interviewArchive', 'reintegrationArchive', 'absenceArchive', 'taskLog', 'violenceArchive', 'contactsArchive', 'workshopsArchive', 'specialNeedsArchive', 'vigilanceCases', 'behaviorFiles', 'pdAssocArchive', 'pdHealthArchive', 'profile', 'customStudents', 'abMonthly', 'parentCalls', 'parentMeetings', 'followUp'];
+export const DATA_KEYS = ['interviewArchive', 'reintegrationArchive', 'absenceArchive', 'taskLog', 'violenceArchive', 'contactsArchive', 'workshopsArchive', 'specialNeedsArchive', 'vigilanceCases', 'behaviorFiles', 'pdAssocArchive', 'pdHealthArchive', 'socialCases', 'healthCases', 'profile', 'customStudents', 'abMonthly', 'parentCalls', 'parentMeetings', 'followUp'];
 
 export const GATES = [
   ['interview', 'المقابلات الفردية'], ['reintegration', 'الإدماج المدرسي'], ['absence', 'التلاميذ الأكثر غياباً'],
