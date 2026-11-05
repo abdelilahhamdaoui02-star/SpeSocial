@@ -126,6 +126,12 @@ export const SOURCES = [
         : [['نوع الوثيقة', 'إخبار بحالة صحية'], ['نوع الحالة', e.type || e.extra], ['درجة الاستعجال', e.urgency], ['رقم الوثيقة', e.ref],
             ['وصف الحالة', f['pd4-health-desc']], ['الإجراءات', e.procs]];
     } },
+  { key: 'social', label: 'الحالات الاجتماعية والصحية', icon: '🤝', color: '#b45309',
+    get: (c) => arr(c.socialCases).map((e) => ({ ...e, studentName: e.name, level: e.cls })),
+    date: (e) => e.date,
+    brief: (e) => ({ action: first(e.action, e.kind) || 'حالة اجتماعية / صحية', notes: first(e.desc, e.notes) }),
+    fields: (e) => [['نوع الحالة', e.kind], ['الحالة الأسرية', e.family], ['وضعية الوالدين', e.parents], ['الأولوية', e.priority], ['الوضعية', e.status],
+      ['وصف الحالة', e.desc], ['الإجراء المتخذ', e.action], ['ملاحظات', e.notes], ['تاريخ المتابعة', e.next]] },
   { key: 'vigilance', label: 'خلية اليقظة', icon: '🚨', color: '#7c3aed',
     get: (c, ctx) => vigilanceRows(c, ctx), date: (e) => e.date,
     brief: (e) => ({ action: first(e.actions, e.category) || 'خلية اليقظة', notes: first(e.notes, e.status) }),
