@@ -46,6 +46,28 @@ export const GATES = {
   },
 };
 
+// ── «سجل الحالات الاجتماعية والصحية» ──
+// خارج GATES عمداً: GATES تُقارَن اختبارياً حرفاً بحرف بالكود القديم المجمَّد، وهذه البوابة جديدة لا نظير لها فيه.
+// نفس آلية GateTable (استمارة + جدول + بحث + Excel + طباعة)، ومجموعتها socialCases تُحفظ في Firebase كباقي المجموعات.
+export const SOCIAL_KINDS = ['اجتماعية', 'صحية', 'أسرية', 'اجتماعية وصحية'];
+export const SOCIAL_FAMILY = ['', 'الوالدان متزوجان', 'الوالدان منفصلان', 'الوالدان مطلقان', 'أرمل / أرملة', 'أسرة أحادية الوالد', 'تلميذ(ة) في كفالة', 'غير ذلك'];
+export const SOCIAL_PARENTS = ['', 'الوالدان على قيد الحياة', 'الأب متوفى', 'الأم متوفاة', 'الوالدان متوفيان', 'الأب مجهول', 'غير ذلك'];
+export const SOCIAL_PRIORITY = ['عادية', 'عالية', 'عاجلة'];
+export const SOCIAL_STATUS = ['قيد المتابعة', 'تحسن', DONE_STATUS];
+
+export const SOCIAL_GATE = {
+  id: 'social', tool: 'social',
+  box: 'pgSocial', key: 'socialCases', req: 'name', ac: { nameId: 'pgSocial_name', massarId: 'pgSocial_massar', levelId: 'pgSocial_cls' },
+  file: 'سجل-الحالات-الاجتماعية-والصحية', print: 'سجل الحالات الاجتماعية والصحية', title: '🤝 سجل الحالات الاجتماعية والصحية',
+  fields: [
+    { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'cls', l: 'القسم' },
+    { k: 'kind', l: 'نوع الحالة', opts: SOCIAL_KINDS }, { k: 'family', l: 'الحالة الأسرية', opts: SOCIAL_FAMILY }, { k: 'parents', l: 'وضعية الوالدين', opts: SOCIAL_PARENTS },
+    { k: 'priority', l: 'الأولوية', opts: SOCIAL_PRIORITY, badge: 1 }, { k: 'status', l: 'الوضعية', opts: SOCIAL_STATUS, badge: 1 },
+    { k: 'date', l: 'تاريخ الإجراء', t: 'date' }, { k: 'next', l: 'تاريخ المتابعة', t: 'date' },
+    { k: 'desc', l: 'وصف الحالة', t: 'area', wide: 1 }, { k: 'action', l: 'الإجراء المتخذ', t: 'area', wide: 1 }, { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 },
+  ],
+};
+
 // ── البحث ──
 // القديم يطابق على JSON.stringify(السجل كله): فيطابق أسماء الحقول والمعرّف أيضاً، لا القيم فقط. نبقي ذلك كما هو.
 export const matchesQuery = (row, q) => !q || JSON.stringify(row).indexOf(q) !== -1;
