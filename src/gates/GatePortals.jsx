@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useCurrentPortal } from '../store/hooks.js';
-import { GATES, SOCIAL_GATE } from './gateLogic.js';
+import { GATES, SOCIAL_GATE, HEALTH_GATE } from './gateLogic.js';
 import GateTable from './GateTable.jsx';
 import { TrackingLinks } from '../tracking/TrackingModals.jsx';
 
@@ -34,7 +34,17 @@ function FollowupBody() {
 
 function SocialBody() {
   const active = useCurrentPortal() === 'social';
-  return <GateTable gate={SOCIAL_GATE} active={active} />;
+  const [tab, setTab] = useState(0);
+  return (
+    <>
+      <div className="pg-tabs">
+        <button type="button" className={tab === 0 ? 'on' : ''} onClick={() => setTab(0)}>🏠 الحالات الاجتماعية</button>
+        <button type="button" className={tab === 1 ? 'on' : ''} onClick={() => setTab(1)}>🩺 الحالات الصحية</button>
+      </div>
+      <GateTable gate={SOCIAL_GATE} active={active} hidden={tab !== 0} />
+      <GateTable gate={HEALTH_GATE} active={active} hidden={tab !== 1} />
+    </>
+  );
 }
 
 export function SocialPortal({ mount }) {
