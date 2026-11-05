@@ -46,25 +46,47 @@ export const GATES = {
   },
 };
 
-// ── «سجل الحالات الاجتماعية والصحية» ──
-// خارج GATES عمداً: GATES تُقارَن اختبارياً حرفاً بحرف بالكود القديم المجمَّد، وهذه البوابة جديدة لا نظير لها فيه.
-// نفس آلية GateTable (استمارة + جدول + بحث + Excel + طباعة)، ومجموعتها socialCases تُحفظ في Firebase كباقي المجموعات.
-export const SOCIAL_KINDS = ['اجتماعية', 'صحية', 'أسرية', 'اجتماعية وصحية'];
-export const SOCIAL_FAMILY = ['', 'الوالدان متزوجان', 'الوالدان منفصلان', 'الوالدان مطلقان', 'أرمل / أرملة', 'أسرة أحادية الوالد', 'تلميذ(ة) في كفالة', 'غير ذلك'];
-export const SOCIAL_PARENTS = ['', 'الوالدان على قيد الحياة', 'الأب متوفى', 'الأم متوفاة', 'الوالدان متوفيان', 'الأب مجهول', 'غير ذلك'];
-export const SOCIAL_PRIORITY = ['عادية', 'عالية', 'عاجلة'];
-export const SOCIAL_STATUS = ['قيد المتابعة', 'تحسن', DONE_STATUS];
+// ── «سجل الحالات الاجتماعية والصحية»: قسمان (اجتماعي / صحي) بجدولين وبمجموعتين منفصلتين ──
+// خارج GATES عمداً: GATES تُقارَن اختبارياً حرفاً بحرف بالكود القديم المجمَّد، وهاتان البوابتان جديدتان لا نظير لهما فيه.
+// نفس آلية GateTable (استمارة + جدول + بحث + Excel + طباعة)، ومجموعتاهما socialCases وhealthCases تُحفظان في Firebase كباقي المجموعات.
+export const FILE_STATUS = ['مفتوح', 'قيد المتابعة', 'مغلق'];
+export const SOCIAL_FAMILY = ['مستقرة', 'طلاق', 'انفصال', 'أرملة', 'أرمل', 'يتيم الأب', 'يتيم الأم', 'يتيم الأبوين', 'متبنّى', 'تحت الكفالة', 'غير ذلك'];
+export const SOCIAL_DISTANCE = ['أقل من 1 كلم', 'من 1 إلى 3 كلم', 'من 3 إلى 5 كلم', 'أكثر من 5 كلم'];
+export const SOCIAL_HOUSING = ['عصري', 'تقليدي', 'سكن هش / صفيحي', 'سكن قروي', 'مشترك مع أسرة أخرى', 'غير ذلك'];
+export const HEALTH_KINDS = ['مرض مزمن', 'إعاقة', 'ضعف البصر', 'ضعف السمع', 'حساسية', 'اضطراب نفسي / سلوكي', 'صعوبات في النطق', 'غير ذلك'];
+export const HEALTH_FOLLOW = ['يتابع مع طبيب', 'لا يتابع', 'متوقف عن المتابعة'];
+// اقتراحات الوصف المختصر (تظهر عند الكتابة، والكتابة الحرة مسموحة)
+export const HEALTH_SUGGEST = ['داء السكري', 'الربو', 'الصرع', 'أمراض القلب', 'فقر الدم', 'حساسية غذائية', 'حساسية موسمية', 'قصر النظر', 'ضعف السمع الجزئي', 'اضطراب فرط الحركة وتشتت الانتباه', 'إعاقة حركية', 'يحتاج إلى نظارات طبية'];
+
+// بيانات التلميذ المشتركة بين القسمين؛ phoneId يملأ هاتف التلميذ من لائحة التلاميذ عند اختيار الاسم
+const STUDENT_FIELDS = () => [{ k: 'name', l: 'اسم التلميذ(ة)' }, { k: 'level', l: 'المستوى' }, { k: 'cls', l: 'القسم' }, { k: 'massar', l: 'رقم المسار' }];
 
 export const SOCIAL_GATE = {
   id: 'social', tool: 'social',
-  box: 'pgSocial', key: 'socialCases', req: 'name', ac: { nameId: 'pgSocial_name', massarId: 'pgSocial_massar', levelId: 'pgSocial_cls' },
-  file: 'سجل-الحالات-الاجتماعية-والصحية', print: 'سجل الحالات الاجتماعية والصحية', title: '🤝 سجل الحالات الاجتماعية والصحية',
+  box: 'pgSocial', key: 'socialCases', req: 'name', ac: { nameId: 'pgSocial_name', massarId: 'pgSocial_massar', levelId: 'pgSocial_cls', phoneId: 'pgSocial_phone' },
+  file: 'سجل-الحالات-الاجتماعية', print: 'سجل الحالات الاجتماعية', title: '🏠 الحالات الاجتماعية',
+  // الطباعة تقتصر على أهم الأعمدة (الجدول كامل في الشاشة وExcel)
+  printKeys: ['name', 'cls', 'family', 'father', 'mother', 'siblings', 'address', 'date', 'status'],
   fields: [
-    { k: 'name', l: 'اسم التلميذ' }, { k: 'massar', l: 'رقم المسار' }, { k: 'cls', l: 'القسم' },
-    { k: 'kind', l: 'نوع الحالة', opts: SOCIAL_KINDS }, { k: 'family', l: 'الحالة الأسرية', opts: SOCIAL_FAMILY }, { k: 'parents', l: 'وضعية الوالدين', opts: SOCIAL_PARENTS },
-    { k: 'priority', l: 'الأولوية', opts: SOCIAL_PRIORITY, badge: 1 }, { k: 'status', l: 'الوضعية', opts: SOCIAL_STATUS, badge: 1 },
-    { k: 'date', l: 'تاريخ الإجراء', t: 'date' }, { k: 'next', l: 'تاريخ المتابعة', t: 'date' },
-    { k: 'desc', l: 'وصف الحالة', t: 'area', wide: 1 }, { k: 'action', l: 'الإجراء المتخذ', t: 'area', wide: 1 }, { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 },
+    ...STUDENT_FIELDS(), { k: 'phone', l: 'رقم الهاتف', t: 'tel' },
+    { k: 'guardian', l: 'ولي الأمر' }, { k: 'father', l: 'اسم الأب' }, { k: 'fatherJob', l: 'مهنة الأب' }, { k: 'mother', l: 'اسم الأم' }, { k: 'motherJob', l: 'مهنة الأم' },
+    { k: 'family', l: 'الوضعية الأسرية', opts: SOCIAL_FAMILY }, { k: 'siblings', l: 'عدد الإخوة', t: 'number' },
+    { k: 'address', l: 'عنوان المنزل' }, { k: 'distance', l: 'البعد عن المدرسة', opts: SOCIAL_DISTANCE }, { k: 'housing', l: 'نوع البناء', opts: SOCIAL_HOUSING },
+    { k: 'date', l: 'تاريخ تسجيل الحالة', t: 'date' }, { k: 'status', l: 'حالة الملف', opts: FILE_STATUS, badge: 1 },
+    { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 },
+  ],
+};
+
+export const HEALTH_GATE = {
+  id: 'health', tool: 'social',
+  box: 'pgHealth', key: 'healthCases', req: 'name', ac: { nameId: 'pgHealth_name', massarId: 'pgHealth_massar', levelId: 'pgHealth_cls' },
+  file: 'سجل-الحالات-الصحية', print: 'سجل الحالات الصحية', title: '🩺 الحالات الصحية',
+  fields: [
+    ...STUDENT_FIELDS(),
+    { k: 'kind', l: 'نوع الحالة الصحية', opts: HEALTH_KINDS },
+    { k: 'follow', l: 'العلاج / المتابعة الطبية', opts: HEALTH_FOLLOW, badge: 1 },
+    { k: 'date', l: 'تاريخ التسجيل', t: 'date' }, { k: 'status', l: 'حالة الملف', opts: FILE_STATUS, badge: 1 },
+    { k: 'desc', l: 'وصف مختصر للحالة', wide: 1, sugg: HEALTH_SUGGEST },
   ],
 };
 
