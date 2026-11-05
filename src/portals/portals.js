@@ -124,12 +124,13 @@ export const PORTALS = [
     ]
   },
   {
-    "id": "followup",
+    "id": "social",
     "group": "portals",
     "color": "c-amber",
-    "icon": "🔔",
+    "icon": "🤝",
     "label": [
-      "المتابعة"
+      "سجل الحالات الاجتماعية",
+      "والصحية"
     ]
   }
 ];
