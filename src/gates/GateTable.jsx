@@ -67,7 +67,8 @@ export default function GateTable({ gate, active, hidden = false }) {
 
   // حقول لا تظهر في الطباعة (تبقى في الاستمارة والجدول وExcel)
   const HIDE_IN_PRINT = ['massar', 'school'];
-  const print = () => openReport(gate.print, gate.fields.filter((f) => gate.id !== 'calls' || !HIDE_IN_PRINT.includes(f.k)), filterRows(currentRows(gate), q));
+  const printFields = () => (gate.printKeys ? gate.fields.filter((f) => gate.printKeys.includes(f.k)) : gate.fields.filter((f) => gate.id !== 'calls' || !HIDE_IN_PRINT.includes(f.k)));
+  const print = () => openReport(gate.print, printFields(), filterRows(currentRows(gate), q));
   // التصدير إلى Excel (ExcelJS وشعار الوزارة) من طبقة الجلسة؛ لا يعتمد على حالة React
   const exportXlsx = () => { getSession().pgExportXlsx(gate, filterRows(currentRows(gate), q)); };
 
@@ -102,7 +103,12 @@ export default function GateTable({ gate, active, hidden = false }) {
       );
     }
     if (f.t === 'area') return <textarea rows="2" data-k={f.k} ref={(el) => { refs.current[f.k] = el; }} />;
-    const input = <input type={f.t || 'text'} id={id} data-k={f.k} ref={(el) => { refs.current[f.k] = el; }} />;
+    const input = (
+      <>
+        <input type={f.t || 'text'} id={id} data-k={f.k} ref={(el) => { refs.current[f.k] = el; }} {...(f.sugg ? { list: id + '_list' } : {})} {...(f.t === 'number' ? { min: 0 } : {})} />
+        {f.sugg ? <datalist id={id + '_list'}>{f.sugg.map((x) => <option key={x} value={x} />)}</datalist> : null}
+      </>
+    );
     // حقل الاسم: نرسم غلاف الإكمال التلقائي وقائمته مسبقاً، فلا يضطر acSetup لنقل العنصر في DOM يملكه React
     if (gate.ac && id === gate.ac.nameId) {
       return (
