@@ -87,6 +87,17 @@ export const KPI_SOURCES = [
     icon: "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7 9V3h10v6\"/><rect x=\"3\" y=\"9\" width=\"18\" height=\"8\" rx=\"2\"/><path d=\"M7 14h10v7H7z\"/></svg>",
     date: (e) => e.date,
   },
+  {
+    // سجل الاتصال والتواصل مع أولياء الأمور: الاتصالات الهاتفية + مقابلات الأولياء (مجموعتان، كل سجل يُحسب مرة)
+    id: "statParents",
+    keys: ["parentCalls", "parentMeetings"],
+    chartLabel: "اتصال بالأولياء",
+    label: "تواصل مع الأولياء",
+    color: "#16a34a",
+    cls: "k-green",
+    icon: "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z\"/></svg>",
+    date: (e) => e.date,
+  },
 ];
 
 const pad = (n) => (n < 10 ? '0' : '') + n;
