@@ -52,7 +52,7 @@ export const GATES = {
 export const FILE_STATUS = ['مفتوح', 'قيد المتابعة', 'مغلق'];
 export const SOCIAL_FAMILY = ['مستقرة', 'طلاق', 'انفصال', 'أرملة', 'أرمل', 'يتيم الأب', 'يتيم الأم', 'يتيم الأبوين', 'متبنّى', 'تحت الكفالة', 'غير ذلك'];
 export const SOCIAL_DISTANCE = ['أقل من 1 كلم', 'من 1 إلى 3 كلم', 'من 3 إلى 5 كلم', 'أكثر من 5 كلم'];
-export const SOCIAL_HOUSING = ['عصري', 'تقليدي', 'سكن هش / صفيحي', 'سكن قروي', 'مشترك مع أسرة أخرى', 'غير ذلك'];
+export const SOCIAL_HOUSING = ['عصري', 'شقة', 'تقليدي', 'سكن هش / صفيحي', 'سكن قروي', 'مشترك مع أسرة أخرى', 'غير ذلك'];
 export const HEALTH_KINDS = ['مرض مزمن', 'إعاقة', 'ضعف البصر', 'ضعف السمع', 'حساسية', 'اضطراب نفسي / سلوكي', 'صعوبات في النطق', 'غير ذلك'];
 export const HEALTH_FOLLOW = ['يتابع مع طبيب', 'لا يتابع', 'متوقف عن المتابعة'];
 // اقتراحات الوصف المختصر (تظهر عند الكتابة، والكتابة الحرة مسموحة)
@@ -68,7 +68,8 @@ export const SOCIAL_GATE = {
   // الطباعة تقتصر على أهم الأعمدة (الجدول كامل في الشاشة وExcel)
   printKeys: ['name', 'cls', 'family', 'father', 'mother', 'siblings', 'address', 'date', 'status'],
   fields: [
-    ...STUDENT_FIELDS(), { k: 'phone', l: 'رقم الهاتف', t: 'tel' },
+    ...STUDENT_FIELDS().filter((f) => f.k !== 'level'), // القسم الاجتماعي بلا «المستوى»
+    { k: 'phone', l: 'رقم الهاتف', t: 'tel' },
     { k: 'guardian', l: 'ولي الأمر' }, { k: 'father', l: 'اسم الأب' }, { k: 'fatherJob', l: 'مهنة الأب' }, { k: 'mother', l: 'اسم الأم' }, { k: 'motherJob', l: 'مهنة الأم' },
     { k: 'family', l: 'الوضعية الأسرية', opts: SOCIAL_FAMILY }, { k: 'siblings', l: 'عدد الإخوة', t: 'number' },
     { k: 'address', l: 'عنوان المنزل' }, { k: 'distance', l: 'البعد عن المدرسة', opts: SOCIAL_DISTANCE }, { k: 'housing', l: 'نوع البناء', opts: SOCIAL_HOUSING },
