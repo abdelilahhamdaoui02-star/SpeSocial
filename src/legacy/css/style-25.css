@@ -1,4 +1,3 @@
-
 /* ============ v29 — ترويسة خضراء مزرقة + بدون أيقونة المدرسة + إطارات سوداء ============ */
 @media screen{
 :root{ --hdr-teal:#0b5a5f; --bk:#000; }
@@ -72,9 +71,9 @@ body.dark-mode .hp-news-tab{ background:#1e293b; border-color:#334155; }
 @keyframes hpNwIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:none; } }
 @keyframes hpNwProg{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
 body.dark-mode .hp-news-nb{ background:#1e293b; border-color:#334155; color:#93c5fd; }
-/* ---- مؤشرات الإحصائيات: صف واحد مضغوط (8 مؤشرات) ---- */
+/* ---- مؤشرات الإحصائيات: صف واحد مضغوط (9 مؤشرات) ---- */
 @media (min-width:1280px), (min-width:821px) and (max-width:1100px){
-  .hp-stats .hp-kpis{ grid-template-columns:repeat(8,minmax(0,1fr)); gap:6px; }
+  .hp-stats .hp-kpis{ grid-template-columns:repeat(9,minmax(0,1fr)); gap:6px; }
   .hp-stats .hp-kpi{ column-gap:4px; row-gap:0; padding:6px 2px 5px; border-radius:11px; align-content:center; }
   .hp-stats .hp-kpi svg{ width:16px; height:16px; }
   .hp-stats .hp-kpi .dash-stat-num{ font-size:19px; line-height:1.1; }
