@@ -59,3 +59,24 @@
   /* عنوان المبيان لا يبقى وحده في أسفل الصفحة والمبيان في التي بعدها */
   #stPrintModal.open .modal-body .report-section-title { break-after: avoid; page-break-after: avoid; }
 }
+
+/* ── تحسين تقطيع الجداول في الطباعة (كل نوافذ المعاينة) ──
+   كانت قواعد «لا تُقسَّم الصفوف + يتكرر رأس الجدول» محصورة في نافذة بوابتي الأولياء والمتابعة (#pgReportContent)،
+   فبقية التقارير (المقابلات، الغياب، الإدماج، العنف، الإعاقة، الورشات، الإحصاء…) كانت صفوفها تنقطع بين صفحتين ورأس الجدول لا يتكرر. */
+@media print {
+  .print-modal .modal-body .proc-table-report,
+  .print-modal .modal-body .info-table-report { page-break-inside: auto; }
+  .print-modal .modal-body .proc-table-report thead { display: table-header-group; }
+  .print-modal .modal-body .proc-table-report tfoot { display: table-footer-group; }
+  .print-modal .modal-body .proc-table-report tr,
+  .print-modal .modal-body .info-table-report tr,
+  .print-modal .modal-body .proc-report-item,
+  .print-modal .modal-body .report-summary-block { break-inside: avoid; page-break-inside: avoid; }
+  .print-modal .modal-body .proc-table-report td,
+  .print-modal .modal-body .proc-table-report th,
+  .print-modal .modal-body .info-table-report td { overflow-wrap: anywhere; word-break: break-word; }
+  /* العنوان لا يبقى وحده في أسفل صفحة والمحتوى في التي بعدها، والتوقيعات لا تنفصل عن الجدول وحدها */
+  .print-modal .modal-body .report-section-title,
+  .print-modal .modal-body .nrh-title { break-after: avoid; page-break-after: avoid; }
+  .print-modal .modal-body .signatures { break-inside: avoid; page-break-inside: avoid; }
+}
