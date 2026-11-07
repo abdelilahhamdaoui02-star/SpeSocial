@@ -67,12 +67,13 @@ export const PORTALS = [
     ]
   },
   {
-    "id": "casefile",
+    "id": "social",
     "group": "portals",
-    "color": "c-blue",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>",
+    "color": "c-amber",
+    "icon": "🤝",
     "label": [
-      "ملف الحالة الشامل"
+      "سجل الحالات الاجتماعية",
+      "والصحية"
     ]
   },
   {
@@ -124,13 +125,12 @@ export const PORTALS = [
     ]
   },
   {
-    "id": "social",
+    "id": "casefile",
     "group": "portals",
-    "color": "c-amber",
-    "icon": "🤝",
+    "color": "c-blue",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg>",
     "label": [
-      "سجل الحالات الاجتماعية",
-      "والصحية"
+      "ملف الحالة الشامل"
     ]
   }
 ];
