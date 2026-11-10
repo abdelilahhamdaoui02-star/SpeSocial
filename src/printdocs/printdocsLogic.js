@@ -264,7 +264,7 @@ function assocLetter(f) {
 
 function buildAssoc(form, ctx) {
   const f = form.fields;
-  let h = head(V(f, 'pd3-school'), 'نموذج الإحالة إلى جمعية', ctx);
+  let h = head(V(f, 'pd3-school'), 'إحالة إلى جمعية', ctx);
   h += assocLetter(f);
   h += '<div class="report-section-title">بيانات الإحالة</div>' + tbl([
     row('تاريخ الإحالة:', dash(fmtDateReport(V(f, 'pd3-date'))), 'رقم الإحالة:', dash(V(f, 'pd3-ref'))),
