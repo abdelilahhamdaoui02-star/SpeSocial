@@ -51,7 +51,6 @@ export const GATES = {
 // نفس آلية GateTable (استمارة + جدول + بحث + Excel + طباعة)، ومجموعتاهما socialCases وhealthCases تُحفظان في Firebase كباقي المجموعات.
 export const FILE_STATUS = ['مفتوح', 'قيد المتابعة', 'مغلق'];
 export const SOCIAL_FAMILY = ['مستقرة', 'طلاق', 'انفصال', 'أرملة', 'أرمل', 'يتيم الأب', 'يتيم الأم', 'يتيم الأبوين', 'متبنّى', 'تحت الكفالة', 'غير ذلك'];
-export const SOCIAL_DISTANCE = ['أقل من 1 كلم', 'من 1 إلى 3 كلم', 'من 3 إلى 5 كلم', 'أكثر من 5 كلم'];
 export const SOCIAL_HOUSING = ['عصري', 'شقة', 'تقليدي', 'سكن هش / صفيحي', 'سكن قروي', 'مشترك مع أسرة أخرى', 'غير ذلك'];
 export const HEALTH_KINDS = ['مرض مزمن', 'إعاقة', 'ضعف البصر', 'ضعف السمع', 'حساسية', 'اضطراب نفسي / سلوكي', 'صعوبات في النطق', 'غير ذلك'];
 export const HEALTH_FOLLOW = ['يتابع مع طبيب', 'لا يتابع', 'متوقف عن المتابعة'];
@@ -61,20 +60,26 @@ export const HEALTH_SUGGEST = ['داء السكري', 'الربو', 'الصرع'
 // بيانات التلميذ المشتركة بين القسمين؛ phoneId يملأ هاتف التلميذ من لائحة التلاميذ عند اختيار الاسم
 const STUDENT_FIELDS = () => [{ k: 'name', l: 'اسم التلميذ(ة)' }, { k: 'level', l: 'المستوى' }, { k: 'cls', l: 'القسم' }, { k: 'massar', l: 'رقم المسار' }];
 
+// ولي الأمر في الجدول: الاسم المكتوب في «ولي الأمر» إن وُجد، وإلا الأب، وإلا الأم (إذا وُجد الأب والأم يُكتفى بالأب)
+export const guardianName = (r) => [r.guardian, r.father, r.mother].map((x) => String(x || '').trim()).find(Boolean) || '';
+
 export const SOCIAL_GATE = {
   id: 'social', tool: 'social',
   box: 'pgSocial', key: 'socialCases', req: 'name', ac: { nameId: 'pgSocial_name', massarId: 'pgSocial_massar', levelId: 'pgSocial_cls', phoneId: 'pgSocial_phone' },
   file: 'سجل-الحالات-الاجتماعية', print: 'سجل الحالات الاجتماعية', title: '🏠 الحالات الاجتماعية',
-  // الطباعة تقتصر على أهم الأعمدة (الجدول كامل في الشاشة وExcel)
-  printKeys: ['name', 'cls', 'family', 'father', 'mother', 'siblings', 'address', 'date', 'status'],
   fields: [
+    { k: 'date', l: 'تاريخ تسجيل الحالة', t: 'date' },
     ...STUDENT_FIELDS().filter((f) => f.k !== 'level'), // القسم الاجتماعي بلا «المستوى»
     { k: 'phone', l: 'رقم الهاتف', t: 'tel' },
-    { k: 'guardian', l: 'ولي الأمر' }, { k: 'father', l: 'اسم الأب' }, { k: 'fatherJob', l: 'مهنة الأب' }, { k: 'mother', l: 'اسم الأم' }, { k: 'motherJob', l: 'مهنة الأم' },
+    { k: 'guardian', l: 'ولي الأمر (إن كان غير الأبوين)' }, { k: 'father', l: 'اسم الأب' }, { k: 'fatherJob', l: 'مهنة الأب' }, { k: 'mother', l: 'اسم الأم' }, { k: 'motherJob', l: 'مهنة الأم' },
     { k: 'family', l: 'الوضعية الأسرية', opts: SOCIAL_FAMILY }, { k: 'siblings', l: 'عدد الإخوة', t: 'number' },
-    { k: 'address', l: 'عنوان المنزل' }, { k: 'distance', l: 'البعد عن المدرسة', opts: SOCIAL_DISTANCE }, { k: 'housing', l: 'نوع البناء', opts: SOCIAL_HOUSING },
-    { k: 'date', l: 'تاريخ تسجيل الحالة', t: 'date' }, { k: 'status', l: 'حالة الملف', opts: FILE_STATUS, badge: 1 },
+    { k: 'address', l: 'عنوان المنزل' }, { k: 'housing', l: 'نوع السكن', sugg: SOCIAL_HOUSING }, // اقتراحات مع إمكانية الكتابة الحرة
     { k: 'notes', l: 'ملاحظات', t: 'area', wide: 1 },
+  ],
+  // جدول السجل والطباعة: التاريخ، الاسم الكامل للتلميذ، القسم، ولي الأمر، الوضعية الأسرية، ملاحظات
+  columns: [
+    { k: 'date', l: 'التاريخ' }, { k: 'name', l: 'الاسم الكامل للتلميذ' }, { k: 'cls', l: 'القسم' },
+    { k: 'guardianName', l: 'اسم ولي الأمر', get: (r) => guardianName(r) }, { k: 'family', l: 'الوضعية الأسرية' }, { k: 'notes', l: 'ملاحظات' },
   ],
 };
 
