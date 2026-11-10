@@ -242,9 +242,10 @@ function head(school, title, ctx) {
     + '<div class="nrh-school">' + (school ? E(school) : 'المؤسسة التعليمية') + '</div>'
     + '<div class="nrh-title">' + title + '</div></div>';
 }
-// إطار التوقيعات والختم أُخفي من الوثائق بطلب المستخدم (كان جدولاً من خليتين: المختص الاجتماعي ومدير المؤسسة)
+// التوقيعات بشكل بقية التقارير (خط أزرق ثم خطا توقيع: المختص الاجتماعي ومدير المؤسسة) دون إطار ولا عنوان «التوقيعات والختم».
+// بين علامتي تعليق SIG ليسهل على اختبار المطابقة مع الكود القديم المجمَّد استبعادها.
 function sigBlock() {
-  return '';
+  return '<!--SIG--><div class="signatures"><div class="sig-block"><div class="sig-line"></div>المختص الاجتماعي</div><div class="sig-block"><div class="sig-line"></div>مدير المؤسسة</div></div><!--/SIG-->';
 }
 
 // ترويسة رسالة الإحالة بنفس شكل رسالة «إخبار بحالة صحية»: من السيد / تحت إشراف / الموضوع: إحالة التلميذ(ة) … إلى جمعية …
@@ -264,7 +265,7 @@ function assocLetter(f) {
 
 function buildAssoc(form, ctx) {
   const f = form.fields;
-  let h = head(V(f, 'pd3-school'), 'إحالة إلى جمعية', ctx);
+  let h = head(V(f, 'pd3-school'), 'الإحالة إلى جمعية', ctx); // بلا كلمة «نموذج» بطلب المستخدم
   h += assocLetter(f);
   h += '<div class="report-section-title">بيانات الإحالة</div>' + tbl([
     row('تاريخ الإحالة:', dash(fmtDateReport(V(f, 'pd3-date'))), 'رقم الإحالة:', dash(V(f, 'pd3-ref'))),
