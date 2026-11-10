@@ -247,9 +247,25 @@ function sigBlock() {
   return '';
 }
 
+// ترويسة رسالة الإحالة بنفس شكل رسالة «إخبار بحالة صحية»: من السيد / تحت إشراف / الموضوع: إحالة التلميذ(ة) … إلى جمعية …
+// بين علامتي تعليق ASSOC-LETTER ليسهل على اختبار المطابقة مع الكود القديم المجمَّد استبعادها.
+function assocLetter(f) {
+  const td = 'padding:2px 6px;vertical-align:top;';
+  const lbl = td + 'font-weight:800;white-space:nowrap;width:1%;';
+  return '<!--ASSOC-LETTER--><div style="direction:rtl;text-align:right;font-family:\'Cairo\',sans-serif;font-size:0.88rem;font-weight:700;line-height:1.9;margin:8px 0 12px;">'
+    + '<table style="width:100%;border-collapse:collapse;"><tbody>'
+    + '<tr class="pd-line"><td style="' + lbl + '">من السيد:</td><td style="' + td + 'text-align:center;">المختص الاجتماعي</td></tr>'
+    + '<tr class="pd-line"><td style="' + td + '"></td><td style="' + td + 'text-align:center;">تحت إشراف: السيد مدير المؤسسة</td></tr>'
+    + '</tbody></table>'
+    + '<table style="width:100%;border-collapse:collapse;margin-top:8px;"><tbody>'
+    + '<tr class="pd-line"><td style="' + lbl + 'font-size:0.95rem;">الموضــوع :</td><td style="' + td + 'font-size:0.95rem;">إحالة التلميذ(ة) ' + dots(V(f, 'pd3-name'), 30) + ' إلى جمعية ' + dots(V(f, 'pd3-assoc'), 30) + '</td></tr>'
+    + '</tbody></table></div><!--/ASSOC-LETTER-->';
+}
+
 function buildAssoc(form, ctx) {
   const f = form.fields;
   let h = head(V(f, 'pd3-school'), 'نموذج الإحالة إلى جمعية', ctx);
+  h += assocLetter(f);
   h += '<div class="report-section-title">بيانات الإحالة</div>' + tbl([
     row('تاريخ الإحالة:', dash(fmtDateReport(V(f, 'pd3-date'))), 'رقم الإحالة:', dash(V(f, 'pd3-ref'))),
     row('درجة الاستعجالية:', dash(clean(V(f, 'pd3-urgency')))),
