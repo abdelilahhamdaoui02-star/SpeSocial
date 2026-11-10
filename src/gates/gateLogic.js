@@ -78,16 +78,25 @@ export const SOCIAL_GATE = {
   ],
 };
 
+// ملاحظات السجل الصحي: تُركَّب من وصف الحالة والعلاج/المتابعة (لا تُدخَل يدوياً)
+export const healthNotes = (r) => [r.desc, r.follow].map((x) => String(x || '').trim()).filter(Boolean).join(' — ');
+
 export const HEALTH_GATE = {
   id: 'health', tool: 'social',
   box: 'pgHealth', key: 'healthCases', req: 'name', ac: { nameId: 'pgHealth_name', massarId: 'pgHealth_massar', levelId: 'pgHealth_cls' },
   file: 'سجل-الحالات-الصحية', print: 'سجل الحالات الصحية', title: '🩺 الحالات الصحية',
   fields: [
-    ...STUDENT_FIELDS(),
-    { k: 'kind', l: 'نوع الحالة الصحية', opts: HEALTH_KINDS },
+    { k: 'date', l: 'تاريخ تسجيل الحالة', t: 'date' },
+    ...STUDENT_FIELDS().filter((f) => f.k !== 'level'), // القسم الصحي بلا «المستوى»
+    { k: 'kind', l: 'نوع الحالة', sugg: HEALTH_KINDS }, // اقتراحات مع إمكانية الكتابة الحرة
     { k: 'follow', l: 'العلاج / المتابعة الطبية', opts: HEALTH_FOLLOW, badge: 1 },
-    { k: 'date', l: 'تاريخ التسجيل', t: 'date' }, { k: 'status', l: 'حالة الملف', opts: FILE_STATUS, badge: 1 },
+    { k: 'status', l: 'حالة الملف', opts: FILE_STATUS, badge: 1 },
     { k: 'desc', l: 'وصف مختصر للحالة', wide: 1, sugg: HEALTH_SUGGEST },
+  ],
+  // جدول السجل والطباعة: التاريخ، اسم التلميذ، القسم، نوع الحالة، ملاحظات (تُنتَج تلقائياً من ملخص الحالة)
+  columns: [
+    { k: 'date', l: 'التاريخ' }, { k: 'name', l: 'اسم التلميذ' }, { k: 'cls', l: 'القسم' }, { k: 'kind', l: 'نوع الحالة' },
+    { k: 'notes', l: 'ملاحظات', get: (r) => healthNotes(r) },
   ],
 };
 
@@ -101,12 +110,16 @@ export const filterRows = (rows, q) => rows.filter((r) => matchesQuery(r, q));
 export const badgeIndex = (field, value) => Math.max(field.opts.indexOf(value), 0) % 4;
 
 // نموذج الجدول: كل صف { id, n, cells:[{text, badge}] } — n ترقيم الصفوف بعد التصفية (يبدأ من 1)
+// أعمدة الجدول: gate.columns إن وُجدت (مجموعة جزئية أو بأعمدة محسوبة get(row)) وإلا كل حقول الاستمارة
+export const columnsOf = (gate) => gate.columns || gate.fields;
+export const cellValue = (col, row) => (col.get ? col.get(row) : row[col.k]);
+
 export function tableModel(gate, rows, q) {
   return filterRows(rows, q).map((r, i) => ({
     id: r.id,
     n: i + 1,
-    cells: gate.fields.map((f) => {
-      const v = r[f.k] || '';
+    cells: columnsOf(gate).map((f) => {
+      const v = cellValue(f, r) || '';
       return { text: String(v), badge: f.badge ? badgeIndex(f, v) : null };
     }),
   }));
@@ -185,7 +198,7 @@ export function reportHtml(title, fields, rows, ctx) {
   const th = 'padding:6px 8px;text-align:center;border:1px solid #000;background:#fff;color:#000;font-weight:800;-webkit-print-color-adjust:exact;print-color-adjust:exact;';
   const td = 'padding:5px 8px;border:1px solid #cbd5e1;vertical-align:top;overflow-wrap:anywhere;';
   const body = rows.length
-    ? rows.map((r, i) => '<tr><td style="' + td + 'text-align:center;">' + (i + 1) + '</td>' + fields.map((f) => '<td style="' + td + '">' + (iEsc(r[f.k]) || '—') + '</td>').join('') + '</tr>').join('')
+    ? rows.map((r, i) => '<tr><td style="' + td + 'text-align:center;">' + (i + 1) + '</td>' + fields.map((f) => '<td style="' + td + '">' + (iEsc(cellValue(f, r)) || '—') + '</td>').join('') + '</tr>').join('')
     : '<tr><td colspan="' + (fields.length + 1) + '" style="' + td + 'text-align:center;">' + NO_RECORDS_TEXT + '</td></tr>';
   const logo = ctx.logo || '';
   return '<div class="new-report-header"><div class="nrh-logo">' + (logo ? '<img id="ministry-logo-img" src="' + logo + '" alt="شعار الوزارة" style="width:100%;height:auto;max-height:160px;object-fit:contain;display:block;background:white;">' : '') + '</div>' +
