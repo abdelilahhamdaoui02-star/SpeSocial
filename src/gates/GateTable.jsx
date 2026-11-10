@@ -5,6 +5,7 @@ import { getSession } from '../session/installSession.js';
 import {
   tableModel, filterRows, defaultValues, editValues, readDraft, validateDraft, saveRows, findRow, removeRow, parseImport, NO_RECORDS_TEXT,
 } from './gateLogic.js';
+import { columnsOf } from './gateLogic.js';
 import { openReport } from './printModal.js';
 import { acSetup } from '../autocomplete/studentAutocomplete.js';
 
@@ -67,7 +68,7 @@ export default function GateTable({ gate, active, hidden = false }) {
 
   // حقول لا تظهر في الطباعة (تبقى في الاستمارة والجدول وExcel)
   const HIDE_IN_PRINT = ['massar', 'school'];
-  const printFields = () => (gate.printKeys ? gate.fields.filter((f) => gate.printKeys.includes(f.k)) : gate.fields.filter((f) => gate.id !== 'calls' || !HIDE_IN_PRINT.includes(f.k)));
+  const printFields = () => (gate.columns ? gate.columns : gate.printKeys ? gate.fields.filter((f) => gate.printKeys.includes(f.k)) : gate.fields.filter((f) => gate.id !== 'calls' || !HIDE_IN_PRINT.includes(f.k)));
   const print = () => openReport(gate.print, printFields(), filterRows(currentRows(gate), q));
   // التصدير إلى Excel (ExcelJS وشعار الوزارة) من طبقة الجلسة؛ لا يعتمد على حالة React
   const exportXlsx = () => { getSession().pgExportXlsx(gate, filterRows(currentRows(gate), q)); };
@@ -153,7 +154,7 @@ export default function GateTable({ gate, active, hidden = false }) {
             <thead>
               <tr>
                 <th>#</th>
-                {gate.fields.map((f) => <th key={f.k}>{f.l}</th>)}
+                {columnsOf(gate).map((f) => <th key={f.k}>{f.l}</th>)}
                 <th />
               </tr>
             </thead>
@@ -162,7 +163,7 @@ export default function GateTable({ gate, active, hidden = false }) {
                 <tr key={String(row.id) + ':' + row.n}>
                   <td>{row.n}</td>
                   {row.cells.map((c, i) => (
-                    <td key={gate.fields[i].k}>
+                    <td key={columnsOf(gate)[i].k}>
                       {c.badge === null ? c.text : <span className={'pg-st s' + c.badge}>{c.text}</span>}
                     </td>
                   ))}
@@ -172,7 +173,7 @@ export default function GateTable({ gate, active, hidden = false }) {
                   </td>
                 </tr>
               )) : (
-                <tr><td colSpan={gate.fields.length + 2} style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{NO_RECORDS_TEXT}</td></tr>
+                <tr><td colSpan={columnsOf(gate).length + 2} style={{ textAlign: 'center', color: 'var(--text-muted)' }}>{NO_RECORDS_TEXT}</td></tr>
               )}
             </tbody>
           </table>
