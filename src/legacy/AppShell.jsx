@@ -161,24 +161,6 @@ function AppShell() {
         <PortalLanding>
           <div id="mountSiteNotice"></div>
           <div className="hp-main">
-            <section className="hp-panel hp-others" aria-label="بوابات أخرى">
-              <h3 className="hp-panel-title">
-                <svg className="" viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="3" y="3" width="7.5" height="7.5" rx="2"></rect>
-                  <rect x="13.5" y="3" width="7.5" height="7.5" rx="2"></rect>
-                  <rect x="3" y="13.5" width="7.5" height="7.5" rx="2"></rect>
-                  <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"></rect>
-                </svg>
-                <span>بوابات أخرى</span>
-              </h3>
-              <div className="hp-list" id="mountTilesOthers"></div>
-            </section>
-            <section className="hp-panel hp-stats" aria-label="إحصائيات">
-              <div className="hp-stats-head" id="mountStatsHead"></div>
-              <div className="hp-inner" id="mountStatsKpis"></div>
-              <div className="hp-inner hp-chart-card" id="mountStatsChart"></div>
-              <div className="hp-inner hp-news-card" id="mountNews"></div>
-            </section>
             <section className="hp-panel hp-portals" aria-label="البوابات">
               <h3 className="hp-panel-title">
                 <svg className="" viewBox="0 0 24 24" aria-hidden="true">
@@ -190,9 +172,16 @@ function AppShell() {
                 <span>البوابات</span>
               </h3>
               <div className="hp-list" id="mountTilesPortals"></div>
+              <div className="hp-list" id="mountTilesOthers"></div>
+            </section>
+            <section className="hp-panel hp-stats" aria-label="إحصائيات">
+              <div className="hp-stats-head" id="mountStatsHead"></div>
+              <div className="hp-inner" id="mountStatsKpis"></div>
+              <div className="hp-inner hp-chart-card" id="mountStatsChart"></div>
+              <div className="hp-inner hp-news-card" id="mountNews"></div>
+              <div className="hp-report" id="mountHomeReport"></div>
             </section>
           </div>
-          <div className="hp-report" id="mountHomeReport"></div>
         </PortalLanding>
         {TOOLS.map((t) => <ToolPage key={t.id} t={t} />)}
       </div>
