@@ -147,24 +147,34 @@
     gap:16px;
   }
 
-  /* 2) عمود البوابات: يلتصق بأعلى الشاشة عند التمرير، وارتفاعه يتّسع للشاشة دون شريط تمرير */
+  /* 2) عمود البوابات: ارتفاعه تلقائي (يلفّ كل البطاقات)، ويلتصق أعلى الشاشة عند التمرير */
   html body .desk.has-portals > .hp-desk-portals{
     position:sticky; top:8px;
-    height:calc(100vh - 270px);   /* 270px ≈ ارتفاع الرأس؛ عدّله إن لزم */
-    min-height:480px;
+    height:auto !important;
+    min-height:0 !important;
     max-height:none !important;
     overflow:visible !important;
+    padding-bottom:12px;
   }
   html body .hp-desk-portals > .hp-list{
-    flex:1 1 auto; min-height:0;
     display:flex; flex-direction:column; gap:5px;
+    flex:0 0 auto; height:auto; overflow:visible;
   }
-  /* 3) البطاقات تتقلّص لتظهر كل البوابات */
+
+  /* 3) ارتفاع البطاقة = (ارتفاع الشاشة - الرأس والعنوان) ÷ 14 بوابة، بين 38 و56px
+        إن زاد عدد البوابات غيّر الرقم 14 */
   html body .desk.has-portals .hp-desk-portals .hp-tile{
-    flex:1 1 0; min-height:34px !important; max-height:58px;
-    padding:3px 10px;
+    flex:0 0 auto;
+    height:clamp(38px, calc((100vh - 130px) / 14), 56px) !important;
+    min-height:0 !important; max-height:none !important;
+    padding:2px 10px;
   }
-  html body .hp-desk-portals .hp-lbl{ font-size:clamp(12px,1.55vh,14.5px); line-height:1.25; }
-  html body .hp-desk-portals .hp-ico{ width:clamp(28px,4.2vh,38px); height:clamp(28px,4.2vh,38px); }
+  html body .hp-desk-portals .hp-lbl{ font-size:clamp(12px,1.5vh,14px); line-height:1.2; }
+  html body .hp-desk-portals .hp-ico{ width:clamp(28px,4vh,36px); height:clamp(28px,4vh,36px); }
   html body .hp-desk-portals .hp-panel-title{ margin-bottom:4px; }
+}
+
+/* شاشة قصيرة (أقل من 760px ارتفاعاً): لا يمكن إظهار 14 بوابة مع الرأس، فيتحرّك العمود مع الصفحة بدل أن يُقطع */
+@media screen and (min-width:1101px) and (max-height:760px){
+  html body .desk.has-portals > .hp-desk-portals{ position:static; }
 }
