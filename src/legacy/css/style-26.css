@@ -100,11 +100,13 @@
 .hp-stats > .hp-report .hp-report-t{ font-size:18px; }
 .hp-stats > .hp-report .hp-btn{ padding:10px 18px; font-size:14.5px; }
 
-/* ============ الحاسوب: شاشة كاملة + عمود البوابات ثابت يميناً في الرئيسية وعند فتح أي بوابة ============
+/* ============ الحاسوب: عمود البوابات ثابت يميناً في الرئيسية وعند فتح أي بوابة ============
    المحتوى الوسطي = إحصائيات الرئيسية أو البوابة المفتوحة فقط. الهاتف والتابلت (≤1100px) كما كانا. */
 .hp-desk-portals{ display:none; }
 @media screen and (min-width:1101px){
-  html body .page-wrapper, html body.on-home .page-wrapper, html body:not(.on-home) .page-wrapper{ max-width:none !important; box-shadow:none; }
+  /* الشريط العائم القديم (أيقونات البوابات على اليمين) محذوف في الحاسوب: عمود البوابات الثابت يغني عنه */
+  #frozenNav, #frozenNav.visible{ display:none !important; }
+  body:has(#frozenNav.visible){ padding-bottom:0; }
   .desk{ display:block; padding:22px 24px 0; }
   .desk.has-portals{ display:grid; grid-template-columns:minmax(270px,330px) minmax(0,1fr); gap:18px; align-items:start; }
   .desk.has-portals > .hp-desk-portals{
@@ -124,12 +126,8 @@
   .desk.has-portals #portalLanding .hp-main > .hp-portals{ display:none; }
   html body.on-home .desk.has-portals .hp-main{ grid-template-columns:minmax(0,1fr); padding:0; }
   .desk.has-portals #portalLanding{ padding:0 0 12px; }
-  /* صفحات البوابات: بعرض عمود الوسط كاملاً */
+  /* صفحات البوابات: بعرض عمود الوسط */
   .desk.has-portals .tool-page{ padding:0 0 32px; }
-  .desk.has-portals .tool-page > .back-bar,
-  .desk.has-portals .tool-page > .main-container,
-  .desk.has-portals .tool-page > div[style*="0a1f3d"]{ max-width:none; }
-  .desk.has-portals #mountPrintdocsHero{ max-width:none !important; }
 }
 @media screen and (max-width:1100px){ .hp-desk-portals{ display:none !important; } }
 body.dark-mode .hp-desk-portals .hp-tile.on{ background:#2b3d57; }
