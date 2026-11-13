@@ -67,7 +67,7 @@
   .hp-stats{ display:contents !important; }
   .hp-news-card{ order:-1 !important; }
   .hp-portals{ order:1 !important; }
-  .hp-others{ order:2 !important; }
+  .hp-stats > .hp-report{ order:6 !important; margin:8px 0 0 !important; }
   .hp-stats-head{ order:3 !important; margin:4px 4px 0 !important; }
   #mountStatsKpis{ order:4 !important; }
   #mountStatsChart{ order:5 !important; margin-top:0 !important; }
