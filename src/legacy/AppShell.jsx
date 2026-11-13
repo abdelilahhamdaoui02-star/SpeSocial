@@ -68,6 +68,29 @@ function PortalLanding({ children }) {
   return <div id="portalLanding" style={{ display: entered && !current ? 'block' : 'none' }}>{children}</div>;
 }
 
+// الحاسوب: عمود البوابات ثابت يميناً والمحتوى (الإحصائيات أو البوابة المفتوحة) في الوسط.
+// العمود يظهر بعد الدخول فقط؛ في الهاتف والتابلت يُخفى بـCSS وتبقى بوابات الرئيسية كما كانت.
+function DeskShell({ children }) {
+  const entered = useEntered();
+  return (
+    <div className={entered ? 'desk has-portals' : 'desk'}>
+      <aside className="hp-panel hp-desk-portals" aria-label="البوابات">
+        <h3 className="hp-panel-title">
+          <svg className="" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="9" cy="8" r="3.5"></circle>
+            <path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path>
+            <circle cx="17.5" cy="9" r="2.5"></circle>
+            <path d="M17 14c2.8 0 4.7 1.9 4.7 5"></path>
+          </svg>
+          <span>البوابات</span>
+        </h3>
+        <div className="hp-list" id="mountTilesDesk"></div>
+      </aside>
+      <div className="desk-content">{children}</div>
+    </div>
+  );
+}
+
 function AppShell() {
   return (
     <>
@@ -158,6 +181,7 @@ function AppShell() {
           </div>
           <div className="accent-bar"></div>
         </header>
+        <DeskShell>
         <PortalLanding>
           <div id="mountSiteNotice"></div>
           <div className="hp-main">
@@ -172,7 +196,6 @@ function AppShell() {
                 <span>البوابات</span>
               </h3>
               <div className="hp-list" id="mountTilesPortals"></div>
-              <div className="hp-list" id="mountTilesOthers"></div>
             </section>
             <section className="hp-panel hp-stats" aria-label="إحصائيات">
               <div className="hp-stats-head" id="mountStatsHead"></div>
@@ -184,6 +207,7 @@ function AppShell() {
           </div>
         </PortalLanding>
         {TOOLS.map((t) => <ToolPage key={t.id} t={t} />)}
+        </DeskShell>
       </div>
       <div className="dev-footer" style={{ background: "linear-gradient(135deg,#0f2744,#1a3a5c)", color: "rgba(255,255,255,0.6)", textAlign: "center", padding: "12px 20px", fontSize: "0.74rem", direction: "rtl", borderTop: "2px solid rgba(200,169,74,0.3)" }}>
         <span style={{ color: "rgba(200,169,74,0.9)" }}>{" تم البرمجة والتطوير بواسطة:"}</span>
