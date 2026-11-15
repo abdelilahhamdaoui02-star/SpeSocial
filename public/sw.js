@@ -1,5 +1,5 @@
 // Service Worker — منصة التوثيق المهني (شرط أساسي لاعتبار الموقع PWA قابلاً للتثبيت)
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'spesocial-' + VERSION;
 const SCOPE = self.registration.scope;
 const SHELL = [SCOPE, SCOPE + 'index.html', SCOPE + 'manifest.json', SCOPE + 'icons/icon-192.png', SCOPE + 'icons/icon-512.png'];

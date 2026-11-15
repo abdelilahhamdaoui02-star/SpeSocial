@@ -1,5 +1,5 @@
-import { Fragment } from 'react';
-import { PORTALS, DESK_ORDER, DESK_COLOR } from './portals.js';
+import { Fragment, useEffect, useState } from 'react';
+import { PORTALS, DESK_GROUPS, DESK_COLOR } from './portals.js';
 import { openPortal } from '../navigation.js';
 import { usePortalLabel, useCurrentPortal } from '../store/hooks.js';
 
@@ -22,11 +22,36 @@ function Tile({ portal, color }) {
   );
 }
 
-// group: بوابات الرئيسية في الهاتف والتابلت كما كانت؛ desk: عمود الحاسوب الثابت بكل البوابات بالترتيب المخصّص
+const groupOf = (id) => DESK_GROUPS.find((g) => g.items.includes(id))?.id || null;
+
+// عمود الحاسوب: 4 مجموعات (أكورديون). المجموعة التي فيها البوابة المفتوحة تُفتح تلقائياً.
+function DeskGroups() {
+  const current = useCurrentPortal();
+  const [open, setOpen] = useState(() => groupOf(current) || DESK_GROUPS[0].id);
+  useEffect(() => { const g = groupOf(current); if (g) setOpen(g); }, [current]);
+  const by = Object.fromEntries(PORTALS.map((p) => [p.id, p]));
+  return DESK_GROUPS.map((g) => {
+    const isOpen = open === g.id;
+    return (
+      <div key={g.id} className={`dg ${g.color}${isOpen ? ' open' : ''}${g.items.includes(current) ? ' has-on' : ''}`}>
+        <button type="button" className="dg-head" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : g.id)}>
+          <span className="dg-ico">{g.icon}</span>
+          <span className="dg-title">{g.title}</span>
+          <span className="dg-count">{g.items.length}</span>
+          <svg className="dg-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </button>
+        {isOpen && (
+          <div className="dg-body">
+            {g.items.filter((id) => by[id]).map((id) => <Tile key={id} portal={by[id]} color={DESK_COLOR[id]} />)}
+          </div>
+        )}
+      </div>
+    );
+  });
+}
+
+// group: بوابات الرئيسية في الهاتف والتابلت كما كانت؛ desk: عمود الحاسوب الثابت بمجموعاته الأربع
 export default function PortalTiles({ group, desk }) {
-  if (desk) {
-    const by = Object.fromEntries(PORTALS.map((p) => [p.id, p]));
-    return DESK_ORDER.filter((id) => by[id]).map((id) => <Tile key={id} portal={by[id]} color={DESK_COLOR[id]} />);
-  }
+  if (desk) return <DeskGroups />;
   return PORTALS.filter((p) => p.group === group).map((p) => <Tile key={p.id} portal={p} />);
 }
