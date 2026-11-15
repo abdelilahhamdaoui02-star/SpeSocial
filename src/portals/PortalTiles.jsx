@@ -35,7 +35,7 @@ function DeskGroups() {
     return (
       <div key={g.id} className={`dg ${g.color}${isOpen ? ' open' : ''}${g.items.includes(current) ? ' has-on' : ''}`}>
         <button type="button" className="dg-head" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : g.id)}>
-          <span className="dg-ico">{g.icon}</span>
+          <span className="dg-ico" dangerouslySetInnerHTML={{ __html: g.icon }} />
           <span className="dg-title">{g.title}</span>
           <span className="dg-count">{g.items.length}</span>
           <svg className="dg-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
