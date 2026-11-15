@@ -135,7 +135,12 @@ export const PORTALS = [
   }
 ];
 
-// الحاسوب فقط: عمود البوابات الثابت بترتيب مخصّص ولون موحّد للسجل الاجتماعي.
+// الحاسوب فقط: عمود البوابات الثابت مقسَّم إلى 4 مجموعات (تُطوى وتُفتح)، ولون موحّد للسجل الاجتماعي.
 // الهاتف والتابلت يستعملان القائمة أعلاه بمجموعتيها (group) كما كانت.
-export const DESK_ORDER = ['interview', 'absence', 'violence', 'parents', 'social', 'reintegration', 'specialneeds', 'printdocs', 'workshops', 'casefile', 'iip', 'vigilance', 'behavior', 'stats'];
+export const DESK_GROUPS = [
+  { id: 'follow', title: 'المتابعة الفردية للتلميذ', icon: '🧑‍🎓', color: 'c-blue', items: ['interview', 'casefile', 'iip', 'vigilance'] },
+  { id: 'cases', title: 'الحالات الاجتماعية والصحية', icon: '🤝', color: 'c-indigo', items: ['social', 'violence', 'specialneeds', 'reintegration'] },
+  { id: 'comm', title: 'التواصل والإحالة', icon: '📨', color: 'c-teal', items: ['parents', 'printdocs'] },
+  { id: 'watch', title: 'الرصد والأنشطة والإحصاء', icon: '📊', color: 'c-amber', items: ['absence', 'behavior', 'workshops', 'stats'] },
+];
 export const DESK_COLOR = { social: 'c-indigo' };
