@@ -1,7 +1,7 @@
 // هيكل الصفحة (الترويسة والبوابة الرئيسية وصفحات الأدوات وتذييل المطوّر) — كان src/legacy/body.html ويُحقَن بـ dangerouslySetInnerHTML (الخطوة 48).
 // المعرّفات والأصناف كما كانت حرفياً لأن الأنماط (styles.js) وبقية الوحدات تعتمد عليها؛ والأقسام الديناميكية فراغات تُرسم فيها مكوّنات React عبر createPortal من LegacyApp.
 // الهيكل ثابت: memo بلا خصائص فلا يُعاد رسمه أبداً، فتبقى تعديلات DOM التي تجريها وحدات الجلسة والتنقل (صنف open وdisplay وأسماء المستخدم) كما هي.
-import { memo } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { goHome } from '../navigation.js';
 import { toolDomId } from '../nav/navLogic.js';
 import { useCurrentPortal, useEntered } from '../store/hooks.js';
@@ -72,8 +72,25 @@ function PortalLanding({ children }) {
 // العمود يظهر بعد الدخول فقط؛ في الهاتف والتابلت يُخفى بـCSS وتبقى بوابات الرئيسية كما كانت.
 function DeskShell({ children }) {
   const entered = useEntered();
+  const deskRef = useRef(null);
+  // ارتفاع عمود البوابات = الجزء الظاهر من الشاشة، فتظهر كل البوابات دائماً مهما كان التمرير (الحاسوب فقط)
+  useEffect(() => {
+    const el = deskRef.current;
+    if (!el || typeof window === 'undefined') return undefined;
+    let raf = 0;
+    const calc = () => {
+      raf = 0;
+      const top = Math.max(8, el.getBoundingClientRect().top + 22);
+      el.style.setProperty('--desk-h', Math.max(320, window.innerHeight - top - 8) + 'px');
+    };
+    const upd = () => { if (!raf) raf = requestAnimationFrame(calc); };
+    calc();
+    window.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    return () => { window.removeEventListener('scroll', upd); window.removeEventListener('resize', upd); if (raf) cancelAnimationFrame(raf); };
+  }, [entered]);
   return (
-    <div className={entered ? 'desk has-portals' : 'desk'}>
+    <div ref={deskRef} className={entered ? 'desk has-portals' : 'desk'}>
       <aside className="hp-panel hp-desk-portals" aria-label="البوابات">
         <h3 className="hp-panel-title">
           <svg className="" viewBox="0 0 24 24" aria-hidden="true">
@@ -185,6 +202,24 @@ function AppShell() {
         <PortalLanding>
           <div id="mountSiteNotice"></div>
           <div className="hp-main">
+            <section className="hp-panel hp-others" aria-label="بوابات أخرى">
+              <h3 className="hp-panel-title">
+                <svg className="" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="3" y="3" width="7.5" height="7.5" rx="2"></rect>
+                  <rect x="13.5" y="3" width="7.5" height="7.5" rx="2"></rect>
+                  <rect x="3" y="13.5" width="7.5" height="7.5" rx="2"></rect>
+                  <rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"></rect>
+                </svg>
+                <span>بوابات أخرى</span>
+              </h3>
+              <div className="hp-list" id="mountTilesOthers"></div>
+            </section>
+            <section className="hp-panel hp-stats" aria-label="إحصائيات">
+              <div className="hp-stats-head" id="mountStatsHead"></div>
+              <div className="hp-inner" id="mountStatsKpis"></div>
+              <div className="hp-inner hp-chart-card" id="mountStatsChart"></div>
+              <div className="hp-inner hp-news-card" id="mountNews"></div>
+            </section>
             <section className="hp-panel hp-portals" aria-label="البوابات">
               <h3 className="hp-panel-title">
                 <svg className="" viewBox="0 0 24 24" aria-hidden="true">
@@ -197,14 +232,8 @@ function AppShell() {
               </h3>
               <div className="hp-list" id="mountTilesPortals"></div>
             </section>
-            <section className="hp-panel hp-stats" aria-label="إحصائيات">
-              <div className="hp-stats-head" id="mountStatsHead"></div>
-              <div className="hp-inner" id="mountStatsKpis"></div>
-              <div className="hp-inner hp-chart-card" id="mountStatsChart"></div>
-              <div className="hp-inner hp-news-card" id="mountNews"></div>
-              <div className="hp-report" id="mountHomeReport"></div>
-            </section>
           </div>
+          <div className="hp-report" id="mountHomeReport"></div>
         </PortalLanding>
         {TOOLS.map((t) => <ToolPage key={t.id} t={t} />)}
         </DeskShell>
