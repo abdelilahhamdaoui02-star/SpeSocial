@@ -5,11 +5,75 @@
 export const PORTALS = [
   {
     "id": "interview",
-    "group": "portals",
+    "group": "others",
     "color": "c-blue",
     "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><path d=\"M8 9h8M8 13h5\"/></svg>",
     "label": [
       "المقابلات الفردية"
+    ]
+  },
+  {
+    "id": "violence",
+    "group": "others",
+    "color": "c-coral",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z\"/></svg>",
+    "label": [
+      "حالات العنف"
+    ]
+  },
+  {
+    "id": "specialneeds",
+    "group": "others",
+    "color": "c-indigo",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"4.5\" r=\"2\"/><path d=\"M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6\"/></svg>",
+    "label": [
+      "وضعية الإعاقة"
+    ]
+  },
+  {
+    "id": "reintegration",
+    "group": "others",
+    "color": "c-teal",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M22 10L12 5 2 10l10 5 10-5z\"/><path d=\"M6 12v5c3 2.5 9 2.5 12 0v-5\"/></svg>",
+    "label": [
+      "الإدماج المدرسي"
+    ]
+  },
+  {
+    "id": "vigilance",
+    "group": "others",
+    "color": "c-amber",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9\"/><path d=\"M13.7 21a2 2 0 0 1-3.4 0\"/></svg>",
+    "label": [
+      "خلية اليقظة"
+    ]
+  },
+  {
+    "id": "behavior",
+    "group": "others",
+    "color": "c-teal",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 4h6v3H9z\"/><path d=\"M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2\"/><path d=\"M8 14l3 3 5-6\"/></svg>",
+    "label": [
+      "رصد السلوك"
+    ]
+  },
+  {
+    "id": "parents",
+    "group": "others",
+    "color": "c-teal",
+    "icon": "📞",
+    "label": [
+      "التواصل مع الأولياء"
+    ]
+  },
+  {
+    "id": "social",
+    "group": "portals",
+    "color": "c-amber",
+    "icon": "🤝",
+    "label": [
+      "سجل الحالات الاجتماعية",
+      "والصحية"
     ]
   },
   {
@@ -23,49 +87,13 @@ export const PORTALS = [
     ]
   },
   {
-    "id": "violence",
-    "group": "portals",
-    "color": "c-coral",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z\"/></svg>",
-    "label": [
-      "حالات العنف"
-    ]
-  },
-  {
-    "id": "parents",
+    "id": "iip",
     "group": "portals",
     "color": "c-teal",
-    "icon": "📞",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 21s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z\"/><path d=\"M8 12h2l1.5-2.5L13 14l1-2h2\"/></svg>",
     "label": [
-      "التواصل مع الأولياء"
-    ]
-  },
-  {
-    "id": "social",
-    "group": "portals",
-    "color": "c-indigo",
-    "icon": "🤝",
-    "label": [
-      "سجل الحالات الاجتماعية",
-      "والصحية"
-    ]
-  },
-  {
-    "id": "reintegration",
-    "group": "portals",
-    "color": "c-teal",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M22 10L12 5 2 10l10 5 10-5z\"/><path d=\"M6 12v5c3 2.5 9 2.5 12 0v-5\"/></svg>",
-    "label": [
-      "الإدماج المدرسي"
-    ]
-  },
-  {
-    "id": "specialneeds",
-    "group": "portals",
-    "color": "c-indigo",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"4.5\" r=\"2\"/><path d=\"M5 8.5l7 1.5 7-1.5M12 10v5l-3 6M12 15l3 6\"/></svg>",
-    "label": [
-      "وضعية الإعاقة"
+      "البرنامج التدخلي",
+      "الفردي"
     ]
   },
   {
@@ -76,6 +104,15 @@ export const PORTALS = [
     "label": [
       "بوابة الإحالة",
       "والإخبار الصحي"
+    ]
+  },
+  {
+    "id": "stats",
+    "group": "portals",
+    "color": "c-teal",
+    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"4.5\" width=\"18\" height=\"16.5\" rx=\"3\"/><path d=\"M8 2.5v4M16 2.5v4M3 10h18M8 14h2M14 14h2M8 17.5h2M14 17.5h2\"/></svg>",
+    "label": [
+      "الإحصاء البياني"
     ]
   },
   {
@@ -95,42 +132,10 @@ export const PORTALS = [
     "label": [
       "ملف الحالة الشامل"
     ]
-  },
-  {
-    "id": "iip",
-    "group": "portals",
-    "color": "c-teal",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 21s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z\"/><path d=\"M8 12h2l1.5-2.5L13 14l1-2h2\"/></svg>",
-    "label": [
-      "البرنامج التدخلي",
-      "الفردي"
-    ]
-  },
-  {
-    "id": "vigilance",
-    "group": "portals",
-    "color": "c-amber",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9\"/><path d=\"M13.7 21a2 2 0 0 1-3.4 0\"/></svg>",
-    "label": [
-      "خلية اليقظة"
-    ]
-  },
-  {
-    "id": "behavior",
-    "group": "portals",
-    "color": "c-teal",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 4h6v3H9z\"/><path d=\"M7 5H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2\"/><path d=\"M8 14l3 3 5-6\"/></svg>",
-    "label": [
-      "رصد السلوك"
-    ]
-  },
-  {
-    "id": "stats",
-    "group": "portals",
-    "color": "c-teal",
-    "icon": "<svg class=\"\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3\" y=\"4.5\" width=\"18\" height=\"16.5\" rx=\"3\"/><path d=\"M8 2.5v4M16 2.5v4M3 10h18M8 14h2M14 14h2M8 17.5h2M14 17.5h2\"/></svg>",
-    "label": [
-      "الإحصاء البياني"
-    ]
   }
 ];
+
+// الحاسوب فقط: عمود البوابات الثابت بترتيب مخصّص ولون موحّد للسجل الاجتماعي.
+// الهاتف والتابلت يستعملان القائمة أعلاه بمجموعتيها (group) كما كانت.
+export const DESK_ORDER = ['interview', 'absence', 'violence', 'parents', 'social', 'reintegration', 'specialneeds', 'printdocs', 'workshops', 'casefile', 'iip', 'vigilance', 'behavior', 'stats'];
+export const DESK_COLOR = { social: 'c-indigo' };
