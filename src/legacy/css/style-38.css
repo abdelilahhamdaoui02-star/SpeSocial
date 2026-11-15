@@ -1,4 +1,3 @@
-
 /* إصلاح عام (حاسوب + هاتف): نافذة الحساب كانت بنفس طبقة الهيدر (500) فيغطي أعلاها */
 #profileModal{ z-index:100000 !important; }
 #settingsModal{ z-index:100001 !important; }
