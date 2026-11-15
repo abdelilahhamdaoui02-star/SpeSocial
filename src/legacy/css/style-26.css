@@ -94,10 +94,10 @@
   .desk.has-portals{ display:grid; grid-template-columns:minmax(270px,330px) minmax(0,1fr); gap:18px; align-items:start; }
   .desk.has-portals > .hp-desk-portals{
     display:flex; flex-direction:column; position:sticky; top:8px; gap:6px; box-sizing:border-box;
-    height:var(--desk-h,calc(100vh - 16px)); padding:12px 12px 10px; overflow-y:auto; overscroll-behavior:contain;
+    align-self:start; height:auto; max-height:calc(100vh - 16px); padding:12px 12px 12px; overflow-y:auto; overscroll-behavior:contain;
   }
   /* 4 مجموعات: الرؤوس ظاهرة دائماً، والمفتوحة تعرض بوابتها تحتها */
-  .hp-desk-portals > .hp-list{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:10px; }
+  .hp-desk-portals > .hp-list{ flex:0 0 auto; display:flex; flex-direction:column; gap:10px; }
   .hp-desk-portals .hp-panel-title{ margin:0 0 4px; font-size:20px; }
   .dg{ --c1:#5b97fa; --c2:#2563d8; border:1.5px solid color-mix(in srgb,var(--c2) 22%,#e4eaf6); border-radius:18px; background:#fff; overflow:hidden; }
   .dg.c-blue{ --c1:#5b97fa; --c2:#2563d8; } .dg.c-indigo{ --c1:#8289f4; --c2:#4f56d6; }
