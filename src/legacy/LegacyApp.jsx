@@ -75,6 +75,7 @@ export default function LegacyApp() {
 
   useLayoutEffect(() => {
     setMounts({
+      others: document.getElementById('mountTilesOthers'),
       portals: document.getElementById('mountTilesPortals'),
       deskPortals: document.getElementById('mountTilesDesk'),
       statsHead: document.getElementById('mountStatsHead'),
@@ -133,8 +134,9 @@ export default function LegacyApp() {
   return (
     <>
       <div ref={ref}><AppShell /></div>
-      {mounts?.portals && createPortal(<PortalTiles />, mounts.portals)}
-      {mounts?.deskPortals && createPortal(<PortalTiles />, mounts.deskPortals)}
+      {mounts?.others && createPortal(<PortalTiles group="others" />, mounts.others)}
+      {mounts?.portals && createPortal(<PortalTiles group="portals" />, mounts.portals)}
+      {mounts?.deskPortals && createPortal(<PortalTiles desk />, mounts.deskPortals)}
       {/* المرحلة 7: الصفحة الرئيسية — بطاقات الإحصائيات والمخطط الشهري وبطاقة التقرير الأسبوعي */}
       {mounts && (
         <HomeStats mounts={{ head: mounts.statsHead, kpis: mounts.statsKpis, chart: mounts.statsChart }} />
