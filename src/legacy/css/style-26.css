@@ -98,13 +98,6 @@
     align-self:stretch; height:auto; padding:12px 12px 16px; overflow:visible;
   }
   .desk.has-portals > .hp-desk-portals > .hp-list{ position:sticky; top:8px; max-height:calc(100vh - 16px); overflow-y:auto; overscroll-behavior:contain; }
-  /* إطار البوابات بلون مميَّز يتناسق مع الترويسة (أخضر مزرق داكن)، والمجموعات بطاقات بيضاء داخله */
-  html body .desk.has-portals > .hp-desk-portals{
-    background:linear-gradient(180deg,#0f6468 0%,#0b4d54 100%);
-    border:1.5px solid #0a4349 !important; box-shadow:0 10px 26px rgba(10,67,73,.22);
-  }
-  .hp-desk-portals > .hp-panel-title{ color:#fff; }
-  .hp-desk-portals > .hp-panel-title svg{ stroke:#9fe6dd; }
   /* 4 مجموعات: الرؤوس ظاهرة دائماً، والمفتوحة تعرض بوابتها تحتها */
   .hp-desk-portals > .hp-list{ flex:0 0 auto; display:flex; flex-direction:column; gap:10px; }
   .hp-desk-portals .hp-panel-title{ margin:0 0 4px; font-size:20px; }
