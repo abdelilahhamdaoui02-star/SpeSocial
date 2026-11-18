@@ -135,3 +135,37 @@
 @media screen and (max-width:1100px){ .hp-desk-portals{ display:none !important; } }
 body.dark-mode .hp-desk-portals .hp-tile.on{ background:#2b3d57; }
 body.dark-mode .dg{ background:#1b2940; } body.dark-mode .dg-head{ color:#dbe7fb; }
+
+/* ============ مظهر «عصري هادئ» — الصفحة الرئيسية في الحاسوب فقط ============
+   حدود ناعمة بدل السوداء، زوايا أصغر، أيقونات مسطّحة بلا تدرّج، لون رئيسي واحد (أخضر الترويسة)،
+   ألوان المؤشرات تبقى للدلالة فقط. الهاتف والتابلت والبوابات الأخرى لا تتأثر. */
+@media screen and (min-width:1101px){
+  html body.on-home{ --bk:#dbe4e7; --hp-line:#e2e9ec; --hp-ink:#173246; --hp-muted:#66788a; --hp-accent:#0b5a5f; }
+  /* الأسطح */
+  html body.on-home .hp-panel{ background:#fff; border-radius:16px; box-shadow:0 1px 2px rgba(16,38,58,.04), 0 8px 22px rgba(16,38,58,.05); }
+  html body.on-home .hp-inner{ border-radius:12px; box-shadow:none; }
+  html body.on-home .hp-chart-wrap{ border-radius:10px; }
+  /* البوابات: بطاقات بيضاء وأيقونات مسطّحة بلون خافت */
+  html body.on-home .hp-tile{ background:#fff; border-radius:12px; box-shadow:none; }
+  html body.on-home .hp-tile:hover{ transform:none; background:color-mix(in srgb,var(--c2) 5%,#fff); box-shadow:none; }
+  html body.on-home .hp-ico, html body.on-home .dg-ico{ background:color-mix(in srgb,var(--c2) 12%,#fff); box-shadow:none; }
+  html body.on-home .hp-ico svg, html body.on-home .dg-ico svg{ stroke:var(--c2); }
+  html body.on-home .dg{ border-radius:14px; border-color:color-mix(in srgb,var(--c2) 14%,#e6ecef); box-shadow:none; }
+  html body.on-home .dg.open, html body.on-home .dg.has-on{ border-color:color-mix(in srgb,var(--c2) 55%,#fff); box-shadow:none; }
+  html body.on-home .hp-desk-portals .hp-tile.on{ background:color-mix(in srgb,var(--c2) 8%,#fff); box-shadow:none; border-color:color-mix(in srgb,var(--c2) 55%,#fff) !important; }
+  /* المؤشرات: خلفية بيضاء تقريباً، الرقم بلون الحبر، واللون للأيقونة والحد الخفيف فقط */
+  html body.on-home .hp-kpi{ background:color-mix(in srgb,var(--k) 5%,#fff); border-radius:10px; border-color:color-mix(in srgb,var(--k) 20%,#fff) !important; }
+  html body.on-home .hp-kpi .dash-stat-num{ color:var(--hp-ink); }
+  html body.on-home .hp-kpi .dash-stat-lbl{ color:var(--hp-muted); font-weight:700; }
+  /* زر الموسم والأزرار: لون الترويسة مسطّحاً */
+  html body.on-home .hp-season{ background:var(--hp-accent); border-radius:10px; }
+  html body.on-home .hp-btn{ border-radius:10px; box-shadow:none; border-color:transparent !important; }
+  html body.on-home .hp-btn.b-blue, html body.on-home .hp-btn.b-green{ background:var(--hp-accent); }
+  html body.on-home .hp-btn:hover{ transform:none; filter:brightness(1.12); }
+  /* شريط التقرير الأسبوعي: بطاقة بيضاء هادئة بدل الإطار الأزرق اللامع */
+  html body.on-home .hp-report{ background:#fff; padding:0; border-radius:16px; box-shadow:0 1px 2px rgba(16,38,58,.04), 0 8px 22px rgba(16,38,58,.05); }
+  html body.on-home .hp-report-in{ border:0 !important; border-radius:16px; padding:14px 22px; }
+  html body.on-home .hp-report-ico{ background:#e8f3f3; border-radius:12px; border-color:transparent !important; }
+  html body.on-home .hp-report-ico svg{ stroke:var(--hp-accent); }
+  html body.on-home #mainWeekRangeBadge{ background:#eef5f5; border-color:#cfe3e3; color:var(--hp-accent); }
+}
