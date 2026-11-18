@@ -169,3 +169,16 @@ body.dark-mode .dg{ background:#1b2940; } body.dark-mode .dg-head{ color:#dbe7fb
   html body.on-home .hp-report-ico svg{ stroke:var(--hp-accent); }
   html body.on-home #mainWeekRangeBadge{ background:#eef5f5; border-color:#cfe3e3; color:var(--hp-accent); }
 }
+
+/* ============ عمود البوابات: إطار ملوّن غليظ يبرزه (يظهر في الرئيسية وفي كل البوابات) ============ */
+@media screen and (min-width:1101px){
+  html body .desk.has-portals > .hp-desk-portals{ border:2px solid #0b5a5f !important; border-radius:16px; background:#fff; box-shadow:0 1px 2px rgba(16,38,58,.05), 0 8px 22px rgba(16,38,58,.07); }
+  html body .hp-desk-portals .dg{ border:2px solid color-mix(in srgb,var(--c2) 80%,#fff); border-radius:14px; box-shadow:none; background:#fff; }
+  html body .hp-desk-portals .dg.open, html body .hp-desk-portals .dg.has-on{ border-color:var(--c2); box-shadow:0 0 0 3px color-mix(in srgb,var(--c2) 14%,transparent); }
+  html body .hp-desk-portals .dg.open > .dg-head, html body .hp-desk-portals .dg.has-on > .dg-head{ background:color-mix(in srgb,var(--c2) 7%,#fff); }
+  html body .hp-desk-portals .dg-ico, html body .hp-desk-portals .hp-ico{ background:color-mix(in srgb,var(--c2) 13%,#fff); box-shadow:none; }
+  html body .hp-desk-portals .dg-ico svg, html body .hp-desk-portals .hp-ico svg{ stroke:var(--c2); }
+  html body .hp-desk-portals .hp-tile{ background:#fff; border:1.5px solid color-mix(in srgb,var(--c2) 25%,#e6ecef) !important; border-radius:11px; box-shadow:none; }
+  html body .hp-desk-portals .hp-tile:hover{ transform:none; background:color-mix(in srgb,var(--c2) 6%,#fff); }
+  html body .hp-desk-portals .hp-tile.on{ background:color-mix(in srgb,var(--c2) 9%,#fff); border-color:var(--c2) !important; box-shadow:none; }
+}
