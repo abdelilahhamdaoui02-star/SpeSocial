@@ -139,9 +139,12 @@ export const PORTALS = [
 // الحاسوب فقط: عمود البوابات الثابت مقسَّم إلى 4 مجموعات (تُطوى وتُفتح)، ولون موحّد للسجل الاجتماعي.
 // الهاتف والتابلت يستعملان القائمة أعلاه بمجموعتيها (group) كما كانت.
 export const DESK_GROUPS = [
-  { id: 'follow', title: 'المتابعة الفردية للتلميذ', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/><path d="M15.5 5.2l1.6 1.6 2.9-3"/></svg>', color: 'c-blue', items: ['interview', 'casefile', 'iip', 'vigilance'] },
-  { id: 'cases', title: 'الحالات الاجتماعية والصحية', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.2-9.4A4.9 4.9 0 0 1 12 7.6a4.9 4.9 0 0 1 9.2 3.5c-1.7 4.8-9.2 9.4-9.2 9.4z"/></svg>', color: 'c-indigo', items: ['social', 'violence', 'specialneeds', 'reintegration'] },
+  { id: 'follow', title: 'المتابعة الفردية', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/><path d="M15.5 5.2l1.6 1.6 2.9-3"/></svg>', color: 'c-blue', items: ['interview', 'iip', 'reintegration'] },
+  // بوابة مستقلة ظاهرة بذاتها (بلا طيّ): تأخذ أيقونتها واسمها من القائمة أعلاه
+  { id: 'casefile', single: 'casefile', color: 'c-blue' },
+  { id: 'watch', title: 'الرصد والإنذار', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.6-6.5 9.5-6.5S21.5 12 21.5 12 17.9 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></svg>', color: 'c-coral', items: ['absence', 'behavior', 'vigilance', 'violence'] },
+  { id: 'cases', title: 'الحالات الاجتماعية والصحية', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.2-9.4A4.9 4.9 0 0 1 12 7.6a4.9 4.9 0 0 1 9.2 3.5c-1.7 4.8-9.2 9.4-9.2 9.4z"/></svg>', color: 'c-indigo', items: ['social', 'specialneeds'] },
   { id: 'comm', title: 'التواصل والإحالة', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7.5l8.5 6 8.5-6"/></svg>', color: 'c-teal', items: ['parents', 'printdocs'] },
-  { id: 'watch', title: 'الرصد والأنشطة والإحصاء', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6M3 20h18"/></svg>', color: 'c-amber', items: ['absence', 'behavior', 'workshops', 'stats'] },
+  { id: 'act', title: 'الأنشطة والإحصاء', icon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V11M12 20V4M19 20v-6M3 20h18"/></svg>', color: 'c-amber', items: ['workshops', 'stats'] },
 ];
 export const DESK_COLOR = { social: 'c-indigo' };
