@@ -182,3 +182,27 @@ body.dark-mode .dg{ background:#1b2940; } body.dark-mode .dg-head{ color:#dbe7fb
   html body .hp-desk-portals .hp-tile:hover{ transform:none; background:color-mix(in srgb,var(--c2) 6%,#fff); }
   html body .hp-desk-portals .hp-tile.on{ background:color-mix(in srgb,var(--c2) 9%,#fff); border-color:var(--c2) !important; box-shadow:none; }
 }
+
+/* ============ عمود البوابات: شريط أخضر ملتصق بالترويسة من الأعلى ويمتد إلى أسفل الصفحة (الحاسوب فقط) ============
+   البطاقات داخله بيضاء فتبرز على الأخضر. للتعديل: لون الشريط في background، والالتصاق بالحافة اليمنى في margin-inline-start. */
+@media screen and (min-width:1101px){
+  html body .desk.has-portals > .hp-desk-portals{
+    margin-top:-22px; margin-inline-start:-24px; /* يلغي حشو .desk فيلتصق بالترويسة وبالحافة اليمنى */
+    border:0 !important; border-radius:0 0 0 18px;
+    background:linear-gradient(180deg,#0b5a5f 0%,#0a4a52 100%);
+    box-shadow:0 8px 24px rgba(8,50,56,.25);
+    padding:18px 14px 20px;
+  }
+  html body .hp-desk-portals .hp-panel-title{ color:#fff; }
+  html body .hp-desk-portals .hp-panel-title svg{ stroke:#fff; }
+  html body .hp-desk-portals .dg{ background:#fff; border:0; border-radius:14px; box-shadow:0 2px 8px rgba(0,0,0,.16); }
+  html body .hp-desk-portals .dg.open, html body .hp-desk-portals .dg.has-on{ box-shadow:0 0 0 3px rgba(255,255,255,.35), 0 2px 8px rgba(0,0,0,.16); }
+}
+
+/* صف واحد: كل البوابات بطاقات بيضاء متتالية على الخلفية الخضراء بلا طيّ */
+@media screen and (min-width:1101px){
+  html body .hp-desk-portals > .hp-list{ gap:9px; position:static; max-height:none; overflow:visible; }
+  html body .hp-desk-portals .hp-tile{ border:0 !important; box-shadow:0 2px 6px rgba(0,0,0,.18); }
+  html body .hp-desk-portals .hp-tile:hover{ background:#eef7f7; }
+  html body .hp-desk-portals .hp-tile.on{ background:#e3f3f1; box-shadow:0 0 0 3px rgba(255,255,255,.45), 0 2px 6px rgba(0,0,0,.18); }
+}
