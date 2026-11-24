@@ -6,7 +6,7 @@ import { getState } from '../store/legacyStore.js';
 import {
   VIO_PROCS, TYPE_OPTIONS, LOCATION_OPTIONS, SOURCE_OPTIONS, PRIORITY_OPTIONS, PRIO_COLORS, MSG,
   todayIso, blankProcRows, newCustomRow, editProcRow, saveEntry, taskLogArgs, updateEntry, formFromEntry,
-  filterArchive, deleteEntry, reportHtml, ROLE_OPTIONS, ROLE_TEACHER, isTeacher,
+  filterArchive, VIO_EXPORT, exportRows, deleteEntry, reportHtml, ROLE_OPTIONS, ROLE_TEACHER, isTeacher,
 } from './violenceLogic.js';
 import { openPreview } from '../preview/previewStore.js';
 import { acSetup } from '../autocomplete/studentAutocomplete.js';
@@ -179,6 +179,7 @@ function ViolenceBody() {
     persist(deleteEntry(currentArchive(), id));
     refreshStats();
   };
+  const exportXlsx = () => { getSession().pgExportXlsx(VIO_EXPORT, exportRows(filtered)); };
   const clearArchive = () => {
     const cur = currentArchive();
     if (!cur.length) { alert(MSG.EMPTY_ARCHIVE); return; }
@@ -330,6 +331,7 @@ function ViolenceBody() {
         <div className={'archive-body' + (archiveOpen ? ' open' : '')} id="vioArchiveBody">
           <div className="archive-search">
             <input type="text" id="vioArchiveSearch" placeholder="🔍 ابحث باسم التلميذ..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            <button type="button" className="btn-sm" onClick={exportXlsx} style={{ background: 'linear-gradient(135deg,#475569,#334155)', color: 'white', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontFamily: "'Cairo',sans-serif", fontWeight: 700 }}>📤 تصدير Excel</button>
             <button type="button" className="btn-sm btn-sm-danger" onClick={clearArchive}>🗑 مسح الأرشيف</button>
           </div>
           <div id="vioArchiveList">
@@ -342,6 +344,7 @@ function ViolenceBody() {
                       <tr key={e.id}>
                         <td style={{ textAlign: 'center', color: '#64748b', fontSize: '0.75rem' }}>{i + 1}</td>
                         <td><strong style={{ color: '#991b1b' }}>🛡️ {e.studentName}</strong>{e.victimRole === ROLE_TEACHER && <span className="archive-tag" style={{ marginInlineStart: 6 }}>👨‍🏫 أستاذ(ة)</span>}</td>
+                        <td>{e.school && e.school !== '—' ? e.school : '—'}</td>
                         <td>{e.aggName && e.aggName !== '—' ? e.aggName : '—'}{e.aggRole === ROLE_TEACHER && <span className="archive-tag" style={{ marginInlineStart: 6 }}>👨‍🏫 أستاذ(ة)</span>}</td>
                         <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>📅 {e.reportDate}</td>
                         <td>{(e.types || []).map((t, k) => <span key={k}><span className="archive-tag">{t}</span>{' '}</span>)}</td>
