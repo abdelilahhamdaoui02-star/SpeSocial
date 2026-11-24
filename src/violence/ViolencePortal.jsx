@@ -6,7 +6,7 @@ import { getState } from '../store/legacyStore.js';
 import {
   VIO_PROCS, TYPE_OPTIONS, LOCATION_OPTIONS, SOURCE_OPTIONS, PRIORITY_OPTIONS, PRIO_COLORS, MSG,
   todayIso, blankProcRows, newCustomRow, editProcRow, saveEntry, taskLogArgs, updateEntry, formFromEntry,
-  filterArchive, deleteEntry, reportHtml,
+  filterArchive, deleteEntry, reportHtml, ROLE_OPTIONS, ROLE_TEACHER, isTeacher,
 } from './violenceLogic.js';
 import { openPreview } from '../preview/previewStore.js';
 import { acSetup } from '../autocomplete/studentAutocomplete.js';
@@ -33,6 +33,22 @@ const refreshStats = () => { try { getSession().flow.updateDashboardStats(); } c
 
 const toggleIn = (list, x) => (list.includes(x) ? list.filter((y) => y !== x) : [...list, x]);
 
+// اختيار صفة الطرف: تلميذ(ة) أو أستاذ(ة)
+function RoleSwitch({ value, onChange }) {
+  return (
+    <div role="radiogroup" aria-label="صفة الشخص" style={{ display: 'inline-flex', gap: 6, margin: '0 0 10px' }}>
+      {ROLE_OPTIONS.map(([val, lbl]) => (
+        <button key={val || 'pupil'} type="button" role="radio" aria-checked={value === val} onClick={() => onChange(val)}
+          style={{
+            fontFamily: "'Cairo',sans-serif", fontSize: '0.8rem', fontWeight: 700, padding: '5px 14px', borderRadius: 20, cursor: 'pointer',
+            border: '1.5px solid ' + (value === val ? '#991b1b' : '#e2c7c7'),
+            background: value === val ? '#fee2e2' : '#fff', color: value === val ? '#991b1b' : '#6b7280',
+          }}>{lbl}</button>
+      ))}
+    </div>
+  );
+}
+
 function Section({ n, title, children }) {
   return (
     <div className="section-card">
@@ -53,6 +69,8 @@ function ViolenceBody() {
   const [sources, setSources] = useState([]);
   const [location, setLocation] = useState('');
   const [priority, setPriority] = useState('');
+  const [aggRole, setAggRole] = useState('');       // '' = تلميذ(ة)، 'أستاذ' = أستاذ(ة)
+  const [victimRole, setVictimRole] = useState('');
   const [procRows, setProcRows] = useState(blankProcRows);
   const [editId, setEditId] = useState(null);
   // معرّف السجل المحفوظ من النموذج الحالي: الحفظ/المعاينة/التقرير تحدّث نفس السجل بدل إضافة سجل جديد في كل ضغطة
@@ -67,7 +85,12 @@ function ViolenceBody() {
     return o;
   };
   const writeText = (vals) => { for (const k of Object.keys(TEXT_IDS)) if (f.current[k]) f.current[k].value = vals[k] || ''; };
-  const readForm = () => ({ ...readText(), types, sources, location, priority, procRows });
+  const readForm = () => ({ ...readText(), types, sources, location, priority, procRows, aggRole, victimRole });
+  // عند التحويل إلى أستاذ يُمسح رقم المسار (خاص بالتلاميذ)
+  const changeRole = (who, role) => {
+    if (isTeacher(role)) { const k = who === 'agg' ? 'aggMassar' : 'massar'; if (f.current[k]) f.current[k].value = ''; }
+    (who === 'agg' ? setAggRole : setVictimRole)(role);
+  };
   const persist = (next) => setArchive(next).catch((e) => { console.error(e); alert('❌ فشل حفظ البيانات'); });
 
   // initViolence القديمة
@@ -83,6 +106,7 @@ function ViolenceBody() {
     savedId.current = null; // نموذج جديد = سجل جديد عند الحفظ التالي
     writeText({});
     setTypes([]); setSources([]); setLocation(''); setPriority('');
+    setAggRole(''); setVictimRole('');
     setProcRows(blankProcRows());
   };
 
@@ -131,6 +155,7 @@ function ViolenceBody() {
     const v = formFromEntry(e);
     writeText(v);
     setLocation(v.location); setPriority(v.priority); setTypes(v.types); setProcRows(v.procRows);
+    setAggRole(v.aggRole); setVictimRole(v.victimRole);
     setEditId(id);
   };
 
@@ -186,17 +211,19 @@ function ViolenceBody() {
 
       <Section n="١" title="معلومات الشخص المعنِّف والشخص الذي تعرّض للعنف">
         <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#991b1b', marginBottom: 8 }}>🔴 الشخص المعنِّف</div>
+        <RoleSwitch value={aggRole} onChange={(r) => changeRole('agg', r)} />
         <div className="form-grid cols-3">
-          <div className="form-group"><label>الاسم الشخصي والعائلي</label><input ref={ref('aggName')} type="text" id="vio_agg_name" placeholder="الاسم الكامل للشخص المعنِّف" /></div>
-          <div className="form-group"><label>القسم</label><input ref={ref('aggLevel')} type="text" id="vio_agg_level" placeholder="مثال: 2APIC-3" /></div>
-          <div className="form-group"><label>رقم مسار</label><input ref={ref('aggMassar')} type="text" id="vio_agg_massar" placeholder="رقم مسار الشخص المعنِّف" /></div>
+          <div className="form-group"><label>الاسم الشخصي والعائلي</label><input ref={ref('aggName')} type="text" id="vio_agg_name" placeholder={isTeacher(aggRole) ? 'الاسم الكامل للأستاذ(ة) المعنِّف(ة)' : 'الاسم الكامل للشخص المعنِّف'} /></div>
+          <div className="form-group"><label>{isTeacher(aggRole) ? 'المادة المدرَّسة' : 'القسم'}</label><input ref={ref('aggLevel')} type="text" id="vio_agg_level" placeholder={isTeacher(aggRole) ? 'مثال: الرياضيات' : 'مثال: 2APIC-3'} /></div>
+          <div className="form-group" style={isTeacher(aggRole) ? { display: 'none' } : undefined}><label>رقم مسار</label><input ref={ref('aggMassar')} type="text" id="vio_agg_massar" placeholder="رقم مسار الشخص المعنِّف" /></div>
         </div>
         <div className="divider" />
         <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#991b1b', marginBottom: 8 }}>🟠 الشخص الذي تعرّض للعنف</div>
+        <RoleSwitch value={victimRole} onChange={(r) => changeRole('victim', r)} />
         <div className="form-grid cols-3">
-          <div className="form-group"><label>الاسم الشخصي والعائلي *</label><input ref={ref('studentName')} type="text" id="vio_studentName" placeholder="الاسم الكامل" /></div>
-          <div className="form-group"><label>القسم</label><input ref={ref('level')} type="text" id="vio_level" placeholder="مثال: 2APIC-3" /></div>
-          <div className="form-group"><label>رقم مسار</label><input ref={ref('massar')} type="text" id="vio_massar" placeholder="رقم مسار التلميذ" /></div>
+          <div className="form-group"><label>الاسم الشخصي والعائلي *</label><input ref={ref('studentName')} type="text" id="vio_studentName" placeholder={isTeacher(victimRole) ? 'الاسم الكامل للأستاذ(ة)' : 'الاسم الكامل'} /></div>
+          <div className="form-group"><label>{isTeacher(victimRole) ? 'المادة المدرَّسة' : 'القسم'}</label><input ref={ref('level')} type="text" id="vio_level" placeholder={isTeacher(victimRole) ? 'مثال: الرياضيات' : 'مثال: 2APIC-3'} /></div>
+          <div className="form-group" style={isTeacher(victimRole) ? { display: 'none' } : undefined}><label>رقم مسار</label><input ref={ref('massar')} type="text" id="vio_massar" placeholder="رقم مسار التلميذ" /></div>
         </div>
         <div className="divider" />
         <div className="form-grid">
@@ -314,8 +341,8 @@ function ViolenceBody() {
                     {filtered.map((e, i) => (
                       <tr key={e.id}>
                         <td style={{ textAlign: 'center', color: '#64748b', fontSize: '0.75rem' }}>{i + 1}</td>
-                        <td><strong style={{ color: '#991b1b' }}>🛡️ {e.studentName}</strong></td>
-                        <td>{e.aggName && e.aggName !== '—' ? e.aggName : '—'}</td>
+                        <td><strong style={{ color: '#991b1b' }}>🛡️ {e.studentName}</strong>{e.victimRole === ROLE_TEACHER && <span className="archive-tag" style={{ marginInlineStart: 6 }}>👨‍🏫 أستاذ(ة)</span>}</td>
+                        <td>{e.aggName && e.aggName !== '—' ? e.aggName : '—'}{e.aggRole === ROLE_TEACHER && <span className="archive-tag" style={{ marginInlineStart: 6 }}>👨‍🏫 أستاذ(ة)</span>}</td>
                         <td style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>📅 {e.reportDate}</td>
                         <td>{(e.types || []).map((t, k) => <span key={k}><span className="archive-tag">{t}</span>{' '}</span>)}</td>
                         <td><span style={{ background: PRIO_COLORS[e.priority] || '#64748b', color: 'white', borderRadius: 10, padding: '2px 8px', fontSize: '0.7rem', fontWeight: 700 }}>{e.priority}</span></td>
