@@ -252,3 +252,33 @@ ${aggTeacher ? `   <tr><td class="info-lbl">الاسم الكامل:</td><td cla
 
  `;
 }
+
+// أعمدة وصفوف تصدير سجل العنف إلى Excel (نفس مُصدِّر سجل الاتصال pgExportXlsx)
+export const VIO_EXPORT = {
+  file: 'سجل_حالات_العنف',
+  print: 'سجل حالات العنف',
+  fields: [
+    { k: 'studentName', l: 'اسم التلميذ(ة) المعنَّف(ة)' },
+    { k: 'massar', l: 'رمز مسار' },
+    { k: 'school', l: 'المؤسسة' },
+    { k: 'aggName', l: 'الشخص المعنِّف' },
+    { k: 'aggLevel', l: 'مستوى المعنِّف' },
+    { k: 'reportDate', l: 'تاريخ الإخبار' },
+    { k: 'types', l: 'نوع العنف' },
+    { k: 'location', l: 'مكان الواقعة' },
+    { k: 'priority', l: 'الأولوية' },
+    { k: 'description', l: 'وصف الواقعة', t: 'area' },
+    { k: 'recommendation', l: 'التوصية', t: 'area' },
+  ],
+};
+export const exportRows = (list) => (list || []).map((e) => {
+  const v = (x) => (x && x !== '—' ? String(x) : '');
+  return {
+    studentName: v(e.studentName) + (e.victimRole === ROLE_TEACHER ? ' (أستاذ/ة)' : ''),
+    massar: v(e.massar), school: v(e.school),
+    aggName: v(e.aggName) + (e.aggRole === ROLE_TEACHER ? ' (أستاذ/ة)' : ''),
+    aggLevel: v(e.aggLevel), reportDate: v(e.reportDate),
+    types: (e.types || []).join('، '), location: v(e.location), priority: v(e.priority),
+    description: v(e.description), recommendation: v(e.recommendation),
+  };
+});
