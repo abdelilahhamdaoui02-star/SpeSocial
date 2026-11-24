@@ -1,7 +1,7 @@
 // هيكل الصفحة (الترويسة والبوابة الرئيسية وصفحات الأدوات وتذييل المطوّر) — كان src/legacy/body.html ويُحقَن بـ dangerouslySetInnerHTML (الخطوة 48).
 // المعرّفات والأصناف كما كانت حرفياً لأن الأنماط (styles.js) وبقية الوحدات تعتمد عليها؛ والأقسام الديناميكية فراغات تُرسم فيها مكوّنات React عبر createPortal من LegacyApp.
 // الهيكل ثابت: memo بلا خصائص فلا يُعاد رسمه أبداً، فتبقى تعديلات DOM التي تجريها وحدات الجلسة والتنقل (صنف open وdisplay وأسماء المستخدم) كما هي.
-import { memo, useEffect, useRef } from 'react';
+import { memo } from 'react';
 import { goHome } from '../navigation.js';
 import { toolDomId } from '../nav/navLogic.js';
 import { useCurrentPortal, useEntered } from '../store/hooks.js';
@@ -66,46 +66,6 @@ function PortalLanding({ children }) {
   const current = useCurrentPortal();
   const entered = useEntered();
   return <div id="portalLanding" style={{ display: entered && !current ? 'block' : 'none' }}>{children}</div>;
-}
-
-// الحاسوب: عمود البوابات ثابت يميناً والمحتوى (الإحصائيات أو البوابة المفتوحة) في الوسط.
-// العمود يظهر بعد الدخول فقط؛ في الهاتف والتابلت يُخفى بـCSS وتبقى بوابات الرئيسية كما كانت.
-function DeskShell({ children }) {
-  const entered = useEntered();
-  const deskRef = useRef(null);
-  // ارتفاع عمود البوابات = الجزء الظاهر من الشاشة، فتظهر كل البوابات دائماً مهما كان التمرير (الحاسوب فقط)
-  useEffect(() => {
-    const el = deskRef.current;
-    if (!el || typeof window === 'undefined') return undefined;
-    let raf = 0;
-    const calc = () => {
-      raf = 0;
-      const top = Math.max(8, el.getBoundingClientRect().top + 22);
-      el.style.setProperty('--desk-h', Math.max(320, window.innerHeight - top - 8) + 'px');
-    };
-    const upd = () => { if (!raf) raf = requestAnimationFrame(calc); };
-    calc();
-    window.addEventListener('scroll', upd, { passive: true });
-    window.addEventListener('resize', upd);
-    return () => { window.removeEventListener('scroll', upd); window.removeEventListener('resize', upd); if (raf) cancelAnimationFrame(raf); };
-  }, [entered]);
-  return (
-    <div ref={deskRef} className={entered ? 'desk has-portals' : 'desk'}>
-      <aside className="hp-panel hp-desk-portals" aria-label="البوابات">
-        <h3 className="hp-panel-title">
-          <svg className="" viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="9" cy="8" r="3.5"></circle>
-            <path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path>
-            <circle cx="17.5" cy="9" r="2.5"></circle>
-            <path d="M17 14c2.8 0 4.7 1.9 4.7 5"></path>
-          </svg>
-          <span>البوابات</span>
-        </h3>
-        <div className="hp-list" id="mountTilesDesk"></div>
-      </aside>
-      <div className="desk-content">{children}</div>
-    </div>
-  );
 }
 
 function AppShell() {
@@ -198,7 +158,6 @@ function AppShell() {
           </div>
           <div className="accent-bar"></div>
         </header>
-        <DeskShell>
         <PortalLanding>
           <div id="mountSiteNotice"></div>
           <div className="hp-main">
@@ -236,7 +195,6 @@ function AppShell() {
           <div className="hp-report" id="mountHomeReport"></div>
         </PortalLanding>
         {TOOLS.map((t) => <ToolPage key={t.id} t={t} />)}
-        </DeskShell>
       </div>
       <div className="dev-footer" style={{ background: "linear-gradient(135deg,#0f2744,#1a3a5c)", color: "rgba(255,255,255,0.6)", textAlign: "center", padding: "12px 20px", fontSize: "0.74rem", direction: "rtl", borderTop: "2px solid rgba(200,169,74,0.3)" }}>
         <span style={{ color: "rgba(200,169,74,0.9)" }}>{" تم البرمجة والتطوير بواسطة:"}</span>
