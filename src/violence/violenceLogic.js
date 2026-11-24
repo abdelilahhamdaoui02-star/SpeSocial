@@ -22,6 +22,12 @@ export const LOCATION_OPTIONS = [
 export const SOURCE_OPTIONS = [
   ['التلميذ(ة) نفسه(ا)', '🧒 التلميذ(ة)'], ['ولي الأمر', '👨‍👩 ولي الأمر'], ['أستاذ', '👨‍🏫 أستاذ'], ['إدارة المؤسسة', '🏫 الإدارة'], ['زميل للضحية', '👤 زميل'], ['رصد مباشر من المختص', '👁 رصد مباشر'],
 ];
+// صفة طرفي الحادثة: التلميذ(ة) هو الافتراضي (يبقى السجل كما كان تماماً)، ويمكن أن يكون أي طرف أستاذاً أو أستاذة
+export const ROLE_PUPIL = '';
+export const ROLE_TEACHER = 'أستاذ';
+export const ROLE_OPTIONS = [[ROLE_PUPIL, '🧒 تلميذ(ة)'], [ROLE_TEACHER, '👨‍🏫 أستاذ(ة)']];
+export const isTeacher = (role) => role === ROLE_TEACHER;
+
 export const PRIORITY_OPTIONS = [['عادية', '🟢 عادية'], ['متوسطة', '🟡 متوسطة'], ['عالية', '🟠 عالية'], ['عاجلة', '🔴 عاجلة']];
 export const PRIO_COLORS = { 'عاجلة': '#dc2626', 'عالية': '#d97706', 'متوسطة': '#ca8a04', 'عادية': '#16a34a' };
 
@@ -87,7 +93,7 @@ export function restoreProcRows(saved) {
 // ── النموذج ──
 // form: نصوص الحقول كما في DOM (تُقصّ هنا كـval القديمة) + types/sources/location/priority + procRows
 export const blankForm = (date = '', school = '') => ({
-  studentName: '', level: '', massar: '', aggName: '', aggLevel: '', aggMassar: '', reportDate: date, school, parentPhone: '',
+  studentName: '', level: '', massar: '', aggName: '', aggLevel: '', aggMassar: '', reportDate: date, school, parentPhone: '', aggRole: '', victimRole: '',
   description: '', recommendation: '', types: [], sources: [], location: '', priority: '', procRows: blankProcRows(),
 });
 
@@ -112,6 +118,9 @@ function entryFrom(f, id, savedAt) {
     recommendation: v(f.recommendation),
     nextFollowup: '—',
     procRows: procDetails(f.procRows || []),
+    // الصفة تُحفظ فقط حين يكون الطرف أستاذاً (غيابها = تلميذ، فتبقى السجلات القديمة وغير الأساتذة كما هي)
+    ...(isTeacher(f.aggRole) ? { aggRole: ROLE_TEACHER } : {}),
+    ...(isTeacher(f.victimRole) ? { victimRole: ROLE_TEACHER } : {}),
   };
 }
 
@@ -149,6 +158,7 @@ export function formFromEntry(e) {
     location: LOCATION_OPTIONS.some((o) => o[0] === e.location) ? e.location : '',
     priority: PRIORITY_OPTIONS.some((o) => o[0] === e.priority) ? e.priority : '',
     types: e.types || [], procRows: restoreProcRows(e.procRows),
+    aggRole: isTeacher(e.aggRole) ? ROLE_TEACHER : '', victimRole: isTeacher(e.victimRole) ? ROLE_TEACHER : '',
   };
 }
 
@@ -193,6 +203,8 @@ export function reportHtml(f, ctx = {}) {
   if (sources.length) incRows.push(`<tr><td class="info-lbl">مصدر الإبلاغ:</td><td class="info-val" colspan="3">${iEsc(sources.join(' / '))}</td></tr>`);
   const hasAgg = v(f.aggName) || v(f.aggLevel) || v(f.aggMassar);
   const priority = f.priority || '';
+  const victimTeacher = isTeacher(f.victimRole);
+  const aggTeacher = isTeacher(f.aggRole);
 
   return `
  <div class="new-report-header">
@@ -207,15 +219,17 @@ export function reportHtml(f, ctx = {}) {
 
  <div class="report-section-title">معلومات الشخص الذي تعرّض للعنف</div>
  <table class="info-table-report" style="${TBL}"><tbody>
-   <tr><td class="info-lbl">الاسم الكامل:</td><td class="info-val">${iEsc(studentName)}</td><td class="info-lbl">رقم المسار:</td><td class="info-val">${V(f.massar)}</td></tr>
-   <tr><td class="info-lbl">المؤسسة التعليمية:</td><td class="info-val">${V(f.school)}</td><td class="info-lbl">القسم:</td><td class="info-val">${V(f.level)}</td></tr>
+${victimTeacher ? `   <tr><td class="info-lbl">الاسم الكامل:</td><td class="info-val">${iEsc(studentName)}</td><td class="info-lbl">الصفة:</td><td class="info-val">أستاذ(ة)</td></tr>
+   <tr><td class="info-lbl">المؤسسة التعليمية:</td><td class="info-val">${V(f.school)}</td><td class="info-lbl">المادة المدرَّسة:</td><td class="info-val">${V(f.level)}</td></tr>` : `   <tr><td class="info-lbl">الاسم الكامل:</td><td class="info-val">${iEsc(studentName)}</td><td class="info-lbl">رقم المسار:</td><td class="info-val">${V(f.massar)}</td></tr>
+   <tr><td class="info-lbl">المؤسسة التعليمية:</td><td class="info-val">${V(f.school)}</td><td class="info-lbl">القسم:</td><td class="info-val">${V(f.level)}</td></tr>`}
    <tr><td class="info-lbl">هاتف الولي:</td><td class="info-val">${V(f.parentPhone)}</td><td class="info-lbl">تاريخ الإخبار:</td><td class="info-val">${V(f.reportDate)}</td></tr>
  </tbody></table>
 
  ${hasAgg ? `<div class="report-section-title">معلومات الشخص المعنِّف</div>
  <table class="info-table-report" style="${TBL}"><tbody>
-   <tr><td class="info-lbl">الاسم الكامل:</td><td class="info-val">${V(f.aggName)}</td><td class="info-lbl">رقم المسار:</td><td class="info-val">${V(f.aggMassar)}</td></tr>
-   <tr><td class="info-lbl">القسم:</td><td class="info-val" colspan="3">${V(f.aggLevel)}</td></tr>
+${aggTeacher ? `   <tr><td class="info-lbl">الاسم الكامل:</td><td class="info-val">${V(f.aggName)}</td><td class="info-lbl">الصفة:</td><td class="info-val">أستاذ(ة)</td></tr>
+   <tr><td class="info-lbl">المادة المدرَّسة:</td><td class="info-val" colspan="3">${V(f.aggLevel)}</td></tr>` : `   <tr><td class="info-lbl">الاسم الكامل:</td><td class="info-val">${V(f.aggName)}</td><td class="info-lbl">رقم المسار:</td><td class="info-val">${V(f.aggMassar)}</td></tr>
+   <tr><td class="info-lbl">القسم:</td><td class="info-val" colspan="3">${V(f.aggLevel)}</td></tr>`}
  </tbody></table>` : ''}
 
  ${incRows.length ? `<div class="report-section-title">معلومات الحادثة</div>
